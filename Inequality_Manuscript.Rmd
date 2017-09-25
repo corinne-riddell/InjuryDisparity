@@ -3,16 +3,16 @@ title: "Inequalities in violent death among men, by state, race, and firearms us
 author: "Corinne Riddell"
 date: "8/30/2017"
 output:
-  word_document: default
-  pdf_document: default
-  html_document: default
+  word_document:
+    reference_docx: reference.docx
+bibliography: biblio.bib
 ---
 
 Corinne A Riddell, PhD
 
 Sam Harper, PhD
 
-Magda Cerda, PhD
+Magdalena Cerdá, PhD
 
 Jay S Kaufman, PhD
 
@@ -22,13 +22,14 @@ MC: Violence Prevention Research Program, Department of Emergency Medicine, Univ
 
 Address correspondence to: Corinne Riddell, PhD, Department of Epidemiology, Biostatistics & Occupational Health, McGill University, 1020 Pine Avenue West, Room 27, Montreal, QC H3A 1A2, Canada. Email: <corinne.riddell@mail.mcgill.ca>. Phone: +1-438-863-0402
 
+##### PAGE BREAK
 
 ```{r, echo=F, warning=F, message=F}
 library(tidyverse)
 library(ggrepel)
 ```
 
-```{r load_data_age_std, echo=F, warning=F, message=F}
+```{r load_data_age_std_males, echo=F, warning=F, message=F}
 #homicide
 NHWM_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
@@ -48,6 +49,26 @@ NHBM_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_Black_NH_Males_Age
 NHBM_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 ```
 
+```{r load_data_age_std_females, echo=F, warning=F, message=F}
+#homicide
+NHWF_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+NHWF_homicide_NonFA <- read.table("./Data/agestd/Homicide_Non-Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+NHBF_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+NHBF_homicide_NonFA <- read.table("./Data/agestd/Homicide_Non-Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+#suicide
+NHWF_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+NHWF_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+NHBF_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+
+NHBF_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+```
+
 ```{r tidy_fx, echo=F, warning=F, message=F}
 tidy_fx <- function(data, state, death, population, crude, adjusted, race, intent, mechanism) {
   dat2 <- data[, c(state, death, population, crude, adjusted)]
@@ -59,7 +80,9 @@ tidy_fx <- function(data, state, death, population, crude, adjusted, race, inten
   
   return(dat2)
 }
+```
 
+```{r tidy_male_data, echo=F}
 NHWM_homicide_FA <- tidy_fx(data = NHWM_homicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
                             "U_A_Rate", "white", "homicide", "Firearm")
 NHWM_homicide_NonFA <- tidy_fx(data = NHWM_homicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
@@ -84,10 +107,36 @@ NHWM_homicide <- rbind(NHWM_homicide_FA, NHWM_homicide_NonFA)
 NHWM_suicide <- rbind(NHWM_suicide_FA, NHWM_suicide_NonFA)
 rm(NHBM_homicide_FA, NHBM_homicide_NonFA, NHBM_suicide_FA, NHBM_suicide_NonFA,
    NHWM_homicide_FA, NHWM_homicide_NonFA, NHWM_suicide_FA, NHWM_suicide_NonFA)
-
 ```
 
-```{r merge_data, echo=F}
+```{r tidy_female_data, echo = F}
+NHWF_homicide_FA <- tidy_fx(data = NHWF_homicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "white", "homicide", "Firearm")
+NHWF_homicide_NonFA <- tidy_fx(data = NHWF_homicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "white", "homicide", "Non-Firearm")
+NHWF_suicide_FA <- tidy_fx(data = NHWF_suicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "white", "suicide", "Firearm")
+NHWF_suicide_NonFA <- tidy_fx(data = NHWF_suicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "white", "suicide", "Non-Firearm")
+
+NHBF_homicide_FA <- tidy_fx(data = NHBF_homicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "black", "homicide", "Firearm")
+NHBF_homicide_NonFA <- tidy_fx(data = NHBF_homicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "black", "homicide", "Non-Firearm")
+NHBF_suicide_FA <- tidy_fx(data = NHBF_suicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "black", "suicide", "Firearm")
+NHBF_suicide_NonFA <- tidy_fx(data = NHBF_suicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
+                            "U_A_Rate", "black", "suicide", "Non-Firearm")
+
+NHBF_homicide<- rbind(NHBF_homicide_FA, NHBF_homicide_NonFA)
+NHBF_suicide <- rbind(NHBF_suicide_FA, NHBF_suicide_NonFA)
+NHWF_homicide <- rbind(NHWF_homicide_FA, NHWF_homicide_NonFA)
+NHWF_suicide <- rbind(NHWF_suicide_FA, NHWF_suicide_NonFA)
+rm(NHBF_homicide_FA, NHBF_homicide_NonFA, NHBF_suicide_FA, NHBF_suicide_NonFA,
+   NHWF_homicide_FA, NHWF_homicide_NonFA, NHWF_suicide_FA, NHWF_suicide_NonFA)
+```
+
+```{r merge_data_males, echo=F}
 #merge all the data
 Males_AllAges_0814 <- merge(NHBM_homicide, NHBM_suicide %>% select(-Population.black), by = c("ST", "type")) %>%
   mutate(crude.RD.hom.su.black = crude.homicide.black - crude.suicide.black,
@@ -104,7 +153,28 @@ Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_suicide %>% select(-Populat
 Males_AllAges_0814 <- Males_AllAges_0814 %>% 
   mutate(crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
          adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white)
+```
 
+```{r merge_data_females, echo=F}
+Females_AllAges_0814 <- merge(NHBF_homicide, NHBF_suicide %>% select(-Population.black), by = c("ST", "type")) %>%
+  mutate(crude.RD.hom.su.black = crude.homicide.black - crude.suicide.black,
+         adj.RD.hom.su.black = adjusted.homicide.black - adjusted.suicide.black)
+
+Females_AllAges_0814 <- merge(Females_AllAges_0814, NHWF_homicide, by = c("ST", "type")) %>%
+  mutate(crude.RD.homicide = crude.homicide.black - crude.homicide.white,
+         adj.RD.homicide = adjusted.homicide.black - adjusted.homicide.white)
+
+Females_AllAges_0814 <- merge(Females_AllAges_0814, NHWF_suicide %>% select(-Population.white), by = c("ST", "type")) %>%
+  mutate(crude.RD.suicide = crude.suicide.black - crude.suicide.white,
+         adj.RD.suicide = adjusted.suicide.black - adjusted.suicide.white)
+
+Females_AllAges_0814 <- Females_AllAges_0814 %>% 
+  mutate(crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
+         adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white)
+```
+
+```{r add_factor_sorting_males, echo = F}
+#used for plotting -- to arrange the states on the y-axis according to the magnitude of the black-white inequality
 levels.firearm.homicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
 
@@ -129,101 +199,39 @@ Males_AllAges_0814$ST.order.RD.suicide <- factor(Males_AllAges_0814$ST,
 
 ```
 
+```{r add_factor_sorting_females, echo = F}
+#used for plotting -- to arrange the states on the y-axis according to the magnitude of the black-white inequality
+levels.firearm.homicide <- Females_AllAges_0814 %>% filter(type == "Firearm") %>%
+  transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
 
-```{r OLD_load_data, echo=F, warning=F, message=F, eval=F}
-NHBM_homicide_0814 <- read.csv("./Data/NHBlack-AllAges-Homicide.txt", header = T, sep = ",")
-NHBM_homicide_0814 <- NHBM_homicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.black = Population, death.homicide.black = Deaths, crude.homicide.black = U_C_Rate) %>%
-  mutate(type = "Firearm")
+Females_AllAges_0814 %>% 
+  filter(is.na(adjusted.homicide.black) == T & type == "Firearm") %>% 
+  select(ST, adjusted.homicide.white)
 
-NHBM_suicide_0814 <- read.csv("./Data/NHBlack-AllAges-Suicide.txt", header = T, sep = ",")
-NHBM_suicide_0814 <- NHBM_suicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.black = Population, death.suicide.black = Deaths, crude.suicide.black = U_C_Rate) %>%
-  mutate(type = "Firearm")
+Females_AllAges_0814$ST.order.RD.homicide <- factor(Females_AllAges_0814$ST, 
+                                                  levels = levels(levels.firearm.homicide$ST.order.RD.homicide))
 
-NHBM_nonfa_homicide_0814 <- read.csv("./Data/NHBlack-AllAges-Homicide-NonFA.txt", header = T, sep = ",")
-NHBM_nonfa_homicide_0814 <- NHBM_nonfa_homicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.black = Population, death.homicide.black = Deaths, crude.homicide.black = U_C_Rate) %>%
-  mutate(type = "Non-firearm")
+# Males_AllAges_0814$ST.order.RD.homicide <- factor(Males_AllAges_0814$ST, 
+#                                                   levels = c("HI", "SD", "NH", "ND", "VT", "ID", "ME", "WY", "MT",
+#                                                              levels(levels.firearm.homicide$ST.order.RD.homicide)[1:42]))
 
-NHBM_nonfa_suicide_0814 <- read.csv("./Data/NHBlack-AllAges-Suicide-NonFA.txt", header = T, sep = ",")
-NHBM_nonfa_suicide_0814 <- NHBM_nonfa_suicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.black = Population, death.suicide.black = Deaths, crude.suicide.black = U_C_Rate) %>%
-  mutate(type = "Non-firearm")
+levels.firearm.suicide <- Females_AllAges_0814 %>% filter(type == "Firearm") %>%
+  transmute(ST.order.RD.suicide = reorder(ST, -adj.RD.suicide))
 
-NHWM_homicide_0814 <- read.table("./Data/NHWhite_AllAges_Homicide.txt", header = T, sep = ",")
-NHWM_homicide_0814 <- NHWM_homicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.white = Population, death.homicide.white = Deaths, crude.homicide.white = U_C_Rate) %>%
-  mutate(type = "Firearm")
+Females_AllAges_0814 %>% 
+  filter(is.na(adjusted.suicide.black) == T & type == "Firearm") %>% 
+  select(ST, adjusted.suicide.white)
 
+# Females_AllAges_0814$ST.order.RD.suicide <- factor(Females_AllAges_0814$ST, 
+#                                                   levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT", "ID", "MT", "WY",
+#                                                              levels(levels.firearm.suicide$ST.order.RD.suicide)[1:39]))
 
-NHWM_suicide_0814 <- read.table("./Data/NHWhite-AllAges-Suicide.txt", header = T, sep = ",")
-NHWM_suicide_0814 <- NHWM_suicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.white = Population, death.suicide.white = Deaths, crude.suicide.white = U_C_Rate) %>%
-  mutate(type = "Firearm")
+Females_AllAges_0814$ST.order.RD.suicide <- factor(Females_AllAges_0814$ST, 
+                                                  levels = levels(levels.firearm.suicide$ST.order.RD.suicide))
 
-
-NHWM_nonfa_homicide_0814 <- read.table("./Data/NHWhite-AllAges-Homicide-NonFA.txt", header = T, sep = ",")
-
-NHWM_nonfa_homicide_0814 <- NHWM_nonfa_homicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.white = Population, death.homicide.white = Deaths, crude.homicide.white = U_C_Rate) %>%
-  mutate(type = "Non-firearm")
-
-
-NHWM_nonfa_suicide_0814 <- read.table("./Data/NHWhite-AllAges-Suicide-NonFA.txt", header = T, sep = ",")
-NHWM_nonfa_suicide_0814 <- NHWM_nonfa_suicide_0814 %>% select(ST, Population, Deaths, U_C_Rate) %>% 
-  rename(pop.white = Population, death.suicide.white = Deaths, crude.suicide.white = U_C_Rate) %>%
-  mutate(type = "Non-firearm")
-
-NHBM_homicide_0814 <- rbind(NHBM_homicide_0814, NHBM_nonfa_homicide_0814)
-NHBM_suicide_0814 <- rbind(NHBM_suicide_0814, NHBM_nonfa_suicide_0814)
-NHWM_homicide_0814 <- rbind(NHWM_homicide_0814, NHWM_nonfa_homicide_0814)
-NHWM_suicide_0814 <- rbind(NHWM_suicide_0814, NHWM_nonfa_suicide_0814)
-rm(NHBM_nonfa_homicide_0814, NHBM_nonfa_suicide_0814, NHWM_nonfa_homicide_0814, NHWM_nonfa_suicide_0814)
-
-#merge all the data
-Males_AllAges_0814 <- merge(NHBM_homicide_0814, NHBM_suicide_0814 %>% select(-pop.black), by = c("ST", "type")) %>%
-  mutate(RD.hom.su.black = crude.homicide.black - crude.suicide.black)
-
-Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_homicide_0814, by = c("ST", "type")) %>%
-  mutate(RD.homicide = crude.homicide.black - crude.homicide.white)
-
-Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_suicide_0814 %>% select(-pop.white), by = c("ST", "type")) %>%
-  mutate(RD.suicide = crude.suicide.black - crude.suicide.white)
-
-Males_AllAges_0814 <- Males_AllAges_0814 %>% 
-  mutate(RD.hom.su.white = crude.homicide.white - crude.suicide.white)
-
-levels.firearm.homicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
-  transmute(ST.order.RD.homicide = reorder(ST, RD.homicide))
-
-
-
-Males_AllAges_0814$ST.order.RD.homicide <- factor(Males_AllAges_0814$ST, 
-                                                  levels = c("ND", "SD", "NH", "ID", "HI", "VT", "ME", "MT", "WY",
-                                                             levels(levels.firearm.homicide$ST.order.RD.homicide)[1:42]))
-
-levels.firearm.suicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
-  transmute(ST.order.RD.suicide = reorder(ST, -RD.suicide))
-
-Males_AllAges_0814$ST.order.RD.suicide <- factor(Males_AllAges_0814$ST, levels = c("NH", "SD", "ND", "ME", "VT", "ID", "MT", "WY",
-                                                                                   levels(levels.firearm.suicide$ST.order.RD.suicide)[1:43]))
 ```
 
-```{r check_the_same, echo=F, eval=F}
-#check equivalence of the population denominators
-table(NHBM_suicide_0814$pop.black==NHBM_homicide_0814$pop.black)
-table(NHBM_suicide_0814$pop.black==NHBM_nonfa_suicide_0814$pop.black)
-table(NHBM_nonfa_homicide_0814$pop.black==NHBM_homicide_0814$pop.black)
-
-#check equivalence of the population denominators
-table(NHWM_suicide_0814$pop.white==NHWM_homicide_0814$pop.white)
-table(NHWM_suicide_0814$pop.white==NHWM_nonfa_suicide_0814$pop.white)
-table(NHWM_homicide_0814$pop.white==NHWM_nonfa_homicide_0814$pop.white)
-```
-
-
-```{r add_variables, echo=F}
+```{r add_variables_males, echo=F}
 num.years = 2014-2008+1
 
 Males_AllAges_0814 <- Males_AllAges_0814 %>% 
@@ -236,14 +244,25 @@ Males_AllAges_0814$gun.level[Males_AllAges_0814$ST %in% c("LA", "UT", "OK", "IA"
 Males_AllAges_0814$gun.level[Males_AllAges_0814$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
 
 Males_AllAges_0814$gun.level <- factor(Males_AllAges_0814$gun.level, levels = c("Low", "Middle", "High"))
-
 ```
 
+```{r add_variables_females, echo=F}
+Females_AllAges_0814 <- Females_AllAges_0814 %>% 
+  mutate(average.pop.white = Population.white/num.years,
+         average.pop.black = Population.black/num.years)
+
+Females_AllAges_0814$gun.level <- "Middle"
+Females_AllAges_0814$gun.level[Females_AllAges_0814$ST %in% c("LA", "UT", "OK", "IA", "TN","KY", "AL", 
+                                                          "MS", "ID","ND", "WV", "AR", "AK", "SD", "MT", "WY")] <- "High"
+Females_AllAges_0814$gun.level[Females_AllAges_0814$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
+
+Females_AllAges_0814$gun.level <- factor(Females_AllAges_0814$gun.level, levels = c("Low", "Middle", "High"))
+```
 **Introduction**
 
-The firearm-related mortality rate in the United States is ten-fold higher the rate of other high income countries.[Grinshetyn 2015] During 2010 to 2012, `r round(27977/(27977 + 4551), 2)*100`% of firearm fatalities were men or boys in the US, with non-Hispanic blacks having died of firearm-related homicide at a rate `r round(14.78/1.44)` times higher than non-Hispanic whites, and whites having died at a rate nearly `r round(9.24/3.23)` times as high from firearm-related suicide.[Fowler, Prev Med 2015] Across the US, states with the highest levels of gun ownership have higher rates of firearm suicide and firearm homicide, for both men and women and independent of age.[Table 1.3 in the Webster book] States with the fewest guns and gun-related deaths are primarily found in the North East, while those with elevated rates of gun ownership and gun deaths are primarily found in the South and the Mountain states.[Table 1.3 Webster book and https://www.cdc.gov/nchs/pressroom/sosmap/firearm_mortality/firearm.htm] 
+The firearm-related mortality rate in the United States is ten-fold higher the rate of other high income countries [@grinshteyn2016violent]. During 2010 to 2012, `r round(27977/(27977 + 4551), 2)*100`% of firearm fatalities were men or boys in the US, with non-Hispanic blacks having died of firearm-related homicide at a rate `r round(14.78/1.44)` times higher than non-Hispanic whites, and whites having died at a rate nearly `r round(9.24/3.23)` times as high from firearm-related suicide [@fowler2015firearm]. Across the US, states with the highest levels of gun ownership have higher rates of firearm suicide and firearm homicide, for both men and women and independent of age [@webster_book_table]. States with the fewest guns and gun-related deaths are primarily found in the North East, while those with elevated rates of gun ownership and gun deaths are primarily found in the South and the Mountain states [@webster_book_table] and [https://www.cdc.gov/nchs/pressroom/sosmap/firearm_mortality/firearm.htm].
 
-The objective of this research is to estimate rates of firearm- and non-firearm related homicide and suicide for non-Hispanic blacks and non-Hispanic whites by US state and compute the difference between rates. While reduction in overall firearm-related mortality is an important public health pursuit,[Editorial in PrevMed], reductions in health inequalities are also important, especially if the inequality is considered an inequity associated with more adverse social conditions linked to race or ethnicity.[Arcaya MC, Arcaya AL, Subramanian SV.Inequalities in health: definitions, concepts, and theories. Glob Health Action. 2015 Jun 24;8:27106. PMID: 26112142] Furthermore, if states vary widely in the magnitude of racial gaps in mortality this might indicate that state policies can be changed in order to close the gap, especially for preventable deaths due to firearm violence. 
+The objective of this research is to estimate rates of firearm- and non-firearm related homicide and suicide for non-Hispanic blacks and non-Hispanic whites by US state and compute the difference between rates. While reduction in overall firearm-related mortality is an important public health pursuit,[Editorial in PrevMed], reductions in health inequalities are also important, especially if the inequality is considered an inequity associated with more adverse social conditions linked to race or ethnicity [@arcaya2015inequalities]. Furthermore, if states vary widely in the magnitude of racial gaps in mortality this might indicate that state policies can be changed in order to close the gap, especially for preventable deaths due to firearm violence. 
 
 Gun ownership vs. violent crime
 - lots of literature on this
@@ -257,10 +276,9 @@ We used the Center for Disease Control and Prevention’s Web-based Injury Stati
 
 To explore the relationship between gun availability and firearm homicide and suicide by race, we used the the last available state estimates of household firearm ownership from the National Behaviourial Risk Factor Surveillance System (BRFSS) from 2004. 
 
-The analysis was performed in R version 3.3.2,[R Core Team (2016). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL https://www.R-project.org/] with all code available on Github (link: https://github.com/corinne-riddell/firearmInequalities).
+The analysis was performed in R version 3.3.2,[@r_language] with all code available on Github (https://github.com/corinne-riddell/InjuryDisparity).
 
 Add bit about BRFSS and how low middle and high gun states were chosen.
-[Note: I haven't discussed in the methods that I used the BRFSS to examine the relationship with gun ownership. If we decide to include a subset of these graphs I will add this description to the methods. For now they are here for our information.]
 
 **Results**
 
@@ -279,6 +297,8 @@ stats3 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(ad
 **Figure 1** displays the heightened rates of homicide fatality among black males compared to white males, according to state and the use of firearms. The black-white differences in homicide fatality rates for men vary strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and are driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. White male rates, on the other hand, showed relatively little variation, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also have have the largest difference in rates between blacks and whites, signaling settings that are most dangerous for blacks but relatively safer for whites. The District of Columbia also has a high rate of firearm homicide for blacks, but its rate for white men was supressed which implies a rate <= `r round((10/white.pop.dc)*100000, 1)` per 100,000 (albeit unstable), implying that it is more dangerous for blacks than for whites.
 
 Non-firearm homicides occur relatively rarely, and maintain the general pattern of heightened rates among black men compared to white men. While blacks experience annual rates that vary between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]`. Across the board, firearm homicide rates are higher than non-firearm rates for blacks, and in some states homicide fatalities by firearms are eight times more frequent than any other mechanism.
+
+##### PAGE BREAK
 
 **Figure 1: Difference in age-standardized homicide fatalities rates for males by state, firearm involvement, and race, 2008-2014**
 
@@ -325,6 +345,8 @@ stats7 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(ad
 
 In contrast to homicide, suicide fatality rates are higher among white than black men, independent of firearms usage, with one exception; In DC, firearm suicides are slightly higher among black men compared to white men (**Figure 2**). The black-white difference in suicides involving a firearm varied from `r stats4$max[1]` in the District of Columbia to `r stats4$min[1]` per 100,000 per year in Missouri. The annual rate of suicides involving firearms varies more markedly for white than for black men, between `r stats5$min[1]` and `r stats5$max[1]` per 100,000 compared to a range of `r stats6$min[1]` to `r stats6$max[1]` seen among blacks. The rates of black- and white- non-firearm suicides and the difference between them vary substantially less than those involving firearms. For white men, between `r stats7$min[2]` and `r stats7$max[2]` per 100,000 non-firearm suicides are committed each year on average across the states, compared to  `r stats6$min[2]` and `r stats6$max[2]`per 100,000 non-firearm suicides among blacks. 
 
+##### PAGE BREAK
+
 **Figure 2: Difference in suicide fatalities rates for males by state, firearm involvement, and race, 2008-2014**
 
 ```{r figure2, fig.width=5, fig.height=7, echo = F, warning=F}
@@ -353,6 +375,8 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
 
 Across states, the firearm suicide and firearm homicide rates for white men show a strong, positive correlation (**Figure 3**). Futhermore, states with the lowest gun ownership rates have consistently low white homicide and suicide rates, indicating an association between lower gun ownership/availability and firearm-related deaths among white men. Among those states with high rates of gun ownership, many of them (i.e., Mississippi, Arizona, Alabama, etc) have relatively high firearm-related suicide and homicide rates among white men, while others have relatively high suicide rates but relatively low homicide rates (i.e., Utah, Idaho, and Montana).
 
+##### PAGE BREAK
+
 **Figure 3: The relationship between the rate of homicide and suicides among whites males by state, 2008-2014**
 
 ```{r Figure3, fig.width=9, fig.height=6, echo = F, warning=F}
@@ -376,9 +400,11 @@ Males_AllAges_0814 %>%
 
 The suicide and homicide rates for blacks, on the other hand, are not associated (**Figure 4**). While lower gun ownership is associated with lower rates of suicide for black males, the relationship between ownership and homicide is much less clear. In particular, firearm homicides among states with a middle amount of gun ownership vary widely.
 
+##### PAGE BREAK
+
 **Figure 4: The relationship between the rate of homicide and suicides among black males by state, 2008-2014**
 
-```{r figure4, fig.height = 8, fig.width = 5, echo=F, warning=F}
+```{r figure4, fig.height = 7, fig.width = 5, echo=F, warning=F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.black, adjusted.homicide.black)) + 
   geom_point(aes(fill = gun.level, size = average.pop.black), col = "white", pch = 21, alpha = 0.5) +
   geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) +
@@ -424,6 +450,62 @@ Males_AllAges_0814 %>%
 
 
 **Other graphs, fyi**
+
+**Figure 1b: Difference in age-standardized homicide fatalities rates for females by state, firearm involvement, and race, 2008-2014**
+
+```{r figure1b, fig.width=5, fig.height=7, echo = F, warning=F}
+ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
+  geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
+                   y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
+               lwd = 2, col = "navy", alpha = 0.5) +
+  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  geom_point(aes(x = adjusted.homicide.black, col = "NH Black", size = average.pop.black)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1),
+  scale_color_manual(values = c("navy", "#fd8d3c")) +
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
+  ylab("") +
+  xlab("Homicide mortality per 100k") + 
+  theme_bw() + 
+  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
+  theme(legend.position = c(0.8, 0.25), 
+        plot.title = element_text(size = 10),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12)) + 
+  scale_x_continuous(limits = c(0, 80), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
+  geom_text(data = subset(Females_AllAges_0814, is.na(adj.RD.homicide)==F),
+            aes(x = adjusted.homicide.black + 2, label = paste0("+", round(adj.RD.homicide))),
+            size = 3, col = "navy") +
+  facet_wrap( ~ type)  
+```
+
+**Figure 2b: Difference in suicide fatalities rates for females by state, firearm involvement, and race, 2008-2014**
+
+```{r figure2b, fig.width=5, fig.height=7, echo = F, warning=F}
+ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
+  geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
+                   y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
+               lwd = 2, col = "#fd8d3c", alpha = 0.5) +
+  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + #, alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  scale_color_manual(values = c("navy", "#fd8d3c")) +
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
+  ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
+  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
+  theme(legend.position = c(0.8, 0.25), 
+        plot.title = element_text(size = 10),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12)) + 
+  scale_x_continuous(limits = c(0, 80), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
+  geom_text(data = subset(Females_AllAges_0814, is.na(adj.RD.suicide)==F), 
+            aes(x = adjusted.suicide.white + 2, label = paste0("+", round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
+  facet_wrap(~type)
+```
+
 
 The suicide rates for blacks and whites are correlated. The ratio of white to black suicides is approximately X:1.
 
@@ -608,3 +690,5 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(crude.suicide.black, c
   theme_bw()
 
 ```
+
+###References
