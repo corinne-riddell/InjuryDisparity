@@ -29,6 +29,26 @@ library(tidyverse)
 library(ggrepel)
 ```
 
+```{r gun_ownership_data, echo=F, warning=F, message=F}
+gun.house.prev <- c(52.2, 59.8, 32.3, 58.8, 20.1, 34.6, 18.1, 26.3, 25.2,
+                    40.3, 10.2, 55.7, 20.7, 38.5, 45.7, 42.8, 47.7, 45.0,
+                    40.3, 21.7, 11.5, 40.8, 41.2, 54.6, 44.2, 62.6, 45.4,
+                    34.0, 31.0, 11.4, 39.7, 18.5, 39.4, 56.2, 34.0, 46.5,
+                    39.8, 35.1, 12.4, 43.3, 59.9, 46.6, 37.1, 44.8, 43.8,
+                    37.5, 34.0, 58.5, 43.0, 65.5)
+
+gun.data <- data.frame("ST" = state.abb, "gun.house.prev" = gun.house.prev)
+
+ggplot(gun.data, aes(gun.house.prev)) + geom_histogram(bins = 20, col = "white") 
+
+ggplot(gun.data, aes(gun.house.prev)) + geom_density()
+
+quantile(gun.data$gun.house.prev, c(0.33, 0.66))
+
+gun.data <- gun.data %>% arrange(gun.house.prev) %>% mutate(gun.house.prev.category = cut(gun.house.prev, breaks = c(0, 20, 35, 44.9, 66), labels = c("10.2%-19.9%", "20.0%-34.9%", "35.0%-44.9%", "45.0%-65.5%")))
+```
+
+
 ```{r load_data_age_std_males, echo=F, warning=F, message=F}
 #homicide
 NHWM_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
@@ -244,6 +264,10 @@ Males_AllAges_0814$gun.level[Males_AllAges_0814$ST %in% c("LA", "UT", "OK", "IA"
 Males_AllAges_0814$gun.level[Males_AllAges_0814$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
 
 Males_AllAges_0814$gun.level <- factor(Males_AllAges_0814$gun.level, levels = c("Low", "Middle", "High"))
+
+dim(Males_AllAges_0814)
+Males_AllAges_0814 <- merge(Males_AllAges_0814, gun.data, by = "ST")
+dim(Males_AllAges_0814)
 ```
 
 ```{r add_variables_females, echo=F}
@@ -257,6 +281,10 @@ Females_AllAges_0814$gun.level[Females_AllAges_0814$ST %in% c("LA", "UT", "OK", 
 Females_AllAges_0814$gun.level[Females_AllAges_0814$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
 
 Females_AllAges_0814$gun.level <- factor(Females_AllAges_0814$gun.level, levels = c("Low", "Middle", "High"))
+
+dim(Females_AllAges_0814)
+Females_AllAges_0814 <- merge(Females_AllAges_0814, gun.data, by = "ST")
+dim(Females_AllAges_0814)
 ```
 **Introduction**
 
@@ -322,7 +350,7 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
         strip.background = element_rect(fill="white"), 
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 80), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
+  scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
   geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.homicide)==F),
             aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide))),
             size = 3, col = "navy") +
@@ -367,7 +395,7 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
         strip.background = element_rect(fill="white"), 
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 80), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
+  scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
   geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.suicide)==F), 
             aes(x = adjusted.suicide.white + 8, label = paste0("+", round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
   facet_wrap(~type)
@@ -388,14 +416,18 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.white
   theme_bw() +
   scale_size_area(breaks = c(100000, 500000, 1500000, 3000000, 7000000), max_size = 15, guide = F) +
   guides(fill = guide_legend(title = "Gun ownership")) 
-```
 
-fyi, correlation coefficients, stratified by firearms usage
-
-```{r corr_coeff_white, echo=F, warning=F}
-Males_AllAges_0814 %>% 
-  group_by(type) %>% 
-  summarise(cor.hom.suicide = cor(adjusted.suicide.white, adjusted.homicide.white, use = "complete.obs"))
+library(viridis)
+ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
+  geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
+  geom_text_repel(aes(label = ST), alpha = 0.8, size = 3) +
+  scale_fill_viridis(discrete = T, direction = -1) +
+  ylab("White Homicide Rate\n(per 100,000)") +
+  xlab("White Suicide Rate (per 100,000)") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_size_area(breaks = c(100000, 500000, 1500000, 3000000, 7000000), max_size = 15, guide = F) +
+  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5)))
 ```
 
 The suicide and homicide rates for blacks, on the other hand, are not associated (**Figure 4**). While lower gun ownership is associated with lower rates of suicide for black males, the relationship between ownership and homicide is much less clear. In particular, firearm homicides among states with a middle amount of gun ownership vary widely.
@@ -413,7 +445,36 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.black
   theme_bw() +
   scale_size_area(breaks = c(16600, 100000, 500000, 1400000), max_size = 15, guide = F) +
   guides(fill = guide_legend(title = "Gun ownership"))
+
+ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.black, adjusted.homicide.black)) + 
+  geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
+  geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) +
+  scale_fill_viridis(discrete = T, direction = -1) +
+  ylab("Black Homicide Rate\n(per 100,000)") +
+  xlab("Black Suicide Rate (per 100,000)") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_size_area(breaks = c(16600, 100000, 500000, 1400000), max_size = 15, guide = F) +
+  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5))) 
+    
+
+# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = adj.RD.homicide)) +
+#          geom_point() +
+#   geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
+# 
+# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = adj.RD.suicide)) +
+#          geom_point() +
+#   geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) +
+#   geom_smooth()
+# 
+# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = Population.white)) +
+#          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
+# 
+# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = Population.black)) +
+#          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
 ```
+
+
 
 fyi, correlation coefficients, stratified by firearms usage:
 
