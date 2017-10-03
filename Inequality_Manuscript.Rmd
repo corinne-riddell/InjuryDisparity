@@ -328,7 +328,7 @@ Non-firearm homicides occur relatively rarely, and maintain the general pattern 
 
 ##### PAGE BREAK
 
-**Figure 1: Difference in age-standardized homicide fatalities rates for males by state, firearm involvement, and race, 2008-2014**
+**Figure 1: Difference in age-standardized homicide fatalities rates for males by state, firearms, and race, 2008-2014**
 
 ```{r figure1, fig.width=5, fig.height=7, echo = F, warning=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
@@ -375,7 +375,7 @@ In contrast to homicide, suicide fatality rates are higher among white than blac
 
 ##### PAGE BREAK
 
-**Figure 2: Difference in suicide fatalities rates for males by state, firearm involvement, and race, 2008-2014**
+**Figure 2: Difference in suicide fatalities rates for males by state, firearms, and race, 2008-2014**
 
 ```{r figure2, fig.width=5, fig.height=7, echo = F, warning=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
@@ -472,16 +472,6 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.black
 # 
 # ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = Population.black)) +
 #          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
-```
-
-
-
-fyi, correlation coefficients, stratified by firearms usage:
-
-```{r, correlation_coeff_black, echo=F}
-Males_AllAges_0814 %>% 
-  group_by(type) %>% 
-  summarise(cor.hom.suicide = cor(adjusted.suicide.black, adjusted.homicide.black, use = "complete.obs"))
 ```
 
 **Discussion**
@@ -599,10 +589,6 @@ ggplot(Males_AllAges_0814, aes(adjusted.homicide.white, adjusted.homicide.black)
   ylab("Homicide rate for blacks") +
   xlab("Homicide rate for whites") +
   coord_equal(ylim = c(5, 70)) + theme_bw()
-
-Males_AllAges_0814 %>% 
-  group_by(type) %>% 
-  summarise(cor.homicide = cor(adjusted.homicide.black, adjusted.homicide.white, use = "complete.obs"))
 
 ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.homicide.white, adjusted.homicide.black)) + 
   geom_label(aes(label = ST, col = gun.level), size = 2.5, alpha = 0.5) +
