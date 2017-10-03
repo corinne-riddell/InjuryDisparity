@@ -1,7 +1,5 @@
 ---
 title: "Inequalities in violent death among men, by state, race, and firearms use"
-author: "Corinne Riddell"
-date: "8/30/2017"
 output:
   word_document:
     reference_docx: reference.docx
@@ -21,6 +19,28 @@ CAR, SH, and JK: Department of Epidemiology, Biostatistics & Occupational Health
 MC: Violence Prevention Research Program, Department of Emergency Medicine, University of California, Davis.
 
 Address correspondence to: Corinne Riddell, PhD, Department of Epidemiology, Biostatistics & Occupational Health, McGill University, 1020 Pine Avenue West, Room 27, Montreal, QC H3A 1A2, Canada. Email: <corinne.riddell@mail.mcgill.ca>. Phone: +1-438-863-0402
+
+##### PAGE BREAK
+
+**Abstract**
+
+**Importance:** It is unknown whether and how much the difference in excess deaths due to homicide among black men and suicide among white men varies by US state. Such knowledge could inform social policy aimed towards reducing social disparities in health.
+
+**Objective:** (i) Estimate the absolute inequality between non-Hispanic black and white men and boys in firearm- and non-firearm-related homicide and suicide across US states; (ii) Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men and boys.
+
+**Design:** Cross-sectional study.
+
+**Setting:** 50 states and the District of Columbia, 2008 to 2014.
+
+**Participants:** Non-Hispanic black and non-Hispanic white males, all ages.
+
+**Exposure:** State gun prevalence (%)
+
+**Main Outcomes and Measures:** Risk difference in firearm- and nonfirearm-related homicide and suicide between black men and white men.
+
+**Results:**
+
+**Conclusions and Relevance:**
 
 ##### PAGE BREAK
 
@@ -360,7 +380,7 @@ While these racial inequalities in violent deaths are well-established for the U
 
 Across the US, states with the highest levels of household gun ownership have higher rates of firearm-related suicide and homicide [@webster_book_table]. Ecologic studies have estimated positive associations between rates of gun ownership and firearm-related homicide and suicide rates, while case-control studies how found positive associations between having a gun in the home and an individual’s risk of homicide occurring at home, and with the overall risk of suicide [References]. If the dynamics of where homicides or suicides occur (at home vs. outside of the home) vary by race, then the relationship between gun prevalence and firearm fatalities may be differential by race. This information is currently unknown but is important to inform whether policies aimed at reducing gun prevalence may have differential effects among blacks and whites. 
 
-In this study, we aimed to: (1) Estimate the absolute inequality between non-Hispanic black and white men and boys in firearm- and non-firearm-related homicide and suicide across US states; (2) Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men and boys
+In this study, we aimed to: (1) Estimate the absolute inequality between non-Hispanic black and white men and boys in firearm- and non-firearm-related homicide and suicide across US states; (2) Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men and boys.
 
 **Methods**
 
@@ -384,9 +404,35 @@ white.pop.dc <- Males_AllAges_0814 %>% filter(ST == "DC" & type == "Firearm") %>
 stats3 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.homicide.black, na.rm = T)), max = round(max(adjusted.homicide.black, na.rm = T)))
 ```
 
-**Figure 1** displays the heightened rates of homicide fatality among black males compared to white males, according to state and the use of firearms. The black-white differences in homicide fatality rates for men vary strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and are driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. White male rates, on the other hand, showed relatively little variation, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also have have the largest difference in rates between blacks and whites, signaling settings that are most dangerous for blacks but relatively safer for whites. The District of Columbia also has a high rate of firearm homicide for blacks, but its rate for white men was supressed which implies a rate <= `r round((10/white.pop.dc)*100000, 1)` per 100,000 (albeit unstable), implying that it is more dangerous for blacks than for whites.
+**Figure 1** displays the heightened rates of homicide fatality among black males compared to white males, according to state and the use of firearms. The black-white difference in homicide fatality rates for men varies strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and are driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. Homicide rates for white male, showed relatively little variation, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also have have the largest difference in rates between blacks and whites, signaling settings that are most dangerous for blacks but relatively safer for whites. The District of Columbia also has a high rate of firearm homicide for blacks, but its rate for white men was supressed. Given its supplied cumulative population denominator of `r white.pop.dc` white men observed over 2008 to 2014, this implies a rate <= `r round((10/white.pop.dc)*100000, 1)` per 100,000, implying that DC is also relatively dangerous for black men, but not for white men.
 
-Non-firearm homicides occur relatively rarely, and maintain the general pattern of heightened rates among black men compared to white men. While blacks experience annual rates that vary between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]`. Across the board, firearm homicide rates are higher than non-firearm rates for blacks, and in some states homicide fatalities by firearms are eight times more frequent than any other mechanism.
+Georgia, New York, Florida, Texas, and California are the states with the largest black populations. Among them, Texas exhibited the smallest black-white difference in firearm-related homicide (13 excess deaths to black men per 100,000), which was also substantially lower than the differences estimated for neighboring states like Louisiana (+37/100,000), Oklahoma (+29/100,000), and Arkansas (+29/100,000). Georgia (+16/100,000) and Florida (+22/100,000) had differences close to nearby South and North Carolina (+19 and +17 per 100,000, respectively), while having lower rates than Alabama (+27/100,000) and Tennessee (+28/100,000). New York's difference (+18/100,000) was similar to that estimated for Massachusettes (+17/100,000) and Connecticut (+22/100,000), but was substantially lower than the rates neighboring in New Jersey (+30/100,000) and Pennsylvania (+41/100,000). California's exhibited the largest black-white difference in firearm-related homicide among the set of states with the highest black populations (+30/100,000), which was larger than the rates estimates for contiguous states like Nevada (+17/100,000) and Oregon (+10/100,000), although other Western states have very small black populations.
+
+Non-firearm homicides occur relatively rarely, and maintain the general pattern of heightened rates among black men compared to white men. While blacks experience annual rates that vary between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]` per 100,000. Across the US, firearm homicide rates are higher than non-firearm rates for black men, and are more than 5.3 times as high in all states in the East North Central (Wisconsin, Illinois, Indiana, Ohio, and Michigan), Missouri, Louisiana, Delaware, and Nebraska.
+
+```{r results_statistics_suicide, echo=F}
+stats4 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adj.RD.suicide, na.rm = T)),
+                                                    max = round(max(adj.RD.suicide, na.rm = T)))
+
+stats5 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
+                                                    max = round(max(adjusted.suicide.white, na.rm = T)))
+
+stats6 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.black, na.rm = T)),
+                                                    max = round(max(adjusted.suicide.black, na.rm = T)))
+
+stats7 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
+                                                    max = round(max(adjusted.suicide.white, na.rm = T)))
+```
+
+In contrast to homicide, suicide fatality rates are higher among white men compared to black men, independent of firearms usage, with the exception of firearm-related suicide in DC (**Figure 2**). The white-black difference in suicides involving a firearm varied from `r -(stats4$max[1])` in the District of Columbia to `r -(stats4$min[1])` per 100,000 per year in Missouri, although differences could not be estimated for 12 states with 10 or fewer firearm-related suicides among blacks. The annual rate of suicides involving firearms varies more markedly for white men than for black men, between `r stats5$min[1]` (DC) and `r stats5$max[1]` (Wyoming) per 100,000 compared to a range of `r stats6$min[1]` (Massachusetts) to `r stats6$max[1]` (New Mexico) per 100,000 among black men. 
+
+Seven of the ten states with the largest white-black firearm differences in suicide are located in the South (Mississippi, Arkansas, West Virginia, Alabama, Texas, South Carollina, and Louisiana), while the remaining three are in the West (Nevada, Arizona, and Colorado). Along with DC, the mid-Atlantic states of Massachusetts, New Jersey, Connecticut, and New York rounded out the states with the smallest white-black differences in firearm-related suicide. 
+
+The rates of black- and white- non-firearm suicides and the difference between them vary substantially less than those involving firearms. For white men, between `r stats7$min[2]` and `r stats7$max[2]` per 100,000 non-firearm suicides are committed each year on average across the states, compared to  `r stats6$min[2]` and `r stats6$max[2]` per 100,000 non-firearm suicides among blacks.
+
+The five states with jointly low rates of firearm-related homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) have the lowest levels of gun prevalence (**Figure 3**). Furthermore, many of the states with the highest joint violence rates have the highest rates of gun prevalence, while many states located in the middle of the graph have mid- gun prevalence levels. Notably, several states with gun prevalence exceeding 45% have relatively low rates of firearm-homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. 
+
+Among black men, states with the lowest prevalence of guns had the lowest rates of firearm-related suicide, and below-average rates of homicide (**Figure 4**). States with the highest joint rates of violence (i.e., Mississippi, Missouri, Oklahoma) had heightened rates of gun prevalence, although several Southern states with relatively high gun prevalence had relatively low rates of firearm-related homicide.  
 
 ##### PAGE BREAK
 
@@ -419,22 +465,6 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
   facet_wrap( ~ type)  
 ```
 
-```{r results_statistics_suicide, echo=F}
-stats4 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adj.RD.suicide, na.rm = T)),
-                                                    max = round(max(adj.RD.suicide, na.rm = T)))
-
-stats5 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
-                                                    max = round(max(adjusted.suicide.white, na.rm = T)))
-
-stats6 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.black, na.rm = T)),
-                                                    max = round(max(adjusted.suicide.black, na.rm = T)))
-
-stats7 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
-                                                    max = round(max(adjusted.suicide.white, na.rm = T)))
-```
-
-In contrast to homicide, suicide fatality rates are higher among white than black men, independent of firearms usage, with one exception; In DC, firearm suicides are slightly higher among black men compared to white men (**Figure 2**). The black-white difference in suicides involving a firearm varied from `r stats4$max[1]` in the District of Columbia to `r stats4$min[1]` per 100,000 per year in Missouri. The annual rate of suicides involving firearms varies more markedly for white than for black men, between `r stats5$min[1]` and `r stats5$max[1]` per 100,000 compared to a range of `r stats6$min[1]` to `r stats6$max[1]` seen among blacks. The rates of black- and white- non-firearm suicides and the difference between them vary substantially less than those involving firearms. For white men, between `r stats7$min[2]` and `r stats7$max[2]` per 100,000 non-firearm suicides are committed each year on average across the states, compared to  `r stats6$min[2]` and `r stats6$max[2]`per 100,000 non-firearm suicides among blacks. 
-
 ##### PAGE BREAK
 
 **Figure 2: Difference in suicide fatalities rates for males by state, firearms, and race, 2008-2014**
@@ -463,8 +493,6 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
   facet_wrap(~type)
 ```
 
-The five states with jointly low rates of firearm-related homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) have the lowest levels of gun prevalence (Figure 3). Furthermore, many of the states with the highest joint violence rates have the highest rates of gun prevalence, while many states located in the middle of the graph have mid- gun prevalence levels. Notably, several states with gun prevalence exceeding 45% have relatively low rates of firearm-homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. 
-
 ##### PAGE BREAK
 
 **Figure 3: The relationship between the rate of homicide and suicides among whites males by state, 2008-2014**
@@ -490,8 +518,6 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.
 #   scale_size_area(breaks = c(100000, 500000, 1500000, 3000000, 7000000), max_size = 15, guide = F) +
 #   guides(fill = guide_legend(title = "Gun ownership")) 
 ```
-
-Among black men, states with the lowest prevalence of guns had the lowest rates of firearm-related suicide, and below-average rates of homicide. States with the highest joint rates of violence (i.e., Mississippi, Missouri, Oklahoma) had heightened rates of gun prevalence, although several Southern states with relatively high gun prevalence had relatively low rates of firearm-related homicide.  
 
 ##### PAGE BREAK
 
