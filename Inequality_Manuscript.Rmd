@@ -198,9 +198,9 @@ Females_AllAges_0814 <- Females_AllAges_0814 %>%
 levels.firearm.homicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
 
-Males_AllAges_0814 %>% 
-  filter(is.na(adjusted.homicide.black) == T & type == "Firearm") %>% 
-  select(ST, adjusted.homicide.white)
+# Males_AllAges_0814 %>% 
+#   filter(is.na(adjusted.homicide.black) == T & type == "Firearm") %>% 
+#   select(ST, adjusted.homicide.white)
 
 Males_AllAges_0814$ST.order.RD.homicide <- factor(Males_AllAges_0814$ST, 
                                                   levels = c("HI", "SD", "NH", "ND", "VT", "ID", "ME", "WY", "MT",
@@ -209,9 +209,9 @@ Males_AllAges_0814$ST.order.RD.homicide <- factor(Males_AllAges_0814$ST,
 levels.firearm.suicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.suicide = reorder(ST, -adj.RD.suicide))
 
-Males_AllAges_0814 %>% 
-  filter(is.na(adjusted.suicide.black) == T & type == "Firearm") %>% 
-  select(ST, adjusted.suicide.white)
+# Males_AllAges_0814 %>% 
+#   filter(is.na(adjusted.suicide.black) == T & type == "Firearm") %>% 
+#   select(ST, adjusted.suicide.white)
 
 Males_AllAges_0814$ST.order.RD.suicide <- factor(Males_AllAges_0814$ST, 
                                                   levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT", "ID", "MT", "WY",
@@ -224,9 +224,9 @@ Males_AllAges_0814$ST.order.RD.suicide <- factor(Males_AllAges_0814$ST,
 levels.firearm.homicide <- Females_AllAges_0814 %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
 
-Females_AllAges_0814 %>% 
-  filter(is.na(adjusted.homicide.black) == T & type == "Firearm") %>% 
-  select(ST, adjusted.homicide.white)
+# Females_AllAges_0814 %>% 
+#   filter(is.na(adjusted.homicide.black) == T & type == "Firearm") %>% 
+#   select(ST, adjusted.homicide.white)
 
 Females_AllAges_0814$ST.order.RD.homicide <- factor(Females_AllAges_0814$ST, 
                                                   levels = levels(levels.firearm.homicide$ST.order.RD.homicide))
@@ -238,9 +238,9 @@ Females_AllAges_0814$ST.order.RD.homicide <- factor(Females_AllAges_0814$ST,
 levels.firearm.suicide <- Females_AllAges_0814 %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.suicide = reorder(ST, -adj.RD.suicide))
 
-Females_AllAges_0814 %>% 
-  filter(is.na(adjusted.suicide.black) == T & type == "Firearm") %>% 
-  select(ST, adjusted.suicide.white)
+# Females_AllAges_0814 %>% 
+#   filter(is.na(adjusted.suicide.black) == T & type == "Firearm") %>% 
+#   select(ST, adjusted.suicide.white)
 
 # Females_AllAges_0814$ST.order.RD.suicide <- factor(Females_AllAges_0814$ST, 
 #                                                   levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT", "ID", "MT", "WY",
@@ -494,11 +494,10 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.black
 *Strengths*
 - The first exposition of racial inequalities in firearm violence by state. 
 
-**Conclusions**
-
-**References**
+**Public Health Implications**
 
 
+#####PAGE BREAK
 
 **Other graphs, fyi**
 
@@ -566,7 +565,7 @@ ggplot(Males_AllAges_0814, aes(adjusted.suicide.white, adjusted.suicide.black)) 
   guides(color = guide_legend(title = " ")) +
   ylab("Suicide rate for blacks") +
   xlab("Suicide rate for whites") +
-  coord_equal(xlim = c(5, 45)) + theme_bw()
+  theme_bw()
 
 Males_AllAges_0814 %>% 
   group_by(type) %>% 
@@ -577,7 +576,7 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.white
   guides(color = guide_legend(title = " ")) +
   ylab("Suicide rate for blacks") +
   xlab("Suicide rate for whites") +
-  coord_equal(xlim = c(5, 45)) + theme_bw()
+  theme_bw()
 
 ```
 
@@ -588,7 +587,7 @@ ggplot(Males_AllAges_0814, aes(adjusted.homicide.white, adjusted.homicide.black)
   geom_text(aes(label = ST, col = type), size = 2.5) +
   ylab("Homicide rate for blacks") +
   xlab("Homicide rate for whites") +
-  coord_equal(ylim = c(5, 70)) + theme_bw()
+  theme_bw()
 
 ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.homicide.white, adjusted.homicide.black)) + 
   geom_label(aes(label = ST, col = gun.level), size = 2.5, alpha = 0.5) +
@@ -737,5 +736,7 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(crude.suicide.black, c
   theme_bw()
 
 ```
+
+#####PAGE BREAK
 
 ###References
