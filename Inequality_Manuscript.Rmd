@@ -22,7 +22,19 @@ Address correspondence to: Corinne Riddell, PhD, Department of Epidemiology, Bio
 
 ##### PAGE BREAK
 
-**Abstract**
+#Key Points
+
+(75 to 100 words or less)
+
+**Question:** How much do the inequalities in homicide and suicide rates between black and white men vary by US state and firearms use?
+
+**Finding:** There was substantial variation in the difference in rates of firearm-related homicide and suicide between blacks and whites. Black men experienced 
+between 5 and 51 additional homicide per 100,000, while white men experienced between -2 and 16 additional suicides per 100,000 men, across US states.
+
+**Meaning:** Policies aimed at reducing inequalities in violence, and violence overall, should be targeted towards states exhibiting inequalities in deaths due to violence. 
+
+##### PAGE BREAK
+#Abstract
 
 **Importance:** It is unknown whether and how much the difference in excess deaths due to homicide among black men and suicide among white men varies by US state. Such knowledge could inform social policy aimed towards reducing social disparities in health.
 
@@ -309,7 +321,7 @@ Females_AllAges_0814 <- merge(Females_AllAges_0814, gun.data, by = "ST", all.x =
 #dim(Females_AllAges_0814)
 ```
 
-**Introduction**
+#Introduction
 
 ```{r WISQARS-data-intro, echo=F}
 #source: WISQARS fatal injury mapping tool
@@ -382,7 +394,7 @@ Across the US, states with the highest levels of household gun ownership have hi
 
 In this study, we aimed to: (1) Estimate the absolute inequality between non-Hispanic black and white men and boys in firearm- and non-firearm-related homicide and suicide across US states; (2) Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men and boys.
 
-**Methods**
+#Methods
 
 We used the Center for Disease Control and Prevention’s Web-based Injury Statistics Query and Reporting System (WISQARS) Fatal Injury Mapping tool to abstract the age-adjusted number of firearm fatalities for males in every state during 2008 to 2014 for non-Hispanic whites and non-Hispanic blacks, by intent (homicide or suicide), and mechanism (firearms or non-firearms). The data was suppressed by WISQARS for race-state strata with 10 or fewer actual deaths between 2008 and 2010, and could not be used in these analyses. We computed the average annual fatality rate according to race, intent, and firearms usage by dividing the number of fatalities by the total population estimate (i.e., the summation of population estimates over 2008 to 2014) and we calculated the absolute inequality in estimates between black and white males. For homicide, we subtract the fatality rate of white males from that of black males, and for suicide these rates are flipped, such that the estimated absolute risk differences are positive and interpreted as the number of additional deaths to black (white) men due to homicide (suicide) associated with the heightened fatality rate experienced by black (white) men. We did not calculate confidence intervals because there was no sampling, and thus no sampling error. To reflect varying population sizes among states and by race, we size the data markers according to race-specific average annualized population size. 
 
@@ -392,7 +404,7 @@ We then visually assessed the relationships between state gun prevalence, firear
 
 The analysis was performed in R version 3.3.2,[@r_language] with all code available on Github (link: https://github.com/corinne-riddell/InjuryDisparity).
 
-**Results**
+#Results
 
 ```{r results_statistics, echo=F}
 stats <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adj.RD.homicide, na.rm = T)), max = round(max(adj.RD.homicide, na.rm = T)))
@@ -430,13 +442,13 @@ Seven of the ten states with the largest white-black firearm differences in suic
 
 The rates of black- and white- non-firearm suicides and the difference between them varied substantially less than those involving firearms. For white men, between `r stats7$min[2]` per 100,000 in Alaska and `r stats7$max[2]` per 100,000 in Hawaii non-firearm suicides were committed each year on average across the states, compared to `r stats6$min[2]` per 100,000 in Alabama and `r stats6$max[2]` per 100,000 in Utah among black men.
 
-The five states with jointly low rates of firearm-related homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) had the lowest category of gun prevalence (**Figure 3**). Furthermore, many of the states with the highest joint violence rates belong to the highest category of gun prevalence, while most states located in the middle of the graph belonged to the middle category of gun prevalence. Notably, several states belonging to the highest gun prevalence category had relatively low rates of firearm-related homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. The strong linear relationship between firearm-related homicide and suicide among white men suggests that the state characteristics that generate variation in homicide and suicide are similar for white men.
+The five states with jointly low rates of firearm-related homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) had the lowest category of gun prevalence (**Figure 3**). Furthermore, many of the states with the highest joint violence rates belong to the highest category of gun prevalence, while most states located in the middle of the graph belonged to the middle category of gun prevalence. Notably, several states belonging to the highest gun prevalence category had relatively low rates of firearm-related homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. The strong linear relationship between firearm-related homicide and suicide among white men suggests that the characteristics that generate variation in homicide and suicide were similar for white men.
 
-Among black men, states with the lowest prevalence of guns had the lowest rates of firearm-related suicide, and below-average rates of firearm-related homicide (**Figure 4**). States with the highest joint rates of violence (i.e., Mississippi, Missouri, Oklahoma) had heightened rates of gun prevalence, although several Southern states with relatively high gun prevalence had relatively low rates of firearm-related homicide. The non-existent relationship between firearm-related homicide and suicide among black men implies that the state characteristics that generated variation in homicide among black men are very different than the characteristics that generated variation in firearm suicide.
+Among black men, states with the lowest prevalence of guns had the lowest rates of firearm-related suicide, and below-average rates of firearm-related homicide (**Figure 4**). States with the highest joint rates of violence (i.e., Mississippi, Missouri, Oklahoma) had heightened rates of gun prevalence, although several Southern states with relatively high gun prevalence had relatively low rates of firearm-related homicide. The non-existent relationship between firearm-related homicide and suicide among black men implies that the set of characteristics that generated variation in firearm-related homicide among black men were different than the characteristics that generated variation in firearm-related suicide.
 
 ##### PAGE BREAK
 
-**Figure 1: Difference in age-standardized homicide fatalities rates for males by state, firearms, and race, 2008-2014**
+###Figure 1: Difference in age-standardized homicide fatalities rates for males by state, firearms, and race, 2008-2014
 
 ```{r figure1, fig.width=5, fig.height=6.5, echo = F, warning=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
@@ -458,16 +470,16 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
         strip.background = element_rect(fill="white"), 
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
-  geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.homicide)==F),
-            aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide))),
-            size = 3, col = "navy") +
-  facet_wrap( ~ type)  
+   geom_text(data = Males_AllAges_0814 %>% filter(is.na(adj.RD.homicide) == F),
+             aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide, 1))),
+             size = 3, col = "navy") +
+  facet_wrap( ~ type) +
+  scale_x_continuous(limits = c(0, 70)) 
 ```
 
 ##### PAGE BREAK
 
-**Figure 2: Difference in suicide fatalities rates for males by state, firearms, and race, 2008-2014**
+###Figure 2: Difference in suicide fatalities rates for males by state, firearms, and race, 2008-2014
 
 ```{r figure2, fig.width=5, fig.height=6.5, echo = F, warning=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
@@ -481,21 +493,22 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
   scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
   ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
   guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
-  theme(legend.position = c(0.85, 0.25), 
+  theme(legend.position = c(0.90, 0.27), 
         plot.title = element_text(size = 10),
         legend.background = element_rect(fill=alpha('white', 0.2)),
         strip.background = element_rect(fill="white"), 
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
+  scale_x_continuous(limits = c(0, 35)) +
+  #scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
   geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.suicide)==F), 
-            aes(x = adjusted.suicide.white + 8, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
+            aes(x = adjusted.suicide.white + 4, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
   facet_wrap(~type)
 ```
 
 ##### PAGE BREAK
 
-**Figure 3: The relationship between the rate of homicide and suicides among whites males by state, 2008-2014**
+###Figure 3: The relationship between the rate of homicide and suicides among whites males by state, 2008-2014
 
 ```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
@@ -521,7 +534,7 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.
 
 ##### PAGE BREAK
 
-**Figure 4: The relationship between the rate of homicide and suicides among black males by state, 2008-2014**
+###Figure 4: The relationship between the rate of homicide and suicides among black males by state, 2008-2014
 
 ```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.black, y = adjusted.homicide.black)) + 
@@ -560,7 +573,8 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
 #          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
 ```
 
-**Discussion**
+#Discussion
+
 
 - Homicide committed by firearm exhibits striking variation by state among blacks, and suicide exhibits variation (not quite so much) by firearm among whites. 
 
@@ -582,246 +596,6 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
 
 **Public Health Implications**
 
-
-#####PAGE BREAK
-
-**Other graphs, fyi**
-
-**Figure 1b: Difference in age-standardized homicide fatalities rates for females by state, firearm involvement, and race, 2008-2014**
-
-```{r figure1b, fig.width=5, fig.height=7, echo = F, warning=F}
-ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
-  geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
-                   y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
-               lwd = 2, col = "navy", alpha = 0.5) +
-  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  geom_point(aes(x = adjusted.homicide.black, col = "NH Black", size = average.pop.black)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1),
-  scale_color_manual(values = c("navy", "#fd8d3c")) +
-  scale_alpha_continuous(guide = F) +
-  scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
-  ylab("") +
-  xlab("Homicide mortality per 100k") + 
-  theme_bw() + 
-  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
-  theme(legend.position = c(0.8, 0.25), 
-        plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2)),
-        strip.background = element_rect(fill="white"), 
-        strip.text.x = element_text(size = 12),
-        strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 80), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
-  geom_text(data = subset(Females_AllAges_0814, is.na(adj.RD.homicide)==F),
-            aes(x = adjusted.homicide.black + 2, label = paste0("+", round(adj.RD.homicide))),
-            size = 3, col = "navy") +
-  facet_wrap( ~ type)  
-```
-
-**Figure 2b: Difference in suicide fatalities rates for females by state, firearm involvement, and race, 2008-2014**
-
-```{r figure2b, fig.width=5, fig.height=7, echo = F, warning=F}
-ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
-  geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
-                   y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
-               lwd = 2, col = "#fd8d3c", alpha = 0.5) +
-  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + #, alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  scale_color_manual(values = c("navy", "#fd8d3c")) +
-  scale_alpha_continuous(guide = F) +
-  scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
-  ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
-  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
-  theme(legend.position = c(0.8, 0.25), 
-        plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2)),
-        strip.background = element_rect(fill="white"), 
-        strip.text.x = element_text(size = 12),
-        strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 80), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
-  geom_text(data = subset(Females_AllAges_0814, is.na(adj.RD.suicide)==F), 
-            aes(x = adjusted.suicide.white + 2, label = paste0("+", round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
-  facet_wrap(~type)
-```
-
-
-The suicide rates for blacks and whites are correlated. The ratio of white to black suicides is approximately X:1.
-
-```{r, echo=F, warning=F}
-ggplot(Males_AllAges_0814, aes(adjusted.suicide.white, adjusted.suicide.black)) + 
-  geom_text(aes(label = ST, col = type), size = 2.5) +
-  guides(color = guide_legend(title = " ")) +
-  ylab("Suicide rate for blacks") +
-  xlab("Suicide rate for whites") +
-  theme_bw()
-
-Males_AllAges_0814 %>% 
-  group_by(type) %>% 
-  summarise(cor.suicide = cor(adjusted.suicide.black, adjusted.suicide.white, use = "complete.obs"))
-
-ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.white, adjusted.suicide.black)) + 
-  geom_label(aes(label = ST, col = gun.level), size = 2.5, alpha = 0.5) +
-  guides(color = guide_legend(title = " ")) +
-  ylab("Suicide rate for blacks") +
-  xlab("Suicide rate for whites") +
-  theme_bw()
-
-```
-
-The homicide rates for blacks and whites are not correlated at all and are wildly different in magnitude.
-
-```{r, echo=F, warning=F}
-ggplot(Males_AllAges_0814, aes(adjusted.homicide.white, adjusted.homicide.black)) + 
-  geom_text(aes(label = ST, col = type), size = 2.5) +
-  ylab("Homicide rate for blacks") +
-  xlab("Homicide rate for whites") +
-  theme_bw()
-
-ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.homicide.white, adjusted.homicide.black)) + 
-  geom_label(aes(label = ST, col = gun.level), size = 2.5, alpha = 0.5) +
-  ylab("Homicide rate for blacks") +
-  xlab("Homicide rate for whites") +
-  theme_bw()
-
-```
-
-```{r, echo=F, eval=F}
-NHBM_1214 <- read.csv("/Users/corinneriddell/Dropbox/Funding/WilliamTGrant/Data/NHBlackMales_byState_1214.csv", header = T)
-NHBM_1214 <- NHBM_1214 %>% 
-  rename(deaths.black = Deaths, pop.black = Population) %>% 
-  mutate(Race = "Non-Hispanic Black", crude.black = (deaths.black/pop.black)*100000) %>%
-  select(ST, deaths.black, pop.black, crude.black)
-
-NHWM_1214 <- read.csv("/Users/corinneriddell/Dropbox/Funding/WilliamTGrant/Data/NHWhiteMales_byState_1214.csv", header = T)
-NHWM_1214 <- NHWM_1214 %>% 
-  rename(deaths.white = Deaths, pop.white = Population) %>% 
-  mutate(Race = "Non-Hispanic White", crude.white = (deaths.white/pop.white)*100000) %>% 
-  select(ST, deaths.white, pop.white, crude.white)
-
-HM_1214 <- read.csv("/Users/corinneriddell/Dropbox/Funding/WilliamTGrant/Data/HispanicMales_byState_1214.csv", header = T)
-HM_1214 <- HM_1214 %>% 
-  rename(deaths.hispanic = Deaths, pop.hispanic = Population) %>% 
-  mutate(Race = "Hispanic", crude.hispanic = (deaths.hispanic/pop.hispanic)*100000) %>% 
-  select(ST, deaths.hispanic, pop.hispanic, crude.hispanic)
-
-dat.1214 <- merge(NHBM_1214, NHWM_1214, by = c("ST")) %>% mutate(BW.RD = crude.black - crude.white)
-dat.1214 <- merge(dat.1214, HM_1214, by = c("ST")) %>% mutate(HW.RD = crude.hispanic - crude.white)
-
-dat.1214 <- dat.1214 %>% mutate(ST.order.BW.RD = reorder(ST, BW.RD),
-                                ST.order.HW.RD = reorder(ST, HW.RD)) %>% arrange(BW.RD)
-```
-
-```{r, echo=F, eval=F}
-ggplot(subset(dat.1214, is.na(BW.RD) == F), aes(y = ST.order.BW.RD, x = crude.white)) + 
-  geom_segment(aes(x = crude.white, xend = crude.black, y = ST.order.BW.RD, yend = ST.order.BW.RD), lwd = 1.5, col = "grey") +
-  geom_point(aes(col = "White")) + geom_point(aes(x = crude.black, col = "Black")) + 
-  scale_color_manual(values = c("navy", "#feb24c")) +
-  ylab("") + xlab("Firearm mortality per 100k") + theme_bw() + 
-  guides(color = guide_legend(title = " ")) + 
-  ggtitle("Figure 1. Number of firearm fatalities, \nnon-Hispanic blacks vs. non-Hispanic whites, \n5 to 24 years old, 2012-2014") +
-  theme(legend.position = c(0.8, 0.13), plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2))) + 
-  labs(caption = "(Fig. created by Riddell. Data from WISQARS)") +
-  scale_x_continuous(limits = c(0, 90), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
-  geom_text(aes(x = crude.black + 8, label = paste0("+", round(BW.RD))
-                ), size = 3) 
-```
-
-```{r, echo=F, eval=F}
-ggplot(subset(dat.1214, is.na(HW.RD) == F), aes(y = ST.order.HW.RD, x = crude.white)) + 
-  geom_segment(aes(x = crude.white, xend = crude.hispanic, y = ST.order.HW.RD, yend = ST.order.HW.RD), lwd = 1.5, col = "grey") +
-  geom_point(aes(col = "White")) + geom_point(aes(x = crude.hispanic, col = "Hispanic")) + 
-  scale_color_manual(values = c("red", "#feb24c")) +
-  ylab("") + xlab("Firearm mortality per 100k") + theme_bw() + 
-  guides(color = guide_legend(title = " ")) + 
-  ggtitle("Figure 2. Number of firearm fatalities, \nHispanic vs. non-Hispanic whites, \n 5 to 24 years old, 2012-2014") +
-  theme(legend.position = c(0.8, 0.13), plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2))) + 
-  labs(caption = "(Fig. created by Riddell. Data from WISQARS)") +
-  scale_x_continuous(limits = c(0, 20), labels = seq(0, 20, 4), breaks = seq(0, 20, 4)) +
-  geom_text(data = subset(dat.1214, HW.RD>=0), aes(x = crude.hispanic + 1, label = paste0("+", round(HW.RD))
-                ), size = 3) +
-  geom_text(data = subset(dat.1214, HW.RD<0), aes(x = crude.hispanic - 1, label = round(HW.RD)
-                ), size = 3) 
-```
-
-```{r, echo=F, eval=F}
-dat.1214$ST.order.BW.RD <- forcats::fct_relevel(f = dat.1214$ST.order.BW.RD,
-                                                "HI", "NH", "VT", "ME", "SD", "MT", "ID", "ND", "WY", "AK", "DE", "DC",
-                                                "UT", "OR", "WA", "AZ", "CO", "IA", "MN", "TX", "VA",
-                                                "SC", "GA", "NV", "WV", "NC", "MS", "MA",
-                                                "NY", "KY", "KS", "AR", "CT", "NM", "MD",
-                                                "FL", "AL", "OK", "NE", "WI", "TN", "CA",
-                                                "LA", "NJ", "OH", "MO", "MI", "PA", "IN",
-                                                "IL")
-
-ggplot(dat.1214, aes(y = ST.order.BW.RD, x = crude.white)) + 
-  geom_segment(aes(x = crude.white, xend = crude.black, y = ST.order.BW.RD, yend = ST.order.BW.RD), lwd = 2, col = "navy", alpha = 0.5) +
-  geom_segment(aes(x = crude.white, xend = crude.hispanic, y = ST.order.BW.RD, yend = ST.order.BW.RD), lwd = 1, col = "red", alpha = 0.5) +
-  geom_point(aes(col = "NH White")) + 
-  geom_point(aes(x = crude.black, col = "NH Black")) + 
-  geom_point(aes(x = crude.hispanic, col = "Hispanic")) +
-  scale_color_manual(values = c("red", "navy", "#feb24c")) +
-  ylab("") + xlab("Firearm mortality per 100k") + theme_bw() + 
-  guides(color = guide_legend(title = " ")) + 
-  ggtitle("Figure 1. Number of firearm fatalities to boys and men aged 5 to 24 years old, 2012-2014") +
-  theme(legend.position = c(0.8, 0.13), plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2))) + 
-  #labs(caption = "(Fig. created by Riddell. Data from WISQARS)") +
-  scale_x_continuous(limits = c(0, 90), labels = seq(0, 80, 20), breaks = seq(0, 80, 20)) +
-  geom_text(data = subset(dat.1214, is.na(BW.RD)==F), aes(x = crude.black + 8, label = paste0("+", round(BW.RD))
-                ), size = 3, col = "navy") +
-  geom_text(data = subset(dat.1214, is.na(HW.RD)==F & HW.RD>=0), aes(x = crude.hispanic + 3, label = paste0("+", round(HW.RD))
-                ), size = 3, col = "red") +
-  geom_text(data = subset(dat.1214, is.na(HW.RD)==F & HW.RD<0), aes(x = crude.hispanic - 3, label = round(HW.RD)
-                ), size = 3, col = "red") 
-```
-
-```{r Figure 3_OLD_versions, fig.width=9, fig.height=3, echo = F, warning=F, eval=F}
-ggplot(Males_AllAges_0814, aes(adjusted.suicide.white, adjusted.homicide.white)) + 
-  geom_text(aes(label = ST, col = type), size = 2.5) +
-  guides(color = guide_legend(title = " ")) + 
-  ylab("Age-standardized white homicide rate\n(per 100,000)") +
-  xlab("Age-standardized white suicide rate (per 100,000)") + 
-  coord_equal(xlim = c(5, 45)) + theme_bw()
-
-ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(crude.suicide.white, crude.homicide.white)) + 
-  geom_label(aes(label = ST, col = gun.level, size = average.pop.white), alpha = 0.5) +
-  guides(color = guide_legend(title = " ")) + 
-  ylab("White Homicide Rate\n(per 100,000)") +
-  xlab("White Suicide Rate (per 100,000)") + 
-  theme_bw() +
-  coord_equal(xlim = c(5, 45)) 
-
-ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(crude.suicide.white, crude.homicide.white)) + 
-  geom_label(aes(label = ST, col = gun.level, size = average.pop.white), alpha = 0.5) +
-  guides(color = guide_legend(title = " ")) + 
-  ylab("White Homicide Rate\n(per 100,000)") +
-  xlab("White Suicide Rate (per 100,000)") + 
-  theme_bw()
-```
-
-```{r figure4_OLD_versions, fig.height=3, fig.width=9, echo=F, warning=F, eval=F}
-ggplot(Males_AllAges_0814, aes(crude.suicide.black, crude.homicide.black)) + 
-  geom_text(aes(label = ST, col = type), size = 2.5) +
-  guides(color = guide_legend(title = " ")) + 
-  ylab("Black Homicide Rate (per 100,000)") +
-  xlab("Black Suicide Rate\n(per 100,000)") + 
-  coord_equal(ylim = c(5, 65)) + theme_bw()
-
-ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(crude.suicide.black, crude.homicide.black)) + 
-  geom_label(aes(label = ST, col = gun.level, size = average.pop.black), alpha = 0.5) +
-  guides(color = guide_legend(title = " ")) + 
-  ylab("Black Homicide Rate (per 100,000)") +
-  xlab("Black Suicide Rate\n(per 100,000)") + 
-  coord_equal(ylim = c(5, 65)) + theme_bw()
-
-ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(crude.suicide.black, crude.homicide.black)) + 
-  geom_label(aes(label = ST, col = gun.level, size = average.pop.black), alpha = 0.5) +
-  guides(color = guide_legend(title = " ")) + 
-  ylab("Black Homicide Rate (per 100,000)") +
-  xlab("Black Suicide Rate\n(per 100,000)") + 
-  theme_bw()
-
-```
 
 #####PAGE BREAK
 
