@@ -471,10 +471,37 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
    geom_text(data = Males_AllAges_0814 %>% filter(is.na(adj.RD.homicide) == F),
-             aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide, 1))),
+             aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide))),
              size = 3, col = "navy") +
   facet_wrap( ~ type) +
   scale_x_continuous(limits = c(0, 70)) 
+```
+
+```{r figure1-females, fig.width=5, fig.height=6.5, echo = F, warning=F, eval = F}
+ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
+  geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
+                   y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
+               lwd = 2, col = "navy", alpha = 0.5) +
+  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  geom_point(aes(x = adjusted.homicide.black, col = "NH Black", size = average.pop.black)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1),
+  scale_color_manual(values = c("navy", "#fd8d3c")) +
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
+  ylab("") +
+  xlab("Homicide mortality per 100k") + 
+  theme_bw() + 
+  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
+  theme(legend.position = c(0.8, 0.25), 
+        plot.title = element_text(size = 10),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12)) + 
+   geom_text(data = Females_AllAges_0814 %>% filter(is.na(adj.RD.homicide) == F),
+             aes(x = adjusted.homicide.black + 1, label = paste0("+", round(adj.RD.homicide))),
+             size = 3, col = "navy") +
+  facet_wrap( ~ type) +
+  scale_x_continuous(limits = c(0, 10)) 
 ```
 
 ##### PAGE BREAK
@@ -503,6 +530,30 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
   #scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
   geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.suicide)==F), 
             aes(x = adjusted.suicide.white + 4, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
+  facet_wrap(~type)
+```
+
+```{r figure2-females, fig.width=5, fig.height=6.5, echo = F, warning=F}
+ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
+  geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
+                   y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
+               lwd = 2, col = "#fd8d3c", alpha = 0.5) +
+  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + #, alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  scale_color_manual(values = c("navy", "#fd8d3c")) +
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(16600, 100000, 500000, 1500000, 3000000, 7000000)) +
+  ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
+  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
+  theme( plot.title = element_text(size = 10),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12)) + 
+  scale_x_continuous(limits = c(0, 7)) +
+  #scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
+  geom_text(data = subset(Females_AllAges_0814, is.na(adj.RD.suicide)==F), 
+            aes(x = adjusted.suicide.white + 1, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
   facet_wrap(~type)
 ```
 
@@ -575,6 +626,27 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
 
 #Discussion
 
+Using data from all 50 US states and DC, our study illustrates the striking variation in the inequality in firearm-related homicide, largely driven by massive differences among states in homicide rates for black men. Firearm-related suicide inequalities also varied across states, although to a lesser degree than for homicide, and was driven by variation in suicide rates for white men. States that were the most dangerous for black men in terms of their risk of homicide were very safe for white men, and included Missouri and the Midwestern states of Michigan, Wisconsin, Illinois, and Indiana. For firearm-related suicide, the states with the largest inequalities were from the South and West. The states with the lowest inequalities in firearm-related suicide had relatively low rates for black and white men alike, including the Northeastern states of New York, Connecticut, New Jersey, Massachusetts, and the District of Columbia. 
+
+For white men, there was a pronounced linear relationship between firearm-related homicide and suicide that suggests a shared set of factors affecting both outcomes. The positive association with state gun prevalence is also pronounced. This finding is aligned with the body of research linking gun prevalence or gun ownership to an individual's risk of suicide or homicide victimization (references). Interestingly, discordant states were only found in one direction; There were several states with relatively high rates of firearm-related suicide and relatively low rates of homicide among white men. This "extra" variation in suicide suggests additional characteristics affecting suicide risk in these states that are mostly rural, Western, and isolated. Recent literature has linked limited economic prospects, and rural isolation to suicide risk. Given that such states also tend to have high gun availability, residents may live in settings that combine high risk for suicidal ideation and attempts with easy access to high fatal firearms.
+
+The relationship between firearm-related homicide, suicide, and gun prevalence is markedly different for black men. There is no discernible relationship between firearm-related homicide and suicide, suggesting that the factors leading to firearm-related homicide among black men differ from those leading to firearm-related suicide. This may be due to an additional set of factors exclusively affecting either type homicide or suicide. Given the substantial variation in homicide among black men and considering the wide body of previous research, it is likely that homicide in the black community is associated with several  determinants of homicidal risk that white men do not experience to the same degree, and that do not influence suicidal risk. Such research has found that....
+
+-many Southern states have relatively low homicide rates for black men, while the midwest as mentioned was relatively dangerous, in terms of homicide.
+-why is this the case? What are the charactersitics and policies currently in place that make the midwest so unsafe for blacks but safe for whites? 
+
+-can't overlook the finding of low suicide for blacks and whites in the northeast, the states with the fewest guns. These are also states with restrictive gun policies, and likely other shared contexts leading to the lowests risks for suiccide in the country.
+
+-Hawaii and Alaska offer interesting case studies because they are physcially separated from the rest of the US, so not subject to gun trafficking from other US states. While these states are very different from the rest of the US in many ways, it is telling that nonfirearm-related suicide rates for white men were highest out of all states in Hawaii and one of the highest for black men, while being the states with the lowest gun prevalence in 2004 -- 10.2%. Conversely, Alaska had the fourth highest gun prevalence rate and one of the highest rates of firearm-related suicide among white men and second highest among white men. This seems to suggest that gun availability does affect mechanism chosen for suicide
+
+This study is subject to several limitations. We were limited to constrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more statistical power. We did not examine women because their risks of homicide and suicide are much lower than for men, and their data were suppressed for more than half of the states, especially for black women. Finally, these results are purely descriptive and make no claims regarding causal mechanisms. Our purpose was to describe how much inequalities in violence vary across the United States in order to provide a foundation for future research linking these differences to variations in the social, cultural, and environmental settings that black and white communities are based, including variations in firearm policy and access to firearms.
+
+###Conclusions and policy implications
+
+
+
+
+###Old
 
 - Homicide committed by firearm exhibits striking variation by state among blacks, and suicide exhibits variation (not quite so much) by firearm among whites. 
 
