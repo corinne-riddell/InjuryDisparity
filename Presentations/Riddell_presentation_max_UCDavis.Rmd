@@ -1,0 +1,320 @@
+---
+title: "Trends in the contribution of major causes of death to the black-white life expectancy gap"
+author: "Corinne Riddell, Post-doctoral Researcher, McGill University, Canada"
+date: "May 23, 2017"
+output: ioslides_presentation
+---
+
+<head>
+<style>
+.greentext {
+        color: green;
+}
+.redtext {
+        color: red;
+}
+</style>
+</head>
+
+```{r initialize, echo=FALSE, warning=F, message=F}
+library(plotly)
+library(viridis)
+library(scales)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(DT)
+library(splines)
+library(broom)
+library(tidyverse)
+
+library(png)
+library(jpeg)
+library(grid)
+library(gridExtra)
+library(knitr)
+```
+
+## Thank you
+
+```{r, echo=F}
+img2 <-  rasterGrob(as.raster(readPNG("./Presentations/images/s_harper2.png")), interpolate = FALSE)
+img3 <-  rasterGrob(as.raster(readJPEG("./Presentations/images/j_kaufman.jpg")), interpolate = FALSE)
+grid.arrange(img3,
+             img2,
+             ncol = 2)
+```
+
+Jay Kaufman and Sam Harper
+
+#Motivation
+
+Injuries have been, and continue to be, a large contributor to the difference in life expectancy for black and white American men *in some states* but not others.
+
+- include map of injury contribution to LE gap for men.
+
+<div class="notes">
+- discuss the midwest vs. the South, vs. CA and MA and NY. 
+- but this hides so much -- injuries is our most messy COD category -- needed to dig deeper into this
+- Our injury category collapses across many disparate causes of death. We wanted to dig deeper into these trends and understand more about how rates of injury mortality vary across US states.
+</div>
+
+----
+
+It is well known that guns feature differently into the lives of black and white Americans
+
+- White men are more likely to commit suicide than black men, with high rates at older ages.
+- Black men are more likely to be fatally assaulted than white men, with highest rates among X to Y year-olds.
+
+----
+
+We know less about whether and how much these racial inequalities in homicide and suicide vary across US states
+
+- Looking back: Large variation in inequalities may signal differences in social policy tied to the differences
+- Looking forward: States with high violence rates and/or large inequalities in violence may benefit from targeted interventions
+
+## The data
+
+```{r, echo = F, out.width = 750}
+include_graphics(path = "./conferences/images/WISQARS.png")
+```
+
+## The data
+
+- <b class = "greentext">40</b> "states": 50 states + DC
+- <b class = "greentext">45</b> years: 2008--2014 
+- <b class = "greentext">All</b> ages
+- <b class = "greentext">Males</b> ("Men", without loss of generality)
+- <b class = "greentext">2</b> races (Non-Hispanic black, non-hispanic white)
+- For each state: Homicide and suicide fatality rates and their racial inequalities, by firearms use
+
+## The analysis
+
++ Estimated smoothed mortality rates using a Bayesian time series model with Poisson likelihood
++ Used a truncated Poisson likelihood when number of deaths were between 1 and 9
++ 1,000 posterior samples. For each:
+    1. Create a life table for every strata
+    2. Calculate the <b style = "greentext">difference</b> in life expectancy between blacks and whites
+    3. Decompose the difference by age and cause of death
+    4. Calculate age-standardized mortality rates
++ Calculate the mean, 5^th^ and 95^th^ percentiles for all estimates
++ Compute national trend using random-effects meta regression
+
+## The output
+
++ Working paper being screened at bioRxiv
++ R Shiny App: https://corinne-riddell.shinyapps.io/black-white-life-expectancy/
+
+## The app
+
+```{r, echo = F, out.width = 800}
+include_graphics(path = "./conferences/images/app_ex1.gif")
+```
+
+## The app
+
+```{r, echo = F, out.width = 800}
+include_graphics(path = "./conferences/images/app_ex2.gif")
+```
+
+## The app
+
+```{r, echo = F, out.width = 800}
+include_graphics(path = "./conferences/images/app_ex3.gif")
+```
+
+## Male black-white life expectancy gap
+
+```{r, echo = F}
+    gg.p <- ggplot(data = subset(BlackWhite_results, sex == "Male"),
+                          aes(y = LE_wbgap_mean, x = year)) +
+    geom_hline(aes(yintercept = 0)) + geom_vline(aes(xintercept = 1969)) +
+    geom_ribbon(aes(ymin = LE_wbgap_lcl, ymax = LE_wbgap_ucl, fill = Census_Division)) +
+    #geom_line(aes(col = Census_Division)) + 
+    facet_wrap(~ stabbrs.map.order, ncol = 11, drop = F) +
+    theme_classic(base_size = 10) +
+    theme(axis.text.x = element_blank(),
+          strip.background=element_blank(),
+          axis.line=element_blank(),
+          axis.ticks=element_blank(),
+          legend.position = "none",
+          panel.background = element_rect(fill = "transparent", colour = NA), 
+          plot.background = element_rect(fill = "transparent", colour = NA),
+          legend.background = element_rect(fill = "transparent", colour = NA)) +
+    ylab("Life expectancy gap (years)") +
+    xlab(paste0("Year (1969-2013)")) 
+
+      interactive.p <- ggplotly(gg.p +     
+        geom_hline(aes(yintercept = 5), lwd = 0.5, col = "grey", alpha = 0.5) +
+        geom_hline(aes(yintercept = 10), lwd = 0.5, col = "grey", alpha = 0.5) +
+        geom_hline(aes(yintercept = 15), lwd = 0.5, col = "grey", alpha = 0.5))
+      
+      for(i in 1:length(interactive.p$x$data)){
+        if (interactive.p$x$data[[i]]$line$color %in% c("rgba(0,0,0,1)", "rgba(190,190,190,0.5)")) {
+          interactive.p$x$data[[i]]$hoverinfo <- "none"
+          interactive.p$x$data[[i]]$line$width <- 1
+        }
+        
+        interactive.p$x$data[[i]]$text <- gsub("Census_Division", "Census Division", interactive.p$x$data[[i]]$text)
+        interactive.p$x$data[[i]]$text <- gsub("LE_wbgap_mean", "Mean life expectancy gap", interactive.p$x$data[[i]]$text)
+        interactive.p$x$data[[i]]$text <- gsub("LE_wbgap_ucl", "Upper credible limit", interactive.p$x$data[[i]]$text)
+        interactive.p$x$data[[i]]$text <- gsub("LE_wbgap_lcl", "Lower credible limit", interactive.p$x$data[[i]]$text)
+      }
+      
+       interactive.p
+```
+
+## Female black-white life expectancy gap
+
+```{r, echo = F}
+    gg.p2 <- ggplot(data = subset(BlackWhite_results, sex == "Female"),
+                          aes(y = LE_wbgap_mean, x = year)) +
+    geom_hline(aes(yintercept = 0)) + geom_vline(aes(xintercept = 1969)) +
+    geom_ribbon(aes(ymin = LE_wbgap_lcl, ymax = LE_wbgap_ucl, fill = Census_Division)) +
+    #geom_line(aes(col = Census_Division)) + 
+    facet_wrap(~ stabbrs.map.order, ncol = 11, drop = F) +
+    theme_classic(base_size = 10) +
+    theme(axis.text.x = element_blank(),
+          strip.background=element_blank(),
+          axis.line=element_blank(),
+          axis.ticks=element_blank(),
+          legend.position = "none",
+          panel.background = element_rect(fill = "transparent", colour = NA), 
+          plot.background = element_rect(fill = "transparent", colour = NA),
+          legend.background = element_rect(fill = "transparent", colour = NA)) +
+    ylab("Life expectancy gap (years)") +
+    xlab(paste0("Year (1969-2013)")) 
+
+      interactive.p2 <- ggplotly(gg.p2 +     
+        geom_hline(aes(yintercept = -5), lwd = 0.5, col = "grey", alpha = 0.5) +
+        geom_hline(aes(yintercept = 5), lwd = 0.5, col = "grey", alpha = 0.5) +
+        geom_hline(aes(yintercept = 10), lwd = 0.5, col = "grey", alpha = 0.5))
+      
+      for(i in 1:length(interactive.p2$x$data)){
+        if (interactive.p2$x$data[[i]]$line$color %in% c("rgba(0,0,0,1)", "rgba(190,190,190,0.5)")) {
+          interactive.p2$x$data[[i]]$hoverinfo <- "none"
+          interactive.p2$x$data[[i]]$line$width <- 1
+        }
+        
+        interactive.p2$x$data[[i]]$text <- gsub("Census_Division", "Census Division", interactive.p$x$data[[i]]$text)
+        interactive.p2$x$data[[i]]$text <- gsub("LE_wbgap_mean", "Mean life expectancy gap", interactive.p$x$data[[i]]$text)
+        interactive.p2$x$data[[i]]$text <- gsub("LE_wbgap_ucl", "Upper credible limit", interactive.p$x$data[[i]]$text)
+        interactive.p2$x$data[[i]]$text <- gsub("LE_wbgap_lcl", "Lower credible limit", interactive.p$x$data[[i]]$text)
+      }
+      
+       interactive.p2
+```
+
+##National patterns in cause contributions to the gap
+
+```{r, echo = F}
+cod_decomp_results <- read.csv("/Users/corinneriddell/Documents/repos/BlackWhiteMortalityGap/Results2/cod_decomp_results.csv")
+cod_decomp_results$COD <- factor(cod_decomp_results$COD, levels(cod_decomp_results$COD)[c(3, 2, 4, 6, 5, 1)])
+
+cod_decomp_national <- cod_decomp_results %>% 
+  filter(state == "Alabama") %>%
+  mutate(national.trend = fitted.RE - RE.estimates) %>%
+  select(-state)
+
+gg.p3 <- ggplotly(ggplot(cod_decomp_national, aes(y = national.trend, x = year)) + 
+  geom_line(aes(col = sex)) + 
+  facet_wrap(~COD) + theme_minimal() +
+  xlab("Year") + ylab("National trend in cause of death contribution")) %>%
+  layout(margin(b = 50, l = 50)) 
+
+gg.p3
+```
+
+#Three examples
+
+##CVD in men
+```{r, echo = F, out.width = 675}
+include_graphics(path = "./conferences/images/CVD_men.png")
+```
+
+##Cancer in women
+```{r, echo = F, out.width = 675}
+include_graphics(path = "./conferences/images/Cancer_women.png")
+```
+
+##Injury in women
+```{r, echo = F, out.width = 675}
+include_graphics(path = "./conferences/images/Injury_women.png")
+```
+
+#A tale of two states
+
+##Tennessee
+```{r, echo = F, out.height = 600, out.width = 800}
+age_cod_results_female <- read.csv("./Results2/age_cod_results_female.csv")
+
+age_cod_results_male <- read.csv("./Results2/age_cod_results_male.csv")
+
+age_cod_results <- rbind(age_cod_results_female, age_cod_results_male)
+rm(age_cod_results_female, age_cod_results_male)
+
+age_cod_results$age <- forcats::fct_relevel(f = age_cod_results$age, "<1 year", "1-4 years", "5-9 years", "10-14 years", 
+                                            "15-19 years", "20-24 years", "25-29 years", "30-34 years", "35-39 years", 
+                                            "40-44 years", "45-49 years", "50-54 years", "55-59 years", "60-64 years", 
+                                            "65-69 years", "70-74 years", "75-79 years", "80-84 years", "85+ years")
+
+age_cod_results$COD <- factor(age_cod_results$COD, levels(age_cod_results$COD)[c(3, 2, 4, 6, 5, 1)])
+
+sub1 <- subset(age_cod_results, year %in% c(1969, 2013) & state == "Tennessee")
+ly1 <- ggplotly(
+  ggplot(data = sub1,
+         aes(x=age, y = age_COD_cont_yrs_mean, fill = COD)) +
+    geom_bar(stat = "identity") + coord_flip() + theme_minimal()  + geom_vline(aes(xintercept = 0)) +
+    theme(legend.title = element_blank(),
+          panel.background = element_rect(fill = "transparent", colour = NA), 
+          plot.background = element_rect(fill = "transparent", colour = NA),
+          legend.background = element_rect(fill = "transparent", colour = NA)) +
+    ylab("Contribution to the life expectancy gap (years)") +
+    xlab("") +
+    facet_wrap(year ~ sex) 
+) 
+
+for(i in 1:length(ly1$x$data)){
+  ly1$x$data[[i]]$text <- gsub("age_COD_cont_yrs_mean", "Contribution to gap (yrs)", ly1$x$data[[i]]$text)
+}
+
+ly1 %>% layout(margin = list(b = 100))
+```
+
+##New York
+```{r, echo = F, out.height = 600, out.width = 800}
+
+sub1 <- subset(age_cod_results, year %in% c(1969, 2013) & state == "New York")
+ly1 <- ggplotly(
+  ggplot(data = sub1,
+         aes(x=age, y = age_COD_cont_yrs_mean, fill = COD)) +
+    geom_bar(stat = "identity") + coord_flip() + theme_minimal()  + geom_vline(aes(xintercept = 0)) +
+    theme(legend.title = element_blank(),
+          panel.background = element_rect(fill = "transparent", colour = NA), 
+          plot.background = element_rect(fill = "transparent", colour = NA),
+          legend.background = element_rect(fill = "transparent", colour = NA)) +
+    ylab("Contribution to the life expectancy gap (years)") +
+    xlab("") +
+    facet_wrap(year ~ sex) 
+) 
+
+for(i in 1:length(ly1$x$data)){
+  ly1$x$data[[i]]$text <- gsub("age_COD_cont_yrs_mean", "Contribution to gap (yrs)", ly1$x$data[[i]]$text)
+}
+
+ly1 %>% layout(margin = list(b = 100))
+```
+
+##Similarities & differences  
+
+- Substantial contribution of infant mortality to the gap in 1969
+- Most deaths from all other causes are during infancy
+- Similar pattern of injury contributions by gender in 1969, but larger contribution in Tennessee
+- Similar pattern of CVD contributions in 1969 and 2013, but Tennessee started worse off
+- Ditto for cancer
+- Injury plays important role in Tennessee in 2013 with opposing effect directions in men and women
+
+##Get in touch
+- corinne.riddell@mail.mcgill.ca
+- @datavisitor on Twitter
+
