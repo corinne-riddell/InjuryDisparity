@@ -1,14 +1,14 @@
 ---
-title: "Trends in the contribution of major causes of death to the black-white life expectancy gap"
+title: "Inequalities in violent death among men, by state, race, and firearms use"
 author: "Corinne Riddell, Post-doctoral Researcher, McGill University, Canada"
-date: "May 23, 2017"
+date: "November 3, 2017"
 output: ioslides_presentation
 ---
 
 <head>
 <style>
-.greentext {
-        color: green;
+.violettext {
+        color: purple;
 }
 .redtext {
         color: red;
@@ -18,6 +18,7 @@ output: ioslides_presentation
 
 ```{r initialize, echo=FALSE, warning=F, message=F}
 library(plotly)
+library(ggrepel)
 library(viridis)
 library(scales)
 library(dplyr)
@@ -35,23 +36,23 @@ library(gridExtra)
 library(knitr)
 ```
 
-## Thank you
+## Co-authors
 
 ```{r, echo=F}
-img2 <-  rasterGrob(as.raster(readPNG("./Presentations/images/s_harper2.png")), interpolate = FALSE)
-img3 <-  rasterGrob(as.raster(readJPEG("./Presentations/images/j_kaufman.jpg")), interpolate = FALSE)
-grid.arrange(img3,
-             img2,
-             ncol = 2)
+img2 <-  rasterGrob(as.raster(readPNG("../Presentations/images/s_harper2.png")), interpolate = FALSE)
+img3 <-  rasterGrob(as.raster(readJPEG("../Presentations/images/m_cerda.jpg")), interpolate = FALSE)
+img4 <-  rasterGrob(as.raster(readJPEG("../Presentations/images/j_kaufman.jpg")), interpolate = FALSE)
+grid.arrange(img2,
+             img3,
+             img4,
+             ncol = 3)
 ```
 
-Jay Kaufman and Sam Harper
+Sam Harper, Magda Cerdá, Jay Kaufman
 
-#Motivation
+## Motivation
 
-Injuries have been, and continue to be, a large contributor to the difference in life expectancy for black and white American men *in some states* but not others.
-
-- include map of injury contribution to LE gap for men.
+Injuries have played, and continue to play, a large role to the racial inequality in life expectancy for black and white American men <b class = "violettext">in some states</b> but not others.
 
 <div class="notes">
 - discuss the midwest vs. the South, vs. CA and MA and NY. 
@@ -61,260 +62,273 @@ Injuries have been, and continue to be, a large contributor to the difference in
 
 ----
 
-It is well known that guns feature differently into the lives of black and white Americans
+Guns feature differently into the deaths of black and white Americans
 
-- White men are more likely to commit suicide than black men, with high rates at older ages.
-- Black men are more likely to be fatally assaulted than white men, with highest rates among X to Y year-olds.
+```{r homicide, fig.width=8, fig.height=3.7, fig.align='center', echo=F, warning=F}
+suicides2 <- read.table("/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/age-adjusted suicides 2015 for non-hispanic black and white males.txt", header = T, sep = "\t", nrows = 18)
+homicides2 <- read.table("/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/age-adjusted assaults 2015 for non-hispanic black and white males.txt", header = T, sep = "\t", nrows = 18)
 
-----
+library(dplyr)
+homicides2 <- homicides2 %>% mutate(Crude.Rate = as.numeric(as.character(Crude.Rate)),
+                                    intent = "Assault")
+homicides2$Ten.Year.Age.Groups <- factor(homicides2$Ten.Year.Age.Groups, levels = 
+                                           c("5-14 years", "15-24 years", "25-34 years",
+                                                  "35-44 years", "45-54 years", "55-64 years",
+                                                  "65-74 years", "75-84 years", "85+ years"))
 
-We know less about whether and how much these racial inequalities in homicide and suicide vary across US states
+suicides2 <- suicides2 %>% mutate(Crude.Rate = as.numeric(as.character(Crude.Rate)),
+                                    intent = "Suicide")
+suicides2$Ten.Year.Age.Groups <- factor(suicides2$Ten.Year.Age.Groups, levels = 
+                                           c("5-14 years", "15-24 years", "25-34 years",
+                                                  "35-44 years", "45-54 years", "55-64 years",
+                                                  "65-74 years", "75-84 years", "85+ years"))
 
-- Looking back: Large variation in inequalities may signal differences in social policy tied to the differences
-- Looking forward: States with high violence rates and/or large inequalities in violence may benefit from targeted interventions
+both <- rbind(suicides2, homicides2)
+levels(both$Race) <- c("Black", "White")
+first.plot <- ggplot(both, aes(x = Ten.Year.Age.Groups, y = Crude.Rate, group = Race)) + 
+  geom_line(aes(col = Race)) +
+  facet_grid(~intent)  + theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = c(0.85, 0.8)) +
+  scale_color_manual(values = c("#8A5C7B", "#4FD5AF")) + 
+  theme(legend.title = element_blank()) +
+  ggtitle("Assault and suicide rates (per 100,000) for men in the US, 2015") +
+  labs(caption = "Source: CDC WONDER Online Database") +
+  ylab("") + xlab("") 
 
-## The data
+ggplotly(first.plot) %>% layout(margin = list(b = 75, t = 75))
+```
+
+##How much do these racial inequalities in violence vary by state?
+```{r, echo=F, warning=F, message=FALSE}
+library(maps)
+library(mapproj)
+
+states <- map_data("state")
+ggplot(data = states) + 
+  geom_polygon(aes(x = long, y = lat, group = group), color = "white") + 
+  coord_map(projection = "azequidistant") + theme_minimal() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        #panel.background = element_rect(fill = "#636363", colour = "#636363"), 
+        plot.background = element_rect(fill = "transparent", colour = NA)) +
+  xlab("") + ylab("")
+  #coord_fixed(1.3)
+```
+
+<div class="notes">
+- Large variation in racial inequalities among spatially contiguous or otherwise similar states may reflect differences in the social, cultural, and policy environments.
+- Quantifying state-level heterogeneity is the first step towards implementing targeted policies aimed at reducing violence and inequalities where they are most urgently needed.
+</div>
+
+## Web-based Injury Statistics Query and Reporting System
 
 ```{r, echo = F, out.width = 750}
-include_graphics(path = "./conferences/images/WISQARS.png")
+include_graphics(path = "../Presentations/images/WISQARS.png")
 ```
 
-## The data
+## Web-based Injury Statistics Query and Reporting System
 
-- <b class = "greentext">40</b> "states": 50 states + DC
-- <b class = "greentext">45</b> years: 2008--2014 
-- <b class = "greentext">All</b> ages
-- <b class = "greentext">Males</b> ("Men", without loss of generality)
-- <b class = "greentext">2</b> races (Non-Hispanic black, non-hispanic white)
-- For each state: Homicide and suicide fatality rates and their racial inequalities, by firearms use
+- 50 states + DC
+- 2008--2014
+- All ages
+- Males (<b class = "violettext">Men</b>, without loss of generality)
+- Non-Hispanic black and white
+- For each state: <b class = "violettext">Homicide</b> and <b class = "violettext">suicide</b> fatality rates and their racial inequalities, by <b class = "violettext">firearms involvement</b>
 
-## The analysis
+## Homicide Inequality
 
-+ Estimated smoothed mortality rates using a Bayesian time series model with Poisson likelihood
-+ Used a truncated Poisson likelihood when number of deaths were between 1 and 9
-+ 1,000 posterior samples. For each:
-    1. Create a life table for every strata
-    2. Calculate the <b style = "greentext">difference</b> in life expectancy between blacks and whites
-    3. Decompose the difference by age and cause of death
-    4. Calculate age-standardized mortality rates
-+ Calculate the mean, 5^th^ and 95^th^ percentiles for all estimates
-+ Compute national trend using random-effects meta regression
+```{r figure1, fig.width=4.5, fig.height=6, echo = F, warning=F, fig.align="center"}
+#load("/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/Males_AllAges_0814")
+load("../Data/Males_AllAges_0814")
 
-## The output
+Males_AllAges_0814 <- Males_AllAges_0814 %>% mutate(average.pop.white = round(average.pop.white),
+                              average.pop.black = round(average.pop.black),
+                              adjusted.homicide.white = round(adjusted.homicide.white, 2),
+                              adjusted.homicide.black = round(adjusted.homicide.black, 2),
+                              adjusted.suicide.white = round(adjusted.suicide.white, 2),
+                              adjusted.suicide.black = round(adjusted.suicide.black, 2))
 
-+ Working paper being screened at bioRxiv
-+ R Shiny App: https://corinne-riddell.shinyapps.io/black-white-life-expectancy/
+homicide.plot <- ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
+  geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
+                   y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
+               lwd = 2, col = "#8A5C7B", alpha = 0.5) +
+  geom_point(aes(col = "NH White", size = average.pop.white)) + 
+  geom_point(aes(x = adjusted.homicide.black, col = "NH Black", size = average.pop.black)) + 
+  scale_color_manual(values = c("#8A5C7B", "#4FD5AF")) +
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
+  ylab("") +
+  xlab("Homicide mortality per 100k") + 
+  theme_bw() + 
+  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
+  theme(legend.position = c(0.8, 0.25), 
+        plot.title = element_text(size = 10),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12)) + 
+   geom_text(data = Males_AllAges_0814 %>% filter(is.na(adj.RD.homicide) == F),
+             aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide))),
+             size = 3, col = "#754255") +
+  facet_wrap( ~ type) +
+  scale_x_continuous(limits = c(0, 70)) 
 
-## The app
-
-```{r, echo = F, out.width = 800}
-include_graphics(path = "./conferences/images/app_ex1.gif")
+homicide.plot
 ```
 
-## The app
+## Suicide Inequality
+```{r figure2, fig.width=4.5, fig.height=6, echo = F, warning=F, fig.align="center"}
+suicide.plot <- ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
+  geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
+                   y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
+               lwd = 2, col = "#4FD5AF", alpha = 0.5) +
+  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + #, alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  scale_color_manual(values = c("#8A5C7B", "#4FD5AF")) +
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
+  ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
+  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
+  theme(legend.position = c(0.90, 0.27), 
+        plot.title = element_text(size = 10),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12)) + 
+  scale_x_continuous(limits = c(0, 35)) +
+  #scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
+  geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.suicide)==F), 
+            aes(x = adjusted.suicide.white + 4, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#308E77") +
+  facet_wrap(~type)
 
-```{r, echo = F, out.width = 800}
-include_graphics(path = "./conferences/images/app_ex2.gif")
+
+suicide.plot
 ```
 
-## The app
+## White Men: Homicide, Suicide, and State Firearms Ownership
+```{r figure3, fig.width=7.5, fig.height=5, echo = F, warning=F, fig.align="center"}
+white.assoc <- ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
+  geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
+  geom_text_repel(aes(label = ST), size = 4) +
+  geom_text(aes(label = ST), size = 4) +
+  #scale_fill_manual(values = c("#EFEE69", "#57C796", "#4B88A0", "#694760")) +
+  scale_fill_manual(values = c("#D2F172","#53D6AD", "#5FA6C5", "#996E94")) +
+  #scale_fill_viridis(discrete = T, direction = -1) +
+  ylab("White Homicide Rate(per 100,000)") +
+  xlab("White Suicide Rate (per 100,000)") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_size_area(breaks = c(100000, 500000, 1500000, 3000000, 7000000), max_size = 15, guide = F) +
+  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5)))
 
-```{r, echo = F, out.width = 800}
-include_graphics(path = "./conferences/images/app_ex3.gif")
-```
+white.assoc <- ggplotly(white.assoc)
 
-## Male black-white life expectancy gap
-
-```{r, echo = F}
-    gg.p <- ggplot(data = subset(BlackWhite_results, sex == "Male"),
-                          aes(y = LE_wbgap_mean, x = year)) +
-    geom_hline(aes(yintercept = 0)) + geom_vline(aes(xintercept = 1969)) +
-    geom_ribbon(aes(ymin = LE_wbgap_lcl, ymax = LE_wbgap_ucl, fill = Census_Division)) +
-    #geom_line(aes(col = Census_Division)) + 
-    facet_wrap(~ stabbrs.map.order, ncol = 11, drop = F) +
-    theme_classic(base_size = 10) +
-    theme(axis.text.x = element_blank(),
-          strip.background=element_blank(),
-          axis.line=element_blank(),
-          axis.ticks=element_blank(),
-          legend.position = "none",
-          panel.background = element_rect(fill = "transparent", colour = NA), 
-          plot.background = element_rect(fill = "transparent", colour = NA),
-          legend.background = element_rect(fill = "transparent", colour = NA)) +
-    ylab("Life expectancy gap (years)") +
-    xlab(paste0("Year (1969-2013)")) 
-
-      interactive.p <- ggplotly(gg.p +     
-        geom_hline(aes(yintercept = 5), lwd = 0.5, col = "grey", alpha = 0.5) +
-        geom_hline(aes(yintercept = 10), lwd = 0.5, col = "grey", alpha = 0.5) +
-        geom_hline(aes(yintercept = 15), lwd = 0.5, col = "grey", alpha = 0.5))
-      
-      for(i in 1:length(interactive.p$x$data)){
-        if (interactive.p$x$data[[i]]$line$color %in% c("rgba(0,0,0,1)", "rgba(190,190,190,0.5)")) {
-          interactive.p$x$data[[i]]$hoverinfo <- "none"
-          interactive.p$x$data[[i]]$line$width <- 1
-        }
-        
-        interactive.p$x$data[[i]]$text <- gsub("Census_Division", "Census Division", interactive.p$x$data[[i]]$text)
-        interactive.p$x$data[[i]]$text <- gsub("LE_wbgap_mean", "Mean life expectancy gap", interactive.p$x$data[[i]]$text)
-        interactive.p$x$data[[i]]$text <- gsub("LE_wbgap_ucl", "Upper credible limit", interactive.p$x$data[[i]]$text)
-        interactive.p$x$data[[i]]$text <- gsub("LE_wbgap_lcl", "Lower credible limit", interactive.p$x$data[[i]]$text)
-      }
-      
-       interactive.p
-```
-
-## Female black-white life expectancy gap
-
-```{r, echo = F}
-    gg.p2 <- ggplot(data = subset(BlackWhite_results, sex == "Female"),
-                          aes(y = LE_wbgap_mean, x = year)) +
-    geom_hline(aes(yintercept = 0)) + geom_vline(aes(xintercept = 1969)) +
-    geom_ribbon(aes(ymin = LE_wbgap_lcl, ymax = LE_wbgap_ucl, fill = Census_Division)) +
-    #geom_line(aes(col = Census_Division)) + 
-    facet_wrap(~ stabbrs.map.order, ncol = 11, drop = F) +
-    theme_classic(base_size = 10) +
-    theme(axis.text.x = element_blank(),
-          strip.background=element_blank(),
-          axis.line=element_blank(),
-          axis.ticks=element_blank(),
-          legend.position = "none",
-          panel.background = element_rect(fill = "transparent", colour = NA), 
-          plot.background = element_rect(fill = "transparent", colour = NA),
-          legend.background = element_rect(fill = "transparent", colour = NA)) +
-    ylab("Life expectancy gap (years)") +
-    xlab(paste0("Year (1969-2013)")) 
-
-      interactive.p2 <- ggplotly(gg.p2 +     
-        geom_hline(aes(yintercept = -5), lwd = 0.5, col = "grey", alpha = 0.5) +
-        geom_hline(aes(yintercept = 5), lwd = 0.5, col = "grey", alpha = 0.5) +
-        geom_hline(aes(yintercept = 10), lwd = 0.5, col = "grey", alpha = 0.5))
-      
-      for(i in 1:length(interactive.p2$x$data)){
-        if (interactive.p2$x$data[[i]]$line$color %in% c("rgba(0,0,0,1)", "rgba(190,190,190,0.5)")) {
-          interactive.p2$x$data[[i]]$hoverinfo <- "none"
-          interactive.p2$x$data[[i]]$line$width <- 1
-        }
-        
-        interactive.p2$x$data[[i]]$text <- gsub("Census_Division", "Census Division", interactive.p$x$data[[i]]$text)
-        interactive.p2$x$data[[i]]$text <- gsub("LE_wbgap_mean", "Mean life expectancy gap", interactive.p$x$data[[i]]$text)
-        interactive.p2$x$data[[i]]$text <- gsub("LE_wbgap_ucl", "Upper credible limit", interactive.p$x$data[[i]]$text)
-        interactive.p2$x$data[[i]]$text <- gsub("LE_wbgap_lcl", "Lower credible limit", interactive.p$x$data[[i]]$text)
-      }
-      
-       interactive.p2
-```
-
-##National patterns in cause contributions to the gap
-
-```{r, echo = F}
-cod_decomp_results <- read.csv("/Users/corinneriddell/Documents/repos/BlackWhiteMortalityGap/Results2/cod_decomp_results.csv")
-cod_decomp_results$COD <- factor(cod_decomp_results$COD, levels(cod_decomp_results$COD)[c(3, 2, 4, 6, 5, 1)])
-
-cod_decomp_national <- cod_decomp_results %>% 
-  filter(state == "Alabama") %>%
-  mutate(national.trend = fitted.RE - RE.estimates) %>%
-  select(-state)
-
-gg.p3 <- ggplotly(ggplot(cod_decomp_national, aes(y = national.trend, x = year)) + 
-  geom_line(aes(col = sex)) + 
-  facet_wrap(~COD) + theme_minimal() +
-  xlab("Year") + ylab("National trend in cause of death contribution")) %>%
-  layout(margin(b = 50, l = 50)) 
-
-gg.p3
-```
-
-#Three examples
-
-##CVD in men
-```{r, echo = F, out.width = 675}
-include_graphics(path = "./conferences/images/CVD_men.png")
-```
-
-##Cancer in women
-```{r, echo = F, out.width = 675}
-include_graphics(path = "./conferences/images/Cancer_women.png")
-```
-
-##Injury in women
-```{r, echo = F, out.width = 675}
-include_graphics(path = "./conferences/images/Injury_women.png")
-```
-
-#A tale of two states
-
-##Tennessee
-```{r, echo = F, out.height = 600, out.width = 800}
-age_cod_results_female <- read.csv("./Results2/age_cod_results_female.csv")
-
-age_cod_results_male <- read.csv("./Results2/age_cod_results_male.csv")
-
-age_cod_results <- rbind(age_cod_results_female, age_cod_results_male)
-rm(age_cod_results_female, age_cod_results_male)
-
-age_cod_results$age <- forcats::fct_relevel(f = age_cod_results$age, "<1 year", "1-4 years", "5-9 years", "10-14 years", 
-                                            "15-19 years", "20-24 years", "25-29 years", "30-34 years", "35-39 years", 
-                                            "40-44 years", "45-49 years", "50-54 years", "55-59 years", "60-64 years", 
-                                            "65-69 years", "70-74 years", "75-79 years", "80-84 years", "85+ years")
-
-age_cod_results$COD <- factor(age_cod_results$COD, levels(age_cod_results$COD)[c(3, 2, 4, 6, 5, 1)])
-
-sub1 <- subset(age_cod_results, year %in% c(1969, 2013) & state == "Tennessee")
-ly1 <- ggplotly(
-  ggplot(data = sub1,
-         aes(x=age, y = age_COD_cont_yrs_mean, fill = COD)) +
-    geom_bar(stat = "identity") + coord_flip() + theme_minimal()  + geom_vline(aes(xintercept = 0)) +
-    theme(legend.title = element_blank(),
-          panel.background = element_rect(fill = "transparent", colour = NA), 
-          plot.background = element_rect(fill = "transparent", colour = NA),
-          legend.background = element_rect(fill = "transparent", colour = NA)) +
-    ylab("Contribution to the life expectancy gap (years)") +
-    xlab("") +
-    facet_wrap(year ~ sex) 
-) 
-
-for(i in 1:length(ly1$x$data)){
-  ly1$x$data[[i]]$text <- gsub("age_COD_cont_yrs_mean", "Contribution to gap (yrs)", ly1$x$data[[i]]$text)
+for(i in 1:length(white.assoc$x$data)){
+  white.assoc$x$data[[i]]$text <- gsub("gun.house.prev.category", 
+                                         "State gun ownership", white.assoc$x$data[[i]]$text)
+    white.assoc$x$data[[i]]$text <- gsub("average.pop.white", 
+                                         "Population", white.assoc$x$data[[i]]$text)
+      white.assoc$x$data[[i]]$text <- gsub("adjusted.suicide.white", 
+                                         "Suicide Rate", white.assoc$x$data[[i]]$text)
+            white.assoc$x$data[[i]]$text <- gsub("adjusted.homicide.white", 
+                                         "Homicide Rate", white.assoc$x$data[[i]]$text)
 }
-
-ly1 %>% layout(margin = list(b = 100))
+white.assoc
 ```
 
-##New York
-```{r, echo = F, out.height = 600, out.width = 800}
+## Black Men: Homicide, Suicide, and State Firearms Ownership
+```{r figure4, fig.width=7.5, fig.height=5, echo = F, warning=F, fig.align="center"}
+black.assoc <- ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.black, y = adjusted.homicide.black)) + 
+  geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
+  geom_text(aes(label = ST), size = 4, check_overlap = T) +
+  scale_fill_manual(values = c("#D2F172","#53D6AD", "#5FA6C5", "#996E94")) +
+  #scale_fill_viridis(discrete = T, direction = -1) +
+  ylab("Black Homicide Rate(per 100,000)") +
+  xlab("Black Suicide Rate (per 100,000)") + 
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_size_area(breaks = c(16600, 100000, 500000, 1400000), max_size = 15, guide = F) +
+  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5))) 
 
-sub1 <- subset(age_cod_results, year %in% c(1969, 2013) & state == "New York")
-ly1 <- ggplotly(
-  ggplot(data = sub1,
-         aes(x=age, y = age_COD_cont_yrs_mean, fill = COD)) +
-    geom_bar(stat = "identity") + coord_flip() + theme_minimal()  + geom_vline(aes(xintercept = 0)) +
-    theme(legend.title = element_blank(),
-          panel.background = element_rect(fill = "transparent", colour = NA), 
-          plot.background = element_rect(fill = "transparent", colour = NA),
-          legend.background = element_rect(fill = "transparent", colour = NA)) +
-    ylab("Contribution to the life expectancy gap (years)") +
-    xlab("") +
-    facet_wrap(year ~ sex) 
-) 
+black.assoc <- ggplotly(black.assoc)
 
-for(i in 1:length(ly1$x$data)){
-  ly1$x$data[[i]]$text <- gsub("age_COD_cont_yrs_mean", "Contribution to gap (yrs)", ly1$x$data[[i]]$text)
+for(i in 1:length(black.assoc$x$data)){
+  black.assoc$x$data[[i]]$text <- gsub("gun.house.prev.category", 
+                                         "State gun ownership", black.assoc$x$data[[i]]$text)
+    black.assoc$x$data[[i]]$text <- gsub("average.pop.black", 
+                                         "Population", black.assoc$x$data[[i]]$text)
+      black.assoc$x$data[[i]]$text <- gsub("adjusted.suicide.black", 
+                                         "Suicide Rate", black.assoc$x$data[[i]]$text)
+            black.assoc$x$data[[i]]$text <- gsub("adjusted.homicide.black", 
+                                         "Homicide Rate", black.assoc$x$data[[i]]$text)
 }
-
-ly1 %>% layout(margin = list(b = 100))
+black.assoc  
 ```
 
-##Similarities & differences  
-
-- Substantial contribution of infant mortality to the gap in 1969
-- Most deaths from all other causes are during infancy
-- Similar pattern of injury contributions by gender in 1969, but larger contribution in Tennessee
-- Similar pattern of CVD contributions in 1969 and 2013, but Tennessee started worse off
-- Ditto for cancer
-- Injury plays important role in Tennessee in 2013 with opposing effect directions in men and women
 
 ##Get in touch
 - corinne.riddell@mail.mcgill.ca
 - @datavisitor on Twitter
+
+```{r, eval=F, echo=F}
+
+homicide.plot <- ggplotly(homicide.plot)
+
+for(i in 1:length(homicide.plot$x$data)){
+  if(homicide.plot$x$data[[i]]$mode == "text" | homicide.plot$x$data[[i]]$mode == "lines"){
+    homicide.plot$x$data[[i]]$hoverinfo <- "none"
+  }
+  homicide.plot$x$data[[i]]$text <- gsub("adjusted.homicide.black", 
+                                         "Homicide, black", homicide.plot$x$data[[i]]$text)
+  homicide.plot$x$data[[i]]$text <- gsub("adjusted.homicide.white", 
+                                         "Homicide, white", homicide.plot$x$data[[i]]$text)
+  homicide.plot$x$data[[i]]$text <- gsub("average.pop.black", 
+                                         "Population, black", homicide.plot$x$data[[i]]$text)
+  homicide.plot$x$data[[i]]$text <- gsub("average.pop.white", 
+                                         "Population, white", homicide.plot$x$data[[i]]$text)
+  homicide.plot$x$data[[i]]$text <- gsub("ST.order.RD.homicide:", 
+                                         "", homicide.plot$x$data[[i]]$text)
+    homicide.plot$x$data[[i]]$text <- gsub("NHBlack", 
+                                         "", homicide.plot$x$data[[i]]$text)
+        homicide.plot$x$data[[i]]$text <- gsub("NH Black", 
+                                         "", homicide.plot$x$data[[i]]$text)
+              homicide.plot$x$data[[i]]$text <- gsub("NH White", 
+                                         "", homicide.plot$x$data[[i]]$text)
+}
+
+
+ggplotly(homicide.plot)
+
+suicide.plot <- ggplotly(suicide.plot)
+
+for(i in 1:length(suicide.plot$x$data)){
+  if(suicide.plot$x$data[[i]]$mode == "text" | suicide.plot$x$data[[i]]$mode == "lines"){
+    suicide.plot$x$data[[i]]$hoverinfo <- "none"
+  }
+  suicide.plot$x$data[[i]]$text <- gsub("adjusted.suicide.black", 
+                                         "suicide, black", suicide.plot$x$data[[i]]$text)
+  suicide.plot$x$data[[i]]$text <- gsub("adjusted.suicide.white", 
+                                         "suicide, white", suicide.plot$x$data[[i]]$text)
+  suicide.plot$x$data[[i]]$text <- gsub("average.pop.black", 
+                                         "Population, black", suicide.plot$x$data[[i]]$text)
+  suicide.plot$x$data[[i]]$text <- gsub("average.pop.white", 
+                                         "Population, white", suicide.plot$x$data[[i]]$text)
+  suicide.plot$x$data[[i]]$text <- gsub("ST.order.RD.suicide:", 
+                                         "", suicide.plot$x$data[[i]]$text)
+    suicide.plot$x$data[[i]]$text <- gsub("NHBlack", 
+                                         "", suicide.plot$x$data[[i]]$text)
+        suicide.plot$x$data[[i]]$text <- gsub("NH Black", 
+                                         "", suicide.plot$x$data[[i]]$text)
+              suicide.plot$x$data[[i]]$text <- gsub("NH White", 
+                                         "", suicide.plot$x$data[[i]]$text)
+}
+
+
+ggplotly(suicide.plot)
+
+```
 
