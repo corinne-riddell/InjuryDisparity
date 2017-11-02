@@ -464,11 +464,10 @@ This study is subject to several limitations. In terms of the listed cause of de
 
 Firearms feature differently in the deaths of black and white men in the United States. The large variation in the homicide and suicide rates and their racial differences across states places a spotlight on states where policies are most urgently needed to reduce rates of violence, and their racial inequalities. This research provides the first step in measuring these inequalities across states, which can be further studied to identify the policies, and social and cultural factors that support reduced rates of violence for all Americans.
 
-##### PAGE BREAK
-
+##Figure Legends 
 ###Figure 1: Difference in age-standardized homicide fatalities rates for men by state, firearms, and race, 2008-2014
 
-```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F}
+```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
   geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
                    y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
@@ -522,11 +521,9 @@ ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide
   scale_x_continuous(limits = c(0, 10)) 
 ```
 
-##### PAGE BREAK
+###Figure 2: Difference in age-standardized suicide fatalities rates for men by state, firearms, and race, 2008-2014
 
-###Figure 2: Difference in suicide fatalities rates for men by state, firearms, and race, 2008-2014
-
-```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F}
+```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
   geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
@@ -575,11 +572,9 @@ ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.w
   facet_wrap(~type)
 ```
 
-##### PAGE BREAK
-
 ###Figure 3: The relationship between the annual rates of homicide and suicide among white men by state and reported firearm ownership, 2008-2014
 
-```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F}
+```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F, eval = F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4) +
@@ -594,11 +589,9 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.
   guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5)))
 ```
 
-##### PAGE BREAK
-
 ###Figure 4: The relationship between the annual rates of homicide and suicide among black men by state and reported firearm ownership, 2008-2014
 
-```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F}
+```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F, eval = F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.black, y = adjusted.homicide.black)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
@@ -636,8 +629,6 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
 #          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
 ```
 
-#####PAGE BREAK
-
 **Author Contributions**
 
 Study conception and design: Riddell
@@ -658,8 +649,6 @@ Administrative, technical, or material support: None
 
 Study supervision: Kaufman
 
-**Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University. Sam Harper was supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Dr. Riddell had full access to all of the data and takes responsibility for the integrity of the data and the accuracy of the data analysis. The sources of support had no control over the design and conduct of the study; collection, management, analysis, and interpretation of the data; and preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication. 
-
-#####PAGE BREAK
+**Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University, and received salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Sam Harper was supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Dr. Riddell had full access to all of the data and takes responsibility for the integrity of the data and the accuracy of the data analysis. The sources of support had no control over the design and conduct of the study; collection, management, analysis, and interpretation of the data; and preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication. 
 
 ###References
