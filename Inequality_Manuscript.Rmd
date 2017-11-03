@@ -652,3 +652,7 @@ Study supervision: Kaufman
 **Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University, and received salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Sam Harper was supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Dr. Riddell had full access to all of the data and takes responsibility for the integrity of the data and the accuracy of the data analysis. The sources of support had no control over the design and conduct of the study; collection, management, analysis, and interpretation of the data; and preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication. 
 
 ###References
+```{r echo=F, eval=F}
+save(Males_AllAges_0814, file = "/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/Males_AllAges_0814")
+```
+
