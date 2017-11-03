@@ -36,6 +36,19 @@ library(gridExtra)
 library(knitr)
 ```
 
+```{r load_bwgap_data, echo=F}
+
+source("/Users/corinneriddell/Documents/repos/BlackWhiteMortalityGap/Code/life_expectancy_functions.R")
+
+cod_decomp_results <- read.csv("/Users/corinneriddell/Documents/repos/BlackWhiteMortalityGap/Results2/cod_decomp_results_cubic.csv")
+cod_decomp_results <- reorder.as.map2(cod_decomp_results, "state", "stabbrs")
+cod_decomp_results$COD_rev <- factor(cod_decomp_results$COD, levels = c("Cardiovascular", "Cancers", "All other causes",
+                                                                        "Communicable", "Non-communicable",  "Injuries"))
+
+BlackWhite_results <- read.csv("/Users/corinneriddell/Documents/repos/BlackWhiteMortalityGap//Results2/BlackWhite_results.csv")
+BlackWhite_results <- reorder.as.map2(BlackWhite_results, "state", "stabbrs")
+```
+
 ## Co-authors
 
 ```{r, echo=F}
@@ -52,7 +65,14 @@ Sam Harper, Magda Cerdá, Jay Kaufman
 
 ## Motivation
 
-Injuries have played, and continue to play, a large role to the racial inequality in life expectancy for black and white American men <b class = "violettext">in some states</b> but not others.
+Injuries have played, and continue to play, a large role to the racial inequality in life expectancy for black and white American men <b class = "violettext">in some states</b> but not others:
+
+https://corinne-riddell.shinyapps.io/black-white-life-expectancy/
+
+- Trends in life expectancy tab
+- Trends in cause contribution tab > Set "Cause of death" to Injuries
+- Flip between grid and map views
+
 
 <div class="notes">
 - discuss the midwest vs. the South, vs. CA and MA and NY. 
@@ -60,9 +80,63 @@ Injuries have played, and continue to play, a large role to the racial inequalit
 - Our injury category collapses across many disparate causes of death. We wanted to dig deeper into these trends and understand more about how rates of injury mortality vary across US states.
 </div>
 
+##Motivation
+
+Stacked contributions of major causes of death to the life expectancy gap among men by US state, 1969-2013
+
+```{r, echo=F, fig.height=5, fig.width=9}
+plot1 <- ggplotly(ggplot(subset(cod_decomp_results, sex == "Male"), aes(x = year, y = COD_cont_yrs_mean)) + 
+  geom_area(aes(fill = COD_rev), stat = "identity") +
+  geom_hline(aes(yintercept = 0)) + geom_vline(aes(xintercept = 1969)) + geom_hline(aes(yintercept = -0.4)) + #the axes
+  geom_line(data = subset(BlackWhite_results, sex == "Male"), aes(x = year, y = LE_wbgap_mean)) +
+  facet_wrap( ~ stabbrs.map.order, ncol = 11, drop = F) + 
+  theme_classic(base_size = 14) + 
+  theme(axis.text.x = element_blank(),
+        strip.background=element_blank(),
+        axis.line=element_blank(),
+        axis.ticks=element_blank()) +
+  ylab("Contribution to the life expectancy gap (%)") +
+  xlab("Year (1969-2013)"))
+
+for(i in 1:400){
+  if(plot1$x$data[[i]]$line$color == "rgba(0,0,0,1)"){
+    plot1$x$data[[i]]$line$width <- 1
+  }
+}
+
+plot1 %>% layout(margin = list(b = 100))
+```
+
+##Motivation
+
+Stacked contributions of major causes of death to the life expectancy gap among men by US state, 2009-2013
+
+```{r, echo=F, fig.height=5, fig.width=9}
+plot2 <- ggplotly(ggplot(subset(cod_decomp_results, sex == "Male" & year > 2009), aes(x = year, y = COD_cont_yrs_mean)) + 
+  geom_area(aes(fill = COD_rev), stat = "identity") +
+  geom_hline(aes(yintercept = 0)) + geom_vline(aes(xintercept = 2009)) + geom_hline(aes(yintercept = -0.4)) + #the axes
+  geom_line(data = subset(BlackWhite_results, sex == "Male" & year > 2009), aes(x = year, y = LE_wbgap_mean)) +
+  facet_wrap( ~ stabbrs.map.order, ncol = 11, drop = F) + 
+  theme_classic(base_size = 14) + 
+  theme(axis.text.x = element_blank(),
+        strip.background=element_blank(),
+        axis.line=element_blank(),
+        axis.ticks=element_blank()) +
+  ylab("Contribution to the life expectancy gap (%)") +
+  xlab("Year (2009-2013)"))
+
+for(i in 1:400){
+  if(plot2$x$data[[i]]$line$color == "rgba(0,0,0,1)"){
+    plot2$x$data[[i]]$line$width <- 1
+  }
+}
+
+plot2 %>% layout(margin = list(b = 100))
+```
+
 ----
 
-Guns feature differently into the deaths of black and white Americans
+Injury is a heterogenous outcome: rates of homicide and suicide vary by race, age, (and sex)
 
 ```{r homicide, fig.width=8, fig.height=3.7, fig.align='center', echo=F, warning=F}
 suicides2 <- read.table("/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/age-adjusted suicides 2015 for non-hispanic black and white males.txt", header = T, sep = "\t", nrows = 18)
@@ -124,6 +198,29 @@ ggplot(data = states) +
 - Quantifying state-level heterogeneity is the first step towards implementing targeted policies aimed at reducing violence and inequalities where they are most urgently needed.
 </div>
 
+##Violence and gun ownership/availability
+
+- gun ownership rates linked to homicide rates and suicide rates (country-level, state-level, ecologic)
+- individual gun ownership tied to household risk of suicide (case-control studies)
+- conceptualizing gun ownership as <b class = "violettext">opportunity</b>, a component cause to <b class = "violettext">motivation</b>, on the causal pathway to lethal violence
+- how does the relationship between gun ownership and violence vary by race?
+
+##Hypothetical pathways: suicide
+```{r, echo = F, out.width = 750}
+include_graphics(path = "../Presentations/images/DAG_suicide.png")
+```
+
+##Hypothetical pathways: homicide
+```{r, echo = F, out.width = 750}
+include_graphics(path = "../Presentations/images/DAG_homicide.png")
+```
+
+##Study objectives
+
+- Estimate the absolute inequality between non-Hispanic black and white men in firearm- and non-firearm-related homicide and suicide across US states
+
+- Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men.
+
 ## Web-based Injury Statistics Query and Reporting System
 
 ```{r, echo = F, out.width = 750}
@@ -138,10 +235,11 @@ include_graphics(path = "../Presentations/images/WISQARS.png")
 - Males (<b class = "violettext">Men</b>, without loss of generality)
 - Non-Hispanic black and white
 - For each state: <b class = "violettext">Homicide</b> and <b class = "violettext">suicide</b> fatality rates and their racial inequalities, by <b class = "violettext">firearms involvement</b>
+- From the 2004 <b class = "violettext">BRFSS</b>, calculated state gun prevalence for the second objective.
 
 ## Homicide Inequality
 
-```{r figure1, fig.width=4.5, fig.height=6, echo = F, warning=F, fig.align="center"}
+```{r figure1, fig.width=4.5, fig.height=5.75, echo = F, warning=F, fig.align="center"}
 #load("/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/Males_AllAges_0814")
 load("../Data/Males_AllAges_0814")
 
@@ -181,7 +279,7 @@ homicide.plot
 ```
 
 ## Suicide Inequality
-```{r figure2, fig.width=4.5, fig.height=6, echo = F, warning=F, fig.align="center"}
+```{r figure2, fig.width=4.5, fig.height=5.75, echo = F, warning=F, fig.align="center"}
 suicide.plot <- ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
   geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
@@ -210,7 +308,7 @@ suicide.plot
 ```
 
 ## White Men: Homicide, Suicide, and State Firearms Ownership
-```{r figure3, fig.width=7.5, fig.height=5, echo = F, warning=F, fig.align="center"}
+```{r figure3, fig.width=7, fig.height=4.5, echo = F, warning=F, fig.align="center"}
 white.assoc <- ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4) +
@@ -241,7 +339,7 @@ white.assoc
 ```
 
 ## Black Men: Homicide, Suicide, and State Firearms Ownership
-```{r figure4, fig.width=7.5, fig.height=5, echo = F, warning=F, fig.align="center"}
+```{r figure4, fig.width=7, fig.height=4.5, echo = F, warning=F, fig.align="center"}
 black.assoc <- ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.black, y = adjusted.homicide.black)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text(aes(label = ST), size = 4, check_overlap = T) +
@@ -269,10 +367,33 @@ for(i in 1:length(black.assoc$x$data)){
 black.assoc  
 ```
 
+##Discussion: Homicide
 
-##Get in touch
-- corinne.riddell@mail.mcgill.ca
-- @datavisitor on Twitter
+- Black men experienced 5 to 51 additional firearm homicides per 100,000
+- Largely driven by variation in black homicide rates (white rates were relatively stable)
+- Rust-belt states had the most firearm homicides and medium levels of gun ownership
+- Southern states with high gun ownership rates had more black homicides than southern states with medium-high gun ownership rates
+- <b class = "violettext">Disentangling those factors that make some Southern states relatively safe for black men and rust-belt states relatively unsafe compared to white men should be a high priority.</b>
+
+##Discussion: Suicide
+
+- White men experienced -2 to 16 additional firearm suicides per 100,000
+- Range in suicide rates for white men was large, although less so than range for firearm homicides among black men
+- State gun prevalence strongly tied to suicide for both black and white men
+- State gun prevalence also tied to a state's gun policy environment
+- <b class = "violettext">What accounts for the difference in suicide risk among black and white men?</b>
+    - Race-specific gun ownership?
+    - Alcohol use/abuse/history
+
+##Conclusions
+
+- The large variation in homicide and suicide rates and their racial inequalities highlight those states where policies may be targeted to reduce rates of violence and their racial inequalities
+- Can we identify policies, social, and cultural factors that support reduced rates of violence for all Americans? And which of these can we intervene upon?
+
+##Thank you
+
+- Please email me if you have questions, or comments at corinne.riddell@mail.mcgill.ca
+- Or, connect on twitter (@datavisitor) or find my work on GitHub (corinne-riddell)
 
 ```{r, eval=F, echo=F}
 
