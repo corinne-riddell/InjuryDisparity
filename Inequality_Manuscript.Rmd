@@ -25,20 +25,11 @@ Word Count: 2700
 
 ##### PAGE BREAK
 
-#Key Points
-
-**Question:** How much do inequalities in homicide and suicide rates between black and white men vary by US state and firearms use?
-
-**Finding:** There was substantial variation in the annual racial difference in firearm-related homicide and suicide. Black men experienced between 5 and 51 additional homicides per 100,000, while white men experienced between -2 and 16 additional suicides per 100,000 men, across states.
-
-**Meaning:** The inter-state variation in the racial difference in homicide is driven by variation in black homicide, and suggests that reductions to high rates of black homicide are achievable and necessary to attain racial equality in safety.
-
-##### PAGE BREAK
 #Abstract
 
-**Importance:** It is unknown whether and how much the difference in excess deaths due to homicide among black men and suicide among white men vary by US state. Such knowledge could inform social policy aimed towards reducing social disparities in health.
+**Background:** It is unknown whether and how much the difference in excess deaths due to homicide among black men and suicide among white men vary by US state. Such knowledge could inform social policy aimed towards reducing social disparities in health.
 
-**Objective:** (1) Estimate the absolute inequality between non-Hispanic black and white men in firearm- and non-firearm-related homicide and suicide across US states; (2) Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men.
+**Objective:** Estimate the absolute inequality between non-Hispanic black and white men in firearm- and non-firearm-related homicide and suicide across US states.
 
 **Design:** Surveillance study.
 
@@ -46,13 +37,13 @@ Word Count: 2700
 
 **Participants:** Non-Hispanic black and non-Hispanic white males, all ages.
 
-**Exposure:** Racial group and firearm involvement.
+**Measurements:** Absolute risks and risk differences in firearm- and non-firearm-related homicide and suicide for black and white men.
 
-**Main Outcomes and Measures:** Absolute risks and risk differences in firearm- and non-firearm-related homicide and suicide for black and white men.
+**Results:** 71,217 homicides and 191,909 suicides were included in this analysis. Black-white differences in rates of firearm-related homicide and suicides varied widely across states. Relative to white men, black men experienced between 5 and 51 additional homicides per 100,000 men per year, with black men in Indiana, Michigan, Missouri, Pennsylvania, and Wisconsin all having more than 40 additional homicides per 100,000. White men experienced between -2 and 16 additional suicides per 100,000, with the largest inequalities measured in Southern and Western states, and smallest inequalities in densely populated Northeastern states.
 
-**Results:** 71,217 homicides and 191,909 suicides were included in this analysis. Black-white differences in rates of firearm-related homicide and suicides varied widely across states. Relative to white men, black men experienced between 5 and 51 additional homicides per 100,000 men per year, with black men in the "rust-belt" states of Indiana, Michigan, Missouri, Pennsylvania, and Wisconsin all having more than 40 additional homicides per 100,000. White men experienced between -2 and 16 additional suicides per 100,000, with the largest inequalities measured in Southern and Western states, and smallest inequalities in densely populated Northeastern states. Descriptive analyses suggest that shared explanatory factors including state gun prevalence explain the variation in firearm-related homicide and suicide among white men, but not among black men, who exhibit disproportionate variation in homicide rates.
+**Limitations:** Non-firearm suicides may be misclassified as unintentional injury deaths. This analysis focused on deaths only, and does not examine rates and inequalities in non-fatal violence.
 
-**Conclusions and Relevance:** Guns feature differently in the deaths of black and white men. The large variation in the risks of violence and their racial inequalities across states highlights states where policies are most urgently needed to reduce rates of violence and their racial inequalities. Future research linking these variations with the social, cultural, and policy environments are needed to identify settings that support reduced rates of violence for all Americans.
+**Conclusion:** The large variation in the risks of violence and their racial inequalities highlights states where policies are most urgently needed to reduce violence and their racial inequalities. Future research linking these variations with the social, cultural, and policy environments are needed to identify settings that support reduced rates of violence for all Americans.
 
 ##### PAGE BREAK
 
@@ -395,13 +386,17 @@ In this study, we aimed to: (1) Estimate the absolute inequality between non-His
 
 #Methods
 
-We used the Center for Disease Control and Prevention’s Web-based Injury Statistics Query and Reporting System (WISQARS) Fatal Injury Mapping tool to abstract the age-adjusted number of firearm fatalities for males in every state during 2008 to 2014 for non-Hispanic whites and non-Hispanic blacks, by intent (homicide or suicide), and firearms involvment. Throughout this paper we refer to this population as men since the vast majority of deaths occurred after childhood. The data were suppressed by WISQARS for race-state strata with 10 or fewer actual deaths between 2008 and 2014, and could not be used in these analyses. We computed the average annual fatality rate according to race, intent, and firearms involvement by dividing the number of fatalities by the total population estimate (i.e., the summation of population estimates over 2008 to 2014) and we calculated the absolute inequality (risk difference) in estimates between black and white men. For homicide, we subtract the fatality rate of white men from that of black men, and for suicide these rates are reversed, such that the estimated risk differences are mostly positive and interpreted as the number of additional deaths to black (white) men due to homicide (suicide) associated with the heightened fatality rate experienced by black (white) men. We did not calculate confidence intervals because there was no sampling, and thus no sampling error. To reflect varying population sizes among states and by race, we size the data markers according to race-specific average annualized population size. 
+We used the Center for Disease Control and Prevention’s Web-based Injury Statistics Query and Reporting System (WISQARS) Fatal Injury Mapping tool to abstract the age-adjusted number of firearm fatalities for males in every state during 2008 to 2014 for non-Hispanic whites and non-Hispanic blacks, by intent (homicide or suicide), and firearms involvement. Throughout this paper we refer to this population as men since the vast majority of deaths occurred after childhood. The data were suppressed by WISQARS for race-state strata with 10 or fewer actual deaths between 2008 and 2014, and could not be used in these analyses. We computed the average annual fatality rate according to race, intent, and firearms involvement by dividing the number of fatalities by the total population estimate (i.e., the summation of population estimates over 2008 to 2014) and we calculated the absolute inequality (risk difference) in estimates between black and white men. For homicide, we subtract the fatality rate of white men from that of black men, and for suicide these rates are reversed, such that the estimated risk differences are mostly positive and interpreted as the number of additional deaths to black (white) men due to homicide (suicide) associated with the heightened fatality rate experienced by black (white) men. We did not calculate confidence intervals because there was no sampling, and thus no sampling error. To reflect varying population sizes among states and by race, we size the data markers according to race-specific average annualized population size. 
 
 To examine the relationships between gun prevalence, firearm-related homicide, and firearm-related suicide by race, we used the last available state-level estimates of household firearm ownership from the National Behavioral Risk Factor Surveillance System (BRFSS) from 2004. The BRFSS is an annual telephone survey on the non-institutionalized adult population that asks respondents about their health-related risk behaviors, chronic health conditions, and use of preventive services. In 2001, 2002, and 2004, the BRFSS asked, “Are any firearms kept in or around your home?” 293,882 people responded to this question and estimates of household gun ownership prevalence (%) by state were computed previously and ranged between 10.2% in Hawaii and 65.5% in Wyoming.[@monuteaux2015firearm] Given that individuals may under-report gun ownership, and that state gun prevalence may have shifted since 2004, we grouped states into four broad categories of gun prevalence: (i) 10% - 19.9%, (ii) 20% - 34.9%, (iii) 35% - 44.9%, and (iv) 45% - 66%, to provide a fair proxy for current levels of ownership. 
 
 We then visually assessed the relationships between state gun prevalence, firearm-related homicide, and firearm-related suicide by graphing the rate of firearm-related homicide as a function of firearm-related suicide and shaded the points by category of gun prevalence, separately for black men and white men. Correlation between rates of firearm-related homicide and suicide would imply that conditions that generate variation in homicide also generate variation in suicide, such as cultural, social, or economic conditions, including state gun prevalence or the firearm policy environment. Thus, the purpose of this descriptive exercise is to illustrate whether states with relatively high rates of firearm-related homicide also have relatively high rates of firearm-related suicide, and if this pattern exists for both black men and white men and is associated with state gun ownership. 
 
-The analysis was performed in R version 3.3.2.[@r_language] No ethical review was required since this study used de-identified data. A replication data set including the raw data and statistical code to reproduce the manuscript is publicly available on GitHub: [https://github.com/corinne-riddell/InjuryDisparity/](https://github.com/corinne-riddell/InjuryDisparity/).
+The analysis was performed in R version 3.3.2.[@r_language] No institutional ethical review was required since this study used publicly accessible data.[@tcps2] A replication data set including the raw data and statistical code to reproduce the manuscript is publicly available on GitHub: [https://github.com/corinne-riddell/InjuryDisparity/](https://github.com/corinne-riddell/InjuryDisparity/).
+
+**Funding Source**
+
+This research was not formally supported by a research grant, although one of the co-authors was supported by the National Institutes of Health (#1R21 DA041154-01).
 
 #Results
 
@@ -428,7 +423,7 @@ There were `r formatC(sum(tib1$sum.deaths.homicide.black) + sum(tib1$sum.deaths.
 
 Georgia, New York, Florida, Texas, and California are the states with the largest black populations. Among them, Texas exhibited the smallest black-white difference in firearm-related homicide (13 additional deaths to black men per 100,000), which was also substantially lower than the differences estimated for neighboring states like Louisiana (+37), Oklahoma (+29), and Arkansas (+29). Georgia (+16) and Florida (+22) had differences close to nearby South and North Carolina (+19 and +17, respectively), while having lower rates than Alabama (+27) and Tennessee (+28). New York's difference (+18) was similar to Massachusetts (+17) and Connecticut (+22), but was substantially lower than the rates of neighboring New Jersey (+30) and Pennsylvania (+41). California exhibited the largest black-white difference (+30) in firearm-related homicide among the five states with the largest black populations, which was larger than the rates estimates for contiguous states like Nevada (+17) and Oregon (+10), although these states had relatively small black populations.
 
-Although non-firearm homicides are much more rare, they also deomonstrated the general pattern of heightened rates among black men compared to white men. Whereas black men experienced annual rates that varied between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]` per 100,000. Across the US, firearm homicide rates were higher than non-firearm rates for black men, and were more than 5.3 times higher in all states in the East North Central region (Wisconsin, Illinois, Indiana, Ohio, and Michigan), and in Missouri, Louisiana, Delaware, and Nebraska.
+Although non-firearm homicides are much more rare, they also demonstrated the general pattern of heightened rates among black men compared to white men. Whereas black men experienced annual rates that varied between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]` per 100,000. Across the US, firearm homicide rates were higher than non-firearm rates for black men, and were more than 5.3 times higher in all states in the East North Central region (Wisconsin, Illinois, Indiana, Ohio, and Michigan), and in Missouri, Louisiana, Delaware, and Nebraska.
 
 ```{r results_statistics_suicide, echo=F}
 stats4 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adj.RD.suicide, na.rm = T)),
@@ -629,27 +624,7 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
 #          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
 ```
 
-**Author Contributions**
-
-Study conception and design: Riddell
-
-Acquisition of data: Riddell 
-
-Analysis and interpretation of data: Riddell, Harper, Cerdá, Kaufman 
-
-Drafting of the manuscript: Riddell
-
-Critical revision of the manuscript for important intellectual content: Riddell, Harper, Cerdá, Kaufman
-
-Statistical analysis: Riddell 
-
-Obtained funding: Dr. Riddell's salary was supported by McGill University's Department of Epidemiology, Biostatistics, and Occupational Health
-
-Administrative, technical, or material support: None 
-
-Study supervision: Kaufman
-
-**Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University, and received salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Sam Harper was supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Dr. Riddell had full access to all of the data and takes responsibility for the integrity of the data and the accuracy of the data analysis. The sources of support had no control over the design and conduct of the study; collection, management, analysis, and interpretation of the data; and preparation, review, or approval of the manuscript; and decision to submit the manuscript for publication. 
+**Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University, and received salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Sam Harper is supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Magdalena Cerdá is a CAMPOS Faculty Scholar, ADVANCE Program at the University of California, Davis and supported by the National Institutes of Health (#1R21 DA041154-01).
 
 ###References
 ```{r echo=F, eval=F}
