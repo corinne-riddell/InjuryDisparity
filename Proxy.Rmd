@@ -1,0 +1,99 @@
+---
+title: "Untitled"
+author: "Corinne Riddell"
+date: "11/10/2017"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+```
+
+## State gun prevalence
+
+- GSS measures gun ownership nationally and annually
+- BRFSS 2004 has state-level estimates on gun ownership
+
+-FS/S correlated well with survey measures of state gun ownership
+-There has been an influx of papers evaluating the effects of gun policies
+-Often these papers involve "case" and "control" states. Where "case" states have undergone a policy change (introduction or removal) and control changes did not
+-DID analyses control for state-level characteristics that vary between states and share time trends
+-DID does not control for state-specific time trends in confounders
+-Synthetic control analyses involve creating a control based on a weighting of a pool of eligible states based on a set of pre-defined confounding factors
+-In both of these analyses, one of the important confounding variables is state-level gun ownership.
+-If there is an influx of guns into a state, homicide or suicide may increase as a result of this influx, indepently from any policy changes.
+     - wait a minute -- if you had a true measure of gun ownership, and if the policy change was working wouldn't you expect that part of the change would go through gun ownership? That is, isn't gun ownership an intermediary?
+
+##Hypothetical pathways: homicide
+```{r, echo = F, out.width = 750}
+include_graphics(path = "../Presentations/images/DAG_homicide.png")
+```
+
+##Hypothetical pathways: suicide
+```{r, echo = F, out.width = 750}
+include_graphics(path = "../Presentations/images/DAG_suicide.png")
+```
+
+```{r load_cook_data}
+dat <- tibble::tribble(
+  ~Year, ~Handgun.Prevalence.GSS, ~FSS, ~SE,
+  1973, 0.2023, 0.5302, 0.0128,
+  1974, 0.2001, 0.5595, 0.0128,
+  1976, 0.2181, 0.5489, 0.0132,
+  1977, 0.2066, 0.5608, 0.0127,
+  1980, 0.2407, 0.5790, 0.0137,
+  1982, 0.2245, 0.5864, 0.0133,
+  1984, 0.2155, 0.5843, 0.0132,
+  1985, 0.2303, 0.5895, 0.0132,
+  1987, 0.2541, 0.5889, 0.0140,
+  1988, 0.2281, 0.5975, 0.0166,
+  1989, 0.2536, 0.6013, 0.0166,
+  1990, 0.2348, 0.6110, 0.0172,
+  1991, 0.2045, 0.6013, 0.0158,
+  1993, 0.2411, 0.6090, 0.0160,
+  1994, 0.2458, 0.6026, 0.0119,
+  1996, 0.2237, 0.5878, 0.0117,
+  1998, 0.1961, 0.5699, 0.0113,
+  2000, 0.1998, 0.5651, 0.0115)
+```
+
+## National gun ownership vs. FS/S
+```{r}
+library(plotly)
+one <- ggplot(dat, aes(x = Year, y = Handgun.Prevalence.GSS)) + 
+  geom_point() + ylab("GSS national handgun %") + geom_smooth()
+
+two <- ggplot(dat, aes(x = Year, y = FSS)) + 
+  geom_point() + ylab("Firearm suicide % of suicides") + geom_smooth()
+
+subplot(ggplotly(one), ggplotly(two), nrows = 2, titleY = T)
+```
+
+Another way to look at it:
+```{r}
+ggplot(dat, aes(x = Handgun.Prevalence.GSS, y = FSS))  + 
+  geom_smooth(se = F, col="black") + 
+  geom_point(aes(col = Year)) + 
+  ylab("Firearm suicide % of suicides") +
+  xlab("GSS national handgun %")
+
+cor <- cor(dat$Handgun.Prevalence.GSS, dat$FSS)
+```
+
+The correlation coefficient (linear) is `r round(cor, 2)`.
+The above plots show that on the national level theses things do co-vary.
+
+Azrael in 2004 says that correlation was 0.21 in the analysis they did when evaluating the proxy and said, "we cannot determine whether FS/S serves as a good proxy for intertemporal variation in gun prevalence."
+
+
+
+
+
+Kivisto 2017 - firearm legislation and fatal police shootings
+Crifasi 2015 - used in synthetic control model to improve the matching. Gun ownership is part of the synthetic control.
+ 
+Let's assume that the proxy is good. That is, that it does a good job on representing gun ownership rates on the state level.
+- does that matter when focus is on communities with the most gun violence?
+
+
+ 
