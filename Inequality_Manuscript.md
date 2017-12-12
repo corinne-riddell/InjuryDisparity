@@ -381,11 +381,19 @@ Figure Legends
 
 ### Figure 1: Difference in age-standardized homicide fatalities rates for men by state, firearms, and race, 2008-2014
 
+![](Inequality_Manuscript_files/figure-markdown_strict/figure1-1.png)
+
 ### Figure 2: Difference in age-standardized suicide fatalities rates for men by state, firearms, and race, 2008-2014
+
+![](Inequality_Manuscript_files/figure-markdown_strict/figure2-1.png)
 
 ### Figure 3: The relationship between the annual rates of homicide and suicide among white men by state and reported firearm ownership, 2008-2014
 
+![](Inequality_Manuscript_files/figure-markdown_strict/Figure3-1.png)
+
 ### Figure 4: The relationship between the annual rates of homicide and suicide among black men by state and reported firearm ownership, 2008-2014
+
+![](Inequality_Manuscript_files/figure-markdown_strict/figure4-1.png)
 
 **Acknowledgements:** Corinne Riddell is a post-doctoral researcher at
 McGill University, and received salary support from the Department of
