@@ -75,42 +75,22 @@ gun.data <- gun.data %>% arrange(gun.house.prev) %>%
 
 ```{r load_data_age_std_males, echo=F, warning=F, message=F}
 #homicide
-NHWM_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHWM_homicide_FA <- read.table("./Data/Men/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
-NHWM_homicide_NonFA <- read.table("./Data/agestd/Homicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHWM_homicide_NonFA <- read.table("./Data/Men/Homicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
-NHBM_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHBM_homicide_FA <- read.table("./Data/Men/Homicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
-NHBM_homicide_NonFA <- read.table("./Data/agestd/Homicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-#suicide
-NHWM_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHWM_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBM_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBM_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-```
-
-```{r load_data_age_std_females, echo=F, warning=F, message=F}
-#homicide
-NHWF_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHWF_homicide_NonFA <- read.table("./Data/agestd/Homicide_Non-Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBF_homicide_FA <- read.table("./Data/agestd/Homicide_Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBF_homicide_NonFA <- read.table("./Data/agestd/Homicide_Non-Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHBM_homicide_NonFA <- read.table("./Data/Men/Homicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
 #suicide
-NHWF_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHWM_suicide_FA <- read.table("./Data/Men/Suicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
-NHWF_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_White_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHWM_suicide_NonFA <- read.table("./Data/Men/Suicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
-NHBF_suicide_FA <- read.table("./Data/agestd/Suicide_Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHBM_suicide_FA <- read.table("./Data/Men/Suicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 
-NHBF_suicide_NonFA <- read.table("./Data/agestd/Suicide_Non-Firearms_Black_NH_Females_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
+NHBM_suicide_NonFA <- read.table("./Data/Men/Suicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
 ```
 
 ```{r tidy_fx, echo=F, warning=F, message=F}
@@ -153,33 +133,6 @@ rm(NHBM_homicide_FA, NHBM_homicide_NonFA, NHBM_suicide_FA, NHBM_suicide_NonFA,
    NHWM_homicide_FA, NHWM_homicide_NonFA, NHWM_suicide_FA, NHWM_suicide_NonFA)
 ```
 
-```{r tidy_female_data, echo = F}
-NHWF_homicide_FA <- tidy_fx(data = NHWF_homicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "white", "homicide", "Firearm")
-NHWF_homicide_NonFA <- tidy_fx(data = NHWF_homicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "white", "homicide", "Non-Firearm")
-NHWF_suicide_FA <- tidy_fx(data = NHWF_suicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "white", "suicide", "Firearm")
-NHWF_suicide_NonFA <- tidy_fx(data = NHWF_suicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "white", "suicide", "Non-Firearm")
-
-NHBF_homicide_FA <- tidy_fx(data = NHBF_homicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "black", "homicide", "Firearm")
-NHBF_homicide_NonFA <- tidy_fx(data = NHBF_homicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "black", "homicide", "Non-Firearm")
-NHBF_suicide_FA <- tidy_fx(data = NHBF_suicide_FA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "black", "suicide", "Firearm")
-NHBF_suicide_NonFA <- tidy_fx(data = NHBF_suicide_NonFA, "ST", "Deaths", "Population", "U_C_Rate", 
-                            "U_A_Rate", "black", "suicide", "Non-Firearm")
-
-NHBF_homicide<- rbind(NHBF_homicide_FA, NHBF_homicide_NonFA)
-NHBF_suicide <- rbind(NHBF_suicide_FA, NHBF_suicide_NonFA)
-NHWF_homicide <- rbind(NHWF_homicide_FA, NHWF_homicide_NonFA)
-NHWF_suicide <- rbind(NHWF_suicide_FA, NHWF_suicide_NonFA)
-rm(NHBF_homicide_FA, NHBF_homicide_NonFA, NHBF_suicide_FA, NHBF_suicide_NonFA,
-   NHWF_homicide_FA, NHWF_homicide_NonFA, NHWF_suicide_FA, NHWF_suicide_NonFA)
-```
-
 ```{r merge_data_males, echo=F}
 #merge all the data
 Males_AllAges_0814 <- merge(NHBM_homicide, NHBM_suicide %>% select(-Population.black), by = c("ST", "type")) %>%
@@ -195,24 +148,6 @@ Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_suicide %>% select(-Populat
          adj.RD.suicide = adjusted.suicide.black - adjusted.suicide.white)
 
 Males_AllAges_0814 <- Males_AllAges_0814 %>% 
-  mutate(crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
-         adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white)
-```
-
-```{r merge_data_females, echo=F}
-Females_AllAges_0814 <- merge(NHBF_homicide, NHBF_suicide %>% select(-Population.black), by = c("ST", "type")) %>%
-  mutate(crude.RD.hom.su.black = crude.homicide.black - crude.suicide.black,
-         adj.RD.hom.su.black = adjusted.homicide.black - adjusted.suicide.black)
-
-Females_AllAges_0814 <- merge(Females_AllAges_0814, NHWF_homicide, by = c("ST", "type")) %>%
-  mutate(crude.RD.homicide = crude.homicide.black - crude.homicide.white,
-         adj.RD.homicide = adjusted.homicide.black - adjusted.homicide.white)
-
-Females_AllAges_0814 <- merge(Females_AllAges_0814, NHWF_suicide %>% select(-Population.white), by = c("ST", "type")) %>%
-  mutate(crude.RD.suicide = crude.suicide.black - crude.suicide.white,
-         adj.RD.suicide = adjusted.suicide.black - adjusted.suicide.white)
-
-Females_AllAges_0814 <- Females_AllAges_0814 %>% 
   mutate(crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
          adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white)
 ```
@@ -243,38 +178,6 @@ Males_AllAges_0814$ST.order.RD.suicide <- factor(Males_AllAges_0814$ST,
 
 ```
 
-```{r add_factor_sorting_females, echo = F}
-#used for plotting -- to arrange the states on the y-axis according to the magnitude of the black-white inequality
-levels.firearm.homicide <- Females_AllAges_0814 %>% filter(type == "Firearm") %>%
-  transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
-
-# Females_AllAges_0814 %>% 
-#   filter(is.na(adjusted.homicide.black) == T & type == "Firearm") %>% 
-#   select(ST, adjusted.homicide.white)
-
-Females_AllAges_0814$ST.order.RD.homicide <- factor(Females_AllAges_0814$ST, 
-                                                  levels = levels(levels.firearm.homicide$ST.order.RD.homicide))
-
-# Males_AllAges_0814$ST.order.RD.homicide <- factor(Males_AllAges_0814$ST, 
-#                                                   levels = c("HI", "SD", "NH", "ND", "VT", "ID", "ME", "WY", "MT",
-#                                                              levels(levels.firearm.homicide$ST.order.RD.homicide)[1:42]))
-
-levels.firearm.suicide <- Females_AllAges_0814 %>% filter(type == "Firearm") %>%
-  transmute(ST.order.RD.suicide = reorder(ST, -adj.RD.suicide))
-
-# Females_AllAges_0814 %>% 
-#   filter(is.na(adjusted.suicide.black) == T & type == "Firearm") %>% 
-#   select(ST, adjusted.suicide.white)
-
-# Females_AllAges_0814$ST.order.RD.suicide <- factor(Females_AllAges_0814$ST, 
-#                                                   levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT", "ID", "MT", "WY",
-#                                                              levels(levels.firearm.suicide$ST.order.RD.suicide)[1:39]))
-
-Females_AllAges_0814$ST.order.RD.suicide <- factor(Females_AllAges_0814$ST, 
-                                                  levels = levels(levels.firearm.suicide$ST.order.RD.suicide))
-
-```
-
 ```{r add_variables_males, echo=F}
 num.years = 2014-2008+1
 
@@ -294,28 +197,11 @@ Males_AllAges_0814 <- merge(Males_AllAges_0814, gun.data, by = "ST", all.x = T)
 #dim(Males_AllAges_0814)
 ```
 
-```{r add_variables_females, echo=F}
-Females_AllAges_0814 <- Females_AllAges_0814 %>% 
-  mutate(average.pop.white = Population.white/num.years,
-         average.pop.black = Population.black/num.years)
-
-Females_AllAges_0814$gun.level <- "Middle"
-Females_AllAges_0814$gun.level[Females_AllAges_0814$ST %in% c("LA", "UT", "OK", "IA", "TN","KY", "AL", 
-                                                          "MS", "ID","ND", "WV", "AR", "AK", "SD", "MT", "WY")] <- "High"
-Females_AllAges_0814$gun.level[Females_AllAges_0814$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
-
-Females_AllAges_0814$gun.level <- factor(Females_AllAges_0814$gun.level, levels = c("Low", "Middle", "High"))
-
-#dim(Females_AllAges_0814)
-Females_AllAges_0814 <- merge(Females_AllAges_0814, gun.data, by = "ST", all.x = T)
-#dim(Females_AllAges_0814)
-```
-
 #Introduction
 
 ```{r WISQARS-data-intro, echo=F}
 #source: WISQARS fatal injury mapping tool
-#note:I uses homicide, not homicide and legal intervention -- this changes the numbers slightly, not materially. 
+#note:I used homicide, not homicide and legal intervention -- this changes the numbers slightly, not materially. 
 
 #HOMICIDE relative risks
 nh.black.homicide.rate.agestd <- 33.58 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
@@ -489,33 +375,6 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
   scale_x_continuous(limits = c(0, 70)) 
 ```
 
-```{r figure1-females, fig.width=5, fig.height=8.5, echo = F, warning=F, eval = F}
-ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
-  geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
-                   y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
-               lwd = 2, col = "navy", alpha = 0.5) +
-  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  geom_point(aes(x = adjusted.homicide.black, col = "NH Black", size = average.pop.black)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1),
-  scale_color_manual(values = c("navy", "#fd8d3c")) +
-  scale_alpha_continuous(guide = F) +
-  scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
-  ylab("") +
-  xlab("Homicide mortality per 100k") + 
-  theme_bw() + 
-  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
-  theme(legend.position = c(0.8, 0.25), 
-        plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2)),
-        strip.background = element_rect(fill="white"), 
-        strip.text.x = element_text(size = 12),
-        strip.text.y = element_text(size = 12)) + 
-   geom_text(data = Females_AllAges_0814 %>% filter(is.na(adj.RD.homicide) == F),
-             aes(x = adjusted.homicide.black + 1, label = paste0("+", round(adj.RD.homicide))),
-             size = 3, col = "navy") +
-  facet_wrap( ~ type) +
-  scale_x_continuous(limits = c(0, 10)) 
-```
-
 ###Figure 2: Difference in age-standardized suicide fatalities rates for men by state, firearms, and race, 2008-2014
 
 ```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=F}
@@ -523,8 +382,8 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
   geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
                lwd = 2, col = "#4FD5AF", alpha = 0.5) +
-  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + #, alpha = ifelse(death.homicide.black < 20, 0.7, 1)
+  geom_point(aes(col = "NH White", size = average.pop.white)) + 
+  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + 
   scale_color_manual(values = c("#8A5C7B", "#4FD5AF")) +
   scale_alpha_continuous(guide = F) +
   scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
@@ -537,33 +396,8 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
   scale_x_continuous(limits = c(0, 35)) +
-  #scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
   geom_text(data = subset(Males_AllAges_0814, is.na(adj.RD.suicide)==F), 
             aes(x = adjusted.suicide.white + 4, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#308E77") +
-  facet_wrap(~type)
-```
-
-```{r figure2-females, fig.width=5, fig.height=8.5, echo = F, warning=F, eval = F}
-ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
-  geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
-                   y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
-               lwd = 2, col = "#fd8d3c", alpha = 0.5) +
-  geom_point(aes(col = "NH White", size = average.pop.white)) + #alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  geom_point(aes(x = adjusted.suicide.black, col = "NH Black", size = average.pop.black)) + #, alpha = ifelse(death.homicide.black < 20, 0.7, 1)
-  scale_color_manual(values = c("navy", "#fd8d3c")) +
-  scale_alpha_continuous(guide = F) +
-  scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
-  ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
-  guides(color = guide_legend(title = " "), size = guide_legend(title = "Population")) + 
-  theme( plot.title = element_text(size = 10),
-        legend.background = element_rect(fill=alpha('white', 0.2)),
-        strip.background = element_rect(fill="white"), 
-        strip.text.x = element_text(size = 12),
-        strip.text.y = element_text(size = 12)) + 
-  scale_x_continuous(limits = c(0, 7)) +
-  #scale_x_continuous(limits = c(0, 60), labels = seq(0, 60, 20), breaks = seq(0, 60, 20)) +
-  geom_text(data = subset(Females_AllAges_0814, is.na(adj.RD.suicide)==F), 
-            aes(x = adjusted.suicide.white + 1, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), size = 3, col = "#fd8d3c") +
   facet_wrap(~type)
 ```
 
@@ -573,9 +407,7 @@ ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.w
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4) +
-  #scale_fill_manual(values = c("#EFEE69", "#57C796", "#4B88A0", "#694760")) +
   scale_fill_manual(values = c("#D2F172","#53D6AD", "#5FA6C5", "#996E94")) +
-  #scale_fill_viridis(discrete = T, direction = -1) +
   ylab("White Homicide Rate\n(per 100,000)") +
   xlab("White Suicide Rate (per 100,000)") + 
   theme_bw() +
@@ -591,43 +423,73 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
   scale_fill_manual(values = c("#D2F172","#53D6AD", "#5FA6C5", "#996E94")) +
-  #scale_fill_viridis(discrete = T, direction = -1) +
   ylab("Black Homicide Rate\n(per 100,000)") +
   xlab("Black Suicide Rate (per 100,000)") + 
   theme_bw() +
   theme(legend.position = "bottom") +
   scale_size_area(breaks = c(16600, 100000, 500000, 1400000), max_size = 15, guide = F) +
   guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5))) 
-    
-# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.black, adjusted.homicide.black)) + 
-#   geom_point(aes(fill = gun.level, size = average.pop.black), col = "white", pch = 21, alpha = 0.5) +
-#   geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) +
-#   ylab("Black Homicide Rate\n(per 100,000)") +
-#   xlab("Black Suicide Rate (per 100,000)") + 
-#   theme_bw() +
-#   scale_size_area(breaks = c(16600, 100000, 500000, 1400000), max_size = 15, guide = F) +
-#   guides(fill = guide_legend(title = "Gun ownership"))
-
-# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = adj.RD.homicide)) +
-#          geom_point() +
-#   geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
-# 
-# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = adj.RD.suicide)) +
-#          geom_point() +
-#   geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) +
-#   geom_smooth()
-# 
-# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = Population.white)) +
-#          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
-# 
-# ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(x = gun.house.prev, y = Population.black)) +
-#          geom_point() + geom_text_repel(aes(label = ST), alpha = 0.8, size = 3, check_overlap = T) 
 ```
 
 **Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University, and received salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Sam Harper is supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Magdalena Cerdá is a CAMPOS Faculty Scholar, ADVANCE Program at the University of California, Davis and supported by the National Institutes of Health (#1R21 DA041154-01).
 
 ###References
+
+1. Statistics, Programming & Economics Branch, National Center for Injury Prevention & Control, Centers for Disease Control and Prevention. Fatal injury mapping. Available from: https://wisqars.cdc.gov:8443/cdcMapFramework/. [cited 3 Oct 2017].
+
+2. Miller M, Azreal D, Hemenway D. Firearms and violent death in the United States. In: Webster DW, Vernick JS, eds. *Reducing Gun Violence in America. Informing Policy with Evidence and Analysis*. Baltimore: The Johns Hopkins University Press; 2013:14-15.
+
+3. Miller M, Azrael D, Hemenway D. Rates of household firearm ownership and homicide across us regions and states, 1988–1997. *American Journal of Public Health*. 2002;92(12):1988-1993.
+
+4. Miller M, Hemenway D, Azrael D. State-level homicide victimization rates in the us in relation to survey measures of household firearm ownership, 2001–2003. *Social Science & Medicine*. 2007;64(3):656-664.
+
+5. Siegel M, Ross CS, King III C. The relationship between gun ownership and firearm homicide rates in the united states, 1981–2010. *American Journal of Public Health*. 2013.
+
+6. Miller M, Barber C, White RA, Azrael D. Firearms and suicide in the United States: Is risk independent of underlying suicidal behavior? *American Journal of Epidemiology*. 2013;178(6):946-955.
+
+7. Miller M, Lippmann SJ, Azrael D, Hemenway D. Household firearm ownership and rates of suicide across the 50 United States. *Journal of Trauma and Acute Care Surgery*. 2007;62(4):1029-1035.
+
+8. Kellermann AL, Rivara FP, Rushforth NB, et al. Gun ownership as a risk factor for homicide in the home. *New England Journal of Medicine*. 1993;329(15):1084-1091.
+
+9. Kellermann AL, Rivara FP, Somes G, et al. Suicide in the home in relation to gun ownership. *New England Journal of Medicine*. 1992;327(7):467-472.
+
+10. Kubrin CE, Wadsworth T. Explaining suicide among blacks and whites: How socioeconomic factors and gun availability affect race-specific suicide rates. *Social Science Quarterly*. 2009;90(5):1203-1227.
+
+11. Monuteaux MC, Lee LK, Hemenway D, Mannix R, Fleegler EW. Firearm ownership and violent crime in the us: An ecologic study. *American journal of Preventive Medicine*. 2015;49(2):207-214.
+
+12. R Core Team. *R: A Language and Environment for Statistical Computing*. Vienna, Austria: R Foundation for Statistical Computing; 2014. http://www.R-project.org/.
+
+13. Canadian Institutes of Health Research, National Sciences and Engineering Research Council of Canada, and Sciences Sciences and Humanities Research Council of Canada. *Tri-council policy statement: Ethical conduct for research involving humans*, December 2014.
+
+14. Wilson WJ. *The Truly Disadvantaged: The Inner City, the Underclass, and Public Policy*. University of Chicago Press; 1987.
+
+15. Massey D. *Problem of the Century*. New York: Russell Sage; 2001:314-344.
+
+16. Ousey GC, Kubrin CE. Exploring the connection between immigration and violent crime rates in US cities, 1980–2000. *Social Problems*. 2009;56(3):447-473.
+
+17. Shihadeh ES, Flynn N. Segregation and crime: The effect of black social isolation on the rates of black urban violence. *Social Forces*. 1996;74(4):1325-1352.
+
+18. Peterson RD, Krivo LJ. Racial segregation and black urban homicide. *Social Forces*. 1993;71(4):1001-1026.
+
+19. Blumstein A. Youth violence, guns, and the illicit-drug industry. *The Journal of Criminal Law and Criminology*. 1995;86(1):10-36.
+
+20. Fryer RG, Heaton PS, Levitt SD, Murphy KM. Measuring crack cocaine and its impact. *Economic Inquiry*. 2013;51(3):1651-1681.
+
+21. Spicer RS, Miller TR. Suicide acts in 8 states: Incidence and case fatality rates by demographics and method. *American Journal of Public Health*. 2000;90(12):1885.
+
+22. Miller M, Azrael D, Hemenway D. The epidemiology of case fatality rates for suicide in the Northeast. *Annals of Emergency Medicine*. 2004;43(6):723-730.
+
+23. Siegel M, Pahn M, Xuan Z, et al. Firearm-related laws in all 50 US states, 1991–2016. *American Journal of Public Health*. 2017;(0):e1-e8.
+
+24. Mościcki EK. Identification of suicide risk factors using epidemiologic studies. *Psychiatric Clinics of North America*. 1997;20(3):499-517.
+
+25. Mościcki EK. Epidemiology of completed and attempted suicide: Toward a framework for prevention. *Clinical Neuroscience Research*. 2001;1(5):310-323.
+
+26. Disease Control C for, Prevention. Alcohol and suicide among racial/ethnic populations — 17 states, 2005–2006. *MMWR*. 2009;58:638-640.
+
+27. Cook PJ, Rivera-Aguirre AE, Cerdá M, Wintemute G. Constant lethality of gunshot injuries from firearm assault: United states, 2003–2012. *American Journal of Public Health*. 2017;107(8):1324-1328.
+
 ```{r echo=F, eval=F}
-save(Males_AllAges_0814, file = "/Users/corinneriddell/Documents/repos/InjuryDisparity/Data/Males_AllAges_0814")
+save(Males_AllAges_0814, file = "./InjuryDisparity/Data/Males_AllAges_0814.Rdata")
 ```
 

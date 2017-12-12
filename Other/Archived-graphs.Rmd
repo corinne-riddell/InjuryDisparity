@@ -1,0 +1,49 @@
+---
+title: "Untitled"
+author: "Corinne Riddell"
+date: "10/4/2017"
+output: html_document
+---
+
+Note, this won't run on its own -- need to compile the other Rmd file first. 
+
+**Other graphs, fyi**
+The suicide rates for blacks and whites are correlated. The ratio of white to black suicides is approximately X:1.
+
+```{r, echo=F, warning=F}
+ggplot(Males_AllAges_0814, aes(adjusted.suicide.white, adjusted.suicide.black)) + 
+  geom_text(aes(label = ST, col = type), size = 2.5) +
+  guides(color = guide_legend(title = " ")) +
+  ylab("Suicide rate for blacks") +
+  xlab("Suicide rate for whites") +
+  theme_bw()
+
+Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(cor.suicide = cor(adjusted.suicide.black, adjusted.suicide.white, use = "complete.obs"))
+
+ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.suicide.white, adjusted.suicide.black)) + 
+  geom_label(aes(label = ST, col = gun.level), size = 2.5, alpha = 0.5) +
+  guides(color = guide_legend(title = " ")) +
+  ylab("Suicide rate for blacks") +
+  xlab("Suicide rate for whites") +
+  theme_bw()
+
+```
+
+The homicide rates for blacks and whites are not correlated at all and are wildly different in magnitude.
+
+```{r, echo=F, warning=F}
+ggplot(Males_AllAges_0814, aes(adjusted.homicide.white, adjusted.homicide.black)) + 
+  geom_text(aes(label = ST, col = type), size = 2.5) +
+  ylab("Homicide rate for blacks") +
+  xlab("Homicide rate for whites") +
+  theme_bw()
+
+ggplot(subset(Males_AllAges_0814, type == "Firearm"), aes(adjusted.homicide.white, adjusted.homicide.black)) + 
+  geom_label(aes(label = ST, col = gun.level), size = 2.5, alpha = 0.5) +
+  ylab("Homicide rate for blacks") +
+  xlab("Homicide rate for whites") +
+  theme_bw()
+
+```
