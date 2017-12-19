@@ -462,7 +462,7 @@ Firearms feature differently in the deaths of black and white men in the United 
 ##Figure Legends 
 ###Figure 1: Difference in age-standardized homicide fatalities rates for men by state, firearms, and race, 2008-2014
 
-```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=F}
+```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
   geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
                    y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
@@ -489,7 +489,7 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
   scale_x_continuous(limits = c(0, 70)) 
 ```
 
-```{r figure1-females, fig.width=5, fig.height=8.5, echo = F, warning=F, eval = F}
+```{r figure1-females, fig.width=5, fig.height=8.5, echo = F, warning=F, eval=F}
 ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
   geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
                    y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
@@ -518,7 +518,7 @@ ggplot(Females_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide
 
 ###Figure 2: Difference in age-standardized suicide fatalities rates for men by state, firearms, and race, 2008-2014
 
-```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=F}
+```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
   geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
@@ -543,7 +543,7 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
   facet_wrap(~type)
 ```
 
-```{r figure2-females, fig.width=5, fig.height=8.5, echo = F, warning=F, eval = F}
+```{r figure2-females, fig.width=5, fig.height=8.5, echo = F, warning=F, eval=F}
 ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
   geom_segment(aes(x = adjusted.suicide.white, xend = adjusted.suicide.black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
@@ -569,7 +569,7 @@ ggplot(Females_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.w
 
 ###Figure 3: The relationship between the annual rates of homicide and suicide among white men by state and reported firearm ownership, 2008-2014
 
-```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F, eval = F}
+```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4) +
@@ -586,7 +586,7 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.
 
 ###Figure 4: The relationship between the annual rates of homicide and suicide among black men by state and reported firearm ownership, 2008-2014
 
-```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F, eval = F}
+```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.black, y = adjusted.homicide.black)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
