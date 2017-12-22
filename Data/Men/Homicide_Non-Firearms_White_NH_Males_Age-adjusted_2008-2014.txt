@@ -3,7 +3,7 @@
 "2008-2014, United States","","","","","","",""
 "Age-adjusted Death Rates per 100,000 Population","","","","","","",""
 "Non-Firearm, Homicide, White, Non-Hispanic, Males, All Ages","","","","","","",""
-"Annualized Age-adjusted Rate for United States:  suppressed","","","","","","",""
+"Annualized Age-adjusted Rate for United States:  1.42","","","","","","",""
 "","","","","","","",""
 "","","","","","","",""
 "Reports for All Ages include those of unknown age.","","","","","","",""
