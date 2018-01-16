@@ -26,21 +26,21 @@ Word Count: 2700
 
 **Background:** It is unknown whether and how much the difference in excess deaths due to homicide among black men and suicide among white men vary by US state. Such knowledge could inform social policy aimed towards reducing social disparities in health.
 
-**Objective:** To compare the rates of firearm-related and firearm-unrelated violent deaths in black and white non-Hispanic men by US state and examine association of state prevalence of gun ownership and firearm-related homicides and suicides." 
+**Objective:** To compare the rates of firearm-related and firearm-unrelated violent deaths in black and white non-Hispanic men by US state and examine association of state prevalence of gun ownership and firearm-related homicides and suicides.
 
 **Design:** Surveillance study.
 
-**Setting:** 50 states and the District of Columbia, 2008 to 2014.
+**Setting:** 50 states and the District of Columbia, 2008 to 2014. The Web-based Injury Statistics Query and Reporting System was used to identify violent deaths, originally reportd by the National Vital Statistics System.
 
 **Participants:** Non-Hispanic black and non-Hispanic white males, all ages.
 
-**Measurements:** Absolute risks and risk differences in firearm- and non-firearm-related homicide and suicide for black and white men.
+**Measurements:** Absolute rates and rate differences in firearm- and non-firearm-related homicide and suicide for black and white men.
 
-**Results:** 71,217 homicides and 191,909 suicides were included in this analysis. Black-white differences in rates of firearm-related homicide and suicides varied widely across states. Relative to white men, black men experienced between 5 and 51 additional homicides per 100,000 men per year, with black men in Indiana, Michigan, Missouri, Pennsylvania, and Wisconsin all having more than 40 additional homicides per 100,000. White men experienced between 2 fewer and 16 additional suicides per 100,000, with the largest inequalities measured in Southern and Western states, and smallest inequalities in densely populated Northeastern states.
+**Results:** 71,217 homicides and 191,909 suicides were included in this analysis. Black-white differences in rates of firearm-related homicide and suicides varied widely across states. Relative to white men, black men experienced between 5 and 51 additional homicides involving firearms per 100,000 men per year, with black men in Indiana, Michigan, Missouri, Pennsylvania, and Wisconsin all having more than 40 additional homicides per 100,000 per year. White men experienced between 2 fewer and 16 additional suicides involving firearms per 100,000 per year, with the largest inequalities measured in Southern and Western states, and smallest inequalities in densely populated Northeastern states. 
 
-**Limitations:** Non-firearm suicides may be misclassified as unintentional injury deaths. This analysis focused on deaths only, and does not examine rates and inequalities in non-fatal violence.
+**Limitations:** Misclassification of homicides and suicides as unintentional injury deaths may have occurred. Survey data on state household gun ownership was collected in 2004 and may have shifted during the past decade. This analysis focused on deaths only, and does not examine rates and inequalities in non-fatal homicide and suicide.
 
-**Conclusion:** The large variation in the risks of violence and their racial inequalities highlights states where policies are most urgently needed to reduce violence and their racial inequalities. Future research linking these variations with the social, cultural, and policy environments are needed to identify settings that support reduced rates of violence for all Americans.
+**Conclusion:** The large variation in the rates of homicide and suicide and their racial inequalities highlight states where policies may be most beneficial at reducing rates of homicide and suicide and their racial inequalities.
 
 **Primary Funding Source:** The lead author receives salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Dr. Cerdá is supported by the National Institutes of Health (#1R21 DA041154-01). 
 
@@ -71,7 +71,6 @@ gun.data <- gun.data %>% arrange(gun.house.prev) %>%
                                        breaks = c(0, 20, 35, 44.9, 66), 
                                        labels = c("10.2%-19.9%", "20.0%-34.9%", "35.0%-44.9%", "45.0%-65.5%")))
 ```
-
 
 ```{r load_data_age_std_males, echo=F, warning=F, message=F}
 #homicide
@@ -133,28 +132,102 @@ rm(NHBM_homicide_FA, NHBM_homicide_NonFA, NHBM_suicide_FA, NHBM_suicide_NonFA,
    NHWM_homicide_FA, NHWM_homicide_NonFA, NHWM_suicide_FA, NHWM_suicide_NonFA)
 ```
 
+```{r annualized_US_point_estimates}
+#The annualized estimates were provided by WISQARS in the header of the data file.
+#We extract them from line 6 of the data files and convert them to data frames for ease of use.
+
+US.Homicide.FA.Black <- read.table("./Data/Men/Homicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+US.Homicide.FA.White <- read.table("./Data/Men/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+US.Homicide.NonFA.Black <- read.table("./Data/Men/Homicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+US.Homicide.NonFA.White <- read.table("./Data/Men/Homicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+
+US.Suicide.FA.Black <- read.table("./Data/Men/Suicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+US.Suicide.FA.White <- read.table("./Data/Men/Suicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+US.Suicide.NonFA.Black <- read.table("./Data/Men/Suicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+US.Suicide.NonFA.White <- read.table("./Data/Men/Suicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
+           skip = 5 ,nrow = 1, header = F, sep = ",")
+```
+
+```{r tidy_annulized_point_estimates}
+tidy_fx2 <- function(annualized.dataset, var1){
+ name <- deparse(substitute(annualized.dataset))
+ variables <- stringr::str_split(name, "\\.")
+ dat2 <- data.frame(annualized.dataset[, c(var1)])
+ names(dat2) <- paste0("Annualized.rate.", variables[[1]][2], ".", variables[[1]][4])
+ dat2$ST <- variables[[1]][1]
+ dat2$type <- ifelse(variables[[1]][3]=="FA", "Firearm", "Non-Firearm")
+ return(dat2)
+}
+
+US.hom.black <- rbind(tidy_fx2(US.Homicide.FA.Black, "V1"),
+                      tidy_fx2(US.Homicide.NonFA.Black, "V1")) %>%
+  rename(adjusted.homicide.black = Annualized.rate.Homicide.Black) %>% 
+  mutate(adjusted.homicide.black = as.numeric(unlist(regmatches(adjusted.homicide.black,
+                             gregexpr("[[:digit:]]+\\.*[[:digit:]]*",adjusted.homicide.black))
+          )      ))
+  
+US.hom.white <- rbind(tidy_fx2(US.Homicide.FA.White, "V1"),
+                      tidy_fx2(US.Homicide.NonFA.White, "V1")) %>%
+  rename(adjusted.homicide.white = Annualized.rate.Homicide.White) %>% 
+  mutate(adjusted.homicide.white = as.numeric(unlist(regmatches(adjusted.homicide.white,
+                             gregexpr("[[:digit:]]+\\.*[[:digit:]]*",adjusted.homicide.white))
+          )      ))
+
+
+US.sui.black <- rbind(tidy_fx2(US.Suicide.FA.Black, "V1"),
+                      tidy_fx2(US.Suicide.NonFA.Black, "V1")) %>%
+  rename(adjusted.suicide.black = Annualized.rate.Suicide.Black) %>% 
+  mutate(adjusted.suicide.black = as.numeric(unlist(regmatches(adjusted.suicide.black,
+                             gregexpr("[[:digit:]]+\\.*[[:digit:]]*", adjusted.suicide.black))
+                             )      
+                             )
+         )
+  
+US.sui.white <- rbind(tidy_fx2(US.Suicide.FA.White, "V1"),
+                      tidy_fx2(US.Suicide.NonFA.White, "V1")) %>%
+  rename(adjusted.suicide.white = Annualized.rate.Suicide.White) %>% 
+  mutate(adjusted.suicide.white = as.numeric(unlist(regmatches(adjusted.suicide.white,                                                              gregexpr("[[:digit:]]+\\.*[[:digit:]]*",adjusted.suicide.white))
+                                                    )     
+                                             )
+         )
+
+US.homicide.data <- cbind(US.hom.white %>% select(-ST, -type), US.hom.black)
+US.suicide.data <- cbind(US.sui.white %>% select(-ST, -type), US.sui.black)
+
+US.data <- merge(US.homicide.data, US.suicide.data, by = c("ST", "type"))
+rm(US.homicide.data, US.suicide.data)
+```
+
 ```{r merge_data_males, echo=F}
 #merge all the data
-Males_AllAges_0814 <- merge(NHBM_homicide, NHBM_suicide %>% select(-Population.black), by = c("ST", "type")) %>%
+Males_AllAges_0814 <- merge(NHBM_homicide, NHBM_suicide %>% select(-Population.black), by = c("ST", "type")) 
+
+Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_homicide, by = c("ST", "type"))
+
+Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_suicide %>% select(-Population.white), by = c("ST", "type"))
+
+Males_AllAges_0814 <- plyr::rbind.fill(Males_AllAges_0814, US.data) %>% 
   mutate(crude.RD.hom.su.black = crude.homicide.black - crude.suicide.black,
-         adj.RD.hom.su.black = adjusted.homicide.black - adjusted.suicide.black)
-
-Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_homicide, by = c("ST", "type")) %>%
-  mutate(crude.RD.homicide = crude.homicide.black - crude.homicide.white,
+         adj.RD.hom.su.black = adjusted.homicide.black - adjusted.suicide.black,
+         crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
+         adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white, 
+         crude.RD.suicide = crude.suicide.black - crude.suicide.white,
+         adj.RD.suicide = adjusted.suicide.black - adjusted.suicide.white,
+         crude.RD.homicide = crude.homicide.black - crude.homicide.white,
          adj.RD.homicide = adjusted.homicide.black - adjusted.homicide.white)
-
-Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_suicide %>% select(-Population.white), by = c("ST", "type")) %>%
-  mutate(crude.RD.suicide = crude.suicide.black - crude.suicide.white,
-         adj.RD.suicide = adjusted.suicide.black - adjusted.suicide.white)
-
-Males_AllAges_0814 <- Males_AllAges_0814 %>% 
-  mutate(crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
-         adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white)
 ```
 
 ```{r add_factor_sorting_males, echo = F}
 #used for plotting -- to arrange the states on the y-axis according to the magnitude of the black-white inequality
-levels.firearm.homicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
+levels.firearm.homicide <- Males_AllAges_0814 %>% 
+  filter(type == "Firearm") %>%
   transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
 
 # Males_AllAges_0814 %>% 
@@ -163,7 +236,7 @@ levels.firearm.homicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
 
 Males_AllAges_0814$ST.order.RD.homicide <- factor(Males_AllAges_0814$ST, 
                                                   levels = c("HI", "SD", "NH", "ND", "VT", "ID", "ME", "WY", "MT",
-                                                             levels(levels.firearm.homicide$ST.order.RD.homicide)[1:42]))
+                                                             levels(levels.firearm.homicide$ST.order.RD.homicide)[c(1:24, 26:43)], "US"))
 
 levels.firearm.suicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.suicide = reorder(ST, -adj.RD.suicide))
@@ -173,8 +246,8 @@ levels.firearm.suicide <- Males_AllAges_0814 %>% filter(type == "Firearm") %>%
 #   select(ST, adjusted.suicide.white)
 
 Males_AllAges_0814$ST.order.RD.suicide <- factor(Males_AllAges_0814$ST, 
-                                                  levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT", "ID", "MT", "WY",
-                                                             levels(levels.firearm.suicide$ST.order.RD.suicide)[1:39]))
+                                                  levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT","ID", "MT", "WY",
+                                                             levels(levels.firearm.suicide$ST.order.RD.suicide)[c(1:15, 17:40)], "US"))
 
 ```
 
@@ -195,7 +268,10 @@ Males_AllAges_0814$gun.level <- factor(Males_AllAges_0814$gun.level, levels = c(
 #dim(Males_AllAges_0814)
 Males_AllAges_0814 <- merge(Males_AllAges_0814, gun.data, by = "ST", all.x = T)
 #dim(Males_AllAges_0814)
+
+Males_AllAges_0814$gun.level[Males_AllAges_0814$ST == "US"] <- NA
 ```
+
 
 #Introduction
 
@@ -203,7 +279,7 @@ Males_AllAges_0814 <- merge(Males_AllAges_0814, gun.data, by = "ST", all.x = T)
 #source: WISQARS fatal injury mapping tool
 #note:I used homicide, not homicide and legal intervention -- this changes the numbers slightly, not materially. 
 
-#HOMICIDE relative risks
+#HOMICIDE relative rates
 nh.black.homicide.rate.agestd <- 33.58 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
 nh.black.homicide.rate.crude <- 35.53 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
 
@@ -213,7 +289,7 @@ nh.white.homicide.rate.crude <- 3.45 #per 100k, annualized crude, 2008-2004, ent
 rr.homicide.black.white.agestd <- nh.black.homicide.rate.agestd/nh.white.homicide.rate.agestd
 rr.homicide.black.white.crude <- nh.black.homicide.rate.crude/nh.white.homicide.rate.crude
 
-#SUICIDE relative risks
+#SUICIDE relative rates
 nh.black.suicide.rate.agestd <- 9.64 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
 nh.black.suicide.rate.crude <- 9.32 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
 
@@ -240,7 +316,7 @@ prop.suicide.nh.male.firearm <- (risk.suicide.nh.male.firearm/risk.suicide.nh.ma
 #source: WISQARS fatal injury mapping tool
 #note:I uses homicide, not homicide and legal intervention -- this changes the numbers slightly, not materially. 
 
-#FIREARM HOMICIDE relative risks
+#FIREARM HOMICIDE relative rates
 nh.black.homicide.rate.agestd.fa <- 27.58 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
 nh.black.homicide.rate.crude.fa <- 29.57 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
 
@@ -250,7 +326,7 @@ nh.white.homicide.rate.crude.fa <- 2.01 #per 100k, annualized crude, 2008-2004, 
 rr.homicide.black.white.agestd.fa <- nh.black.homicide.rate.agestd.fa/nh.white.homicide.rate.agestd.fa
 rr.homicide.black.white.crude.fa <- nh.black.homicide.rate.crude.fa/nh.white.homicide.rate.crude.fa
 
-#FIREARM SUICIDE relative risks
+#FIREARM SUICIDE relative rates
 nh.black.suicide.rate.agestd.fa <- 5.33 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
 nh.black.suicide.rate.crude.fa <- 5.04 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
 
@@ -262,23 +338,25 @@ rr.suicide.white.black.crude.fa <- nh.white.suicide.rate.crude.fa/nh.black.suici
 
 ```
 
-Non-Hispanic black males are nearly `r round(rr.homicide.black.white.agestd)` times more likely to die from homicide than non-Hispanic white males in the United States, whereas white males are `r round(rr.suicide.white.black.agestd,1)` times more likely to die from suicide.^1^ `r round(prop.homicide.nh.male.firearm)`% of these homicides and `r round(prop.suicide.nh.male.firearm)`% of these suicides involved firearms, and the relative racial inequalities in violent deaths are especially marked for firearm-related homicide and slightly increased for firearm-related suicide; Black males are `r round(rr.homicide.black.white.agestd.fa,1)` times more likely to die of a firearm-related homicide than white males, whereas white males are `r round(rr.suicide.white.black.agestd.fa,1)` times as likely to die from firearm-related suicide.^1^
+Non-Hispanic black males are nearly `r round(rr.homicide.black.white.agestd)` times more likely to die from homicide than non-Hispanic white males in the United States, whereas white males are `r round(rr.suicide.white.black.agestd,1)` times more likely than black males to die from suicide.^1^ `r round(prop.homicide.nh.male.firearm)`% of these homicides and `r round(prop.suicide.nh.male.firearm)`% of these suicides involved firearms. The relative racial inequalities in violent deaths are especially marked for homicide involving firearms and slightly increased for suicide involving firearms. Black males are `r round(rr.homicide.black.white.agestd.fa,1)` times more likely to die of a firearm-related homicide than white males, whereas white males are `r round(rr.suicide.white.black.agestd.fa,1)` times as likely to die from firearm-related suicide (1).
 
-While racial inequalities in violent deaths are well-established for the United States overall, it is unknown whether and how much they vary by state. Large variation in racial inequalities among spatially contiguous or otherwise similar states may reflect differences in the social, cultural, and policy environments worthy of further investigation. Quantifying inter-state heterogeneity is the first step towards implementing targeted policies aimed at reducing violence and inequalities where they are most urgently needed.
+While racial inequalities in violent deaths are well-established for the United States overall, it is unknown whether and how much they vary by state. Large variation in racial inequalities suggests the presence of "explanatory factors" that differ across states. These factors could reflect differences in the demographics of each state, or in social, cultural, or policy environments that are known to affect health [ref to add]. Demonstrating the amount of variability in racial inequalities in homicide and suicide across states is the first step towards identifying states with high rates of homicide or suicide, or large racial inequalities in either outcome. Policies to address inequalities could then be targeted.
 
-Across the US, states with the highest levels of household gun ownership have higher rates of firearm-related suicide and homicide.^2^ Ecologic studies comparing US states have estimated positive associations between rates of gun ownership and firearm-related homicide and suicide rates,^3,4,5,6,7^ and case-control studies have found positive associations between having a gun in the home and an individual’s risk of homicide occurring at home,^8^ and with the overall risk of suicide.^9^ When considering the causal pathway to homicide or suicide, two component causes are motivation and opportunity.^10^ Gun availability or ownership increases opportunity and it is plausible that motivation varies by racial group. Thus, the relationship between gun availability and violence may be differential by race. This information is currently unknown but is important to inform whether policies aimed at reducing gun prevalence may have differential effects among blacks and whites.
+Across the US, states with the highest levels of household gun ownership have higher rates of firearm-related suicide and homicide (2). Ecologic studies comparing US states have estimated positive associations between rates of gun ownership and firearm-related homicide and suicide rates (3,4,5,6,7), and case-control studies have found positive associations between having a gun in the home and an individual’s risk of homicide occurring at home (8), and with the overall risk of suicide (9). When considering the causal pathway to homicide or suicide, two component causes are motivation and opportunity (10). Gun availability or ownership increases opportunity and it is plausible that motivation varies by racial group. Thus, the relationship between gun availability and homicide or suicide may be differential by race. This information is currently unknown but is important to inform whether policies aimed at reducing gun prevalence may have differential effects among blacks and whites.
 
 In this study, we aimed to: (1) Compare the rates of firearm-related and firearm-unrelated violent deaths in black and white non-Hispanic men by US state; (2) Examine the association of state prevalence of gun ownership and firearm-related homicides and suicides.
-
+  
 #Methods
 
-We used the Center for Disease Control and Prevention’s Web-based Injury Statistics Query and Reporting System (WISQARS) Fatal Injury Mapping tool to abstract the age-adjusted number of firearm fatalities for males in every state during 2008 to 2014 for non-Hispanic whites and non-Hispanic blacks, by intent (homicide or suicide), and firearms involvement. Throughout this paper we refer to this population as men since the vast majority of deaths occurred after childhood. The data were suppressed by WISQARS for race-state strata with 10 or fewer actual deaths between 2008 and 2014, and could not be used in these analyses. We computed the average annual fatality rate according to race, intent, and firearms involvement by dividing the number of fatalities by the total population estimate (i.e., the summation of population estimates over 2008 to 2014) and we calculated the absolute inequality (risk difference) in estimates between black and white men. For homicide, we subtract the fatality rate of white men from that of black men, and for suicide these rates are reversed, such that the estimated risk differences are mostly positive and interpreted as the number of additional deaths to black (white) men due to homicide (suicide) associated with the heightened fatality rate experienced by black (white) men. When either of the race-specific rates was suppressed, a risk difference was not calculated for the state. To reflect varying population sizes among states and by race, we size the "area" of data markers according to race-specific average annualized population size. 
+We used the Center for Disease Control and Prevention’s Web-based Injury Statistics Query and Reporting System (WISQARS) Fatal Injury Mapping tool to abstract the age-adjusted number of firearm fatalities for males in every state during 2008 to 2014 for non-Hispanic whites and non-Hispanic blacks, by intent (homicide or suicide), and firearms involvement. Throughout this paper we refer to this population as men since the vast majority of deaths occurred after childhood. The data were suppressed (i.e., set to missing) by WISQARS for race-state strata with 10 or fewer actual deaths between 2008 and 2014, and could not be used in these analyses. These data originate from death certificates maintained by the National Vital Statistics System, a branch [word?] of the CDC's National Center for Health Statistics. These data encapsulate all deaths where the cause of death indicated homicide or suicide. Cause-of-death codes also detail firearm involvement, and medical examiners classify race/ethnicity on the death certificate. 
 
-To examine the relationships between gun prevalence, firearm-related homicide, and firearm-related suicide by race, we used the last available state-level estimates of household firearm ownership from the National Behavioral Risk Factor Surveillance System (BRFSS) from 2004. The BRFSS is an annual telephone survey on the non-institutionalized adult population that asks respondents about their health-related risk behaviors, chronic health conditions, and use of preventive services. In 2001, 2002, and 2004, the BRFSS asked, “Are any firearms kept in or around your home?” 293,882 people responded to this question and estimates of household gun ownership prevalence (%) by state were computed previously and ranged between 10.2% in Hawaii and 65.5% in Wyoming.^11^ Given that individuals may under-report gun ownership, and that state gun prevalence may have shifted since 2004, we grouped states into four broad categories of gun prevalence: (i) 10% - 19.9%, (ii) 20% - 34.9%, (iii) 35% - 44.9%, and (iv) 45% - 66%, to provide a fair proxy for current levels of ownership. 
+We computed the average annual fatality rate according to race, intent, and firearms involvement by dividing the number of fatalities by the total population estimate (i.e., the summation of population estimates over 2008 to 2014) and we calculated the absolute inequality (rate difference) in estimates between black and white men. For homicide, we subtract the fatality rate of white men from that of black men, and for suicide these rates are reversed, such that the estimated rate differences are mostly positive and interpreted as the number of additional deaths to black (white) men due to homicide (suicide) associated with the heightened fatality rate experienced by black (white) men. When either of the race-specific rates was suppressed, a rate difference was not calculated for the state. To reflect varying population sizes among states and by race, we size the "area" of data markers according to race-specific average annualized population size. 
 
-We then visually assessed the relationships between state gun prevalence, firearm-related homicide, and firearm-related suicide by graphing the rate of firearm-related homicide as a function of firearm-related suicide and shaded the points by category of gun prevalence, separately for black men and white men. A positive association between rates of firearm-related homicide and suicide would imply that conditions that generate variation in homicide also generate variation in suicide, such as cultural, social, or economic conditions, including state gun prevalence or the firearm policy environment. Thus, the purpose of this descriptive exercise is to illustrate whether states with relatively high rates of firearm-related homicide also have relatively high rates of firearm-related suicide, and if this pattern exists for both black men and white men and is associated with state gun ownership. 
+To examine the relationships between household gun ownership, firearm-related homicide, and firearm-related suicide by race and state, we used the last available state-level estimates of household firearm ownership from the National Behavioral Risk Factor Surveillance System (BRFSS) from 2004. The BRFSS is an annual telephone survey on the non-institutionalized adult population that asks respondents about their health-related risk behaviors, chronic health conditions, and use of preventive services. In 2001, 2002, and 2004, the BRFSS asked, “Are any firearms kept in or around your home?” 293,882 people responded to this question and estimates of household gun ownership prevalence (%) by state were computed previously and ranged between 10.2% in Hawaii and 65.5% in Wyoming (11). Given that individuals may under-report gun ownership, and that state gun prevalence may have shifted since 2004, we grouped states into four broad categories of gun prevalence: (i) 10% - 19.9%, (ii) 20% - 34.9%, (iii) 35% - 44.9%, and (iv) 45% - 66%, to provide a fair proxy for current levels of ownership. 
 
-Data management and data visualization was performed in R version 3.3.2.^12^ No institutional ethical review was required since this study used publicly accessible data.^13^ A replication data set including the raw data and statistical code to reproduce the manuscript is publicly available on GitHub: [https://github.com/corinne-riddell/InjuryDisparity/](https://github.com/corinne-riddell/InjuryDisparity/).
+We then visually assessed the relationships between state gun prevalence, firearm-related homicide, and firearm-related suicide by graphing the rate of firearm-related homicide as a function of firearm-related suicide and shaded the points by category of gun prevalence, separately for black men and white men. A positive association between rates of firearm-related homicide and suicide would imply that conditions that generate variation in homicide also generate variation in suicide, such as cultural, social, or economic conditions, including household gun ownership rates or the firearm policy environment. Thus, the purpose of this descriptive exercise is to illustrate whether states with relatively high rates of firearm-related homicide also have relatively high rates of firearm-related suicide, and if this pattern exists for both black men and white men and is associated with state gun ownership. 
+
+Data management and data visualization was performed in R version 3.3.2 (12). No institutional ethical review was required since this study used publicly accessible data (13). A replication data set including the raw data and statistical code to reproduce the manuscript is publicly available on GitHub: [https://github.com/corinne-riddell/InjuryDisparity/](https://github.com/corinne-riddell/InjuryDisparity/).
 
 **Funding Source**
 
@@ -287,69 +365,102 @@ This research was not formally supported by a research grant, although one of th
 #Results
 
 ```{r results_statistics, echo=F}
-stats <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adj.RD.homicide, na.rm = T)), max = round(max(adj.RD.homicide, na.rm = T)))
+stats <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adj.RD.homicide, na.rm = T)), 
+            max = round(max(adj.RD.homicide, na.rm = T)))
 
-stats2 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.homicide.white, na.rm = T)), max = round(max(adjusted.homicide.white, na.rm = T)))
+stats2 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adjusted.homicide.white, na.rm = T)), 
+            max = round(max(adjusted.homicide.white, na.rm = T)))
 
-white.pop.dc <- Males_AllAges_0814 %>% filter(ST == "DC" & type == "Firearm") %>% select(Population.white)
+white.pop.dc <- Males_AllAges_0814 %>% 
+  filter(ST == "DC" & type == "Firearm") %>% 
+  select(Population.white)
 
-stats3 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.homicide.black, na.rm = T)), max = round(max(adjusted.homicide.black, na.rm = T)))
+stats3 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adjusted.homicide.black, na.rm = T)), 
+            max = round(max(adjusted.homicide.black, na.rm = T)))
 
-tib1 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(sum.deaths.homicide.black = sum(Deaths.homicide.black, na.rm = T), 
-                                                    sum.deaths.homicide.white = sum(Deaths.homicide.white, na.rm = T), 
-                                                    sum.deaths.suicide.black = sum(Deaths.suicide.black, na.rm = T), 
-                                                    sum.deaths.suicide.white = sum(Deaths.suicide.white, na.rm = T))
-
-
+tib1 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(sum.deaths.homicide.black = sum(Deaths.homicide.black, na.rm = T), 
+            sum.deaths.homicide.white = sum(Deaths.homicide.white, na.rm = T),
+            sum.deaths.suicide.black = sum(Deaths.suicide.black, na.rm = T), 
+            sum.deaths.suicide.white = sum(Deaths.suicide.white, na.rm = T))
 ```
 
 There were `r formatC(sum(tib1$sum.deaths.homicide.black) + sum(tib1$sum.deaths.homicide.white), format = "d", big.mark = ",")` homicides and `r formatC(sum(tib1$sum.deaths.suicide.black) + sum(tib1$sum.deaths.suicide.white), format = "d", big.mark = ",")` suicides during 2008 to 2014 included in this analysis. Homicide deaths were suppressed by the data provider for black men in 11 states (Alaska (non-firearm only), New Mexico (non-firearm only) Montana, Wyoming, Maine, Idaho, Vermont, North Dakota, New Hampshire, South Dakota, and Hawaii), and for white men in DC. Suicide deaths were suppressed in 12 states for black men (Montana, Wyoming, Maine, Idaho, Vermont, North Dakota, New Hampshire, South Dakota, Hawaii (firearm only), Utah (firearm only), Iowa (firearm only), and Rhode Island (firearm only)).
 
-**Figure 1** displays the rates of homicide among black men compared to white men, according to state and firearms use. The black-white difference in homicide fatality rates varied strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and was driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. Homicide rates for white men showed relatively little variation across states, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also had the largest differences in rates between blacks and whites, signaling settings that were most dangerous for blacks but relatively safe for whites. The District of Columbia also had a high rate of firearm homicide for blacks, but its rate for white men was suppressed. Given its abstracted cumulative population denominator of `r formatC(white.pop.dc$Population.white, format  = "d", big.mark = ",")`, this implies a rate $\leq$ 10 per `r formatC(white.pop.dc$Population.white, format  = "d", big.mark = ",")`, or `r round((10/white.pop.dc)*100000, 1)` per 100,000, implying that DC was also relatively dangerous for black men, but not for white men.
+*Comparison of firearm-related homicide rates*
 
-Georgia, New York, Florida, Texas, and California are the states with the largest black populations. Among them, Texas exhibited the smallest black-white difference in firearm-related homicide (13 additional deaths to black men per 100,000), which was also substantially lower than the differences estimated for neighboring states like Louisiana (+37), Oklahoma (+29), and Arkansas (+29). Georgia (+16) and Florida (+22) had differences close to nearby South and North Carolina (+19 and +17, respectively), while having lower rates than Alabama (+27) and Tennessee (+28). New York's difference (+18) was similar to Massachusetts (+17) and Connecticut (+22), but was substantially lower than the rates of neighboring New Jersey (+30) and Pennsylvania (+41). California exhibited the largest black-white difference (+30) in firearm-related homicide among the five states with the largest black populations, which was larger than the rates estimates for contiguous states like Nevada (+17) and Oregon (+10), although these states had relatively small black populations.
+**Figure 1** displays the homicide rates among black men compared to white men, according to state and firearms use. The black-white difference in homicide fatality rates varied strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and was driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. Homicide rates for white men showed relatively little variation across states, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also had the largest differences in rates between blacks and whites, signaling states that were most high-risk for blacks but relatively low-risk for whites. The District of Columbia also had a high rate of firearm homicide for blacks, but its rate for white men was suppressed. Given its abstracted cumulative population denominator of `r formatC(white.pop.dc$Population.white, format  = "d", big.mark = ",")`, this implies a rate $\leq$ 10 per `r formatC(white.pop.dc$Population.white, format  = "d", big.mark = ",")` per year, or `r round((10/white.pop.dc)*100000, 1)` per 100,000 per year, implying that DC was also relatively dangerous for black men, but not for white men.
 
-Although non-firearm homicides are much more rare, they also demonstrated the general pattern of heightened rates among black men compared to white men. Whereas black men experienced annual rates that varied between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]` per 100,000. Across the US, firearm homicide rates were higher than non-firearm rates for black men, and were more than 5.3 times higher in all states in the East North Central region (Wisconsin, Illinois, Indiana, Ohio, and Michigan), and in Missouri, Louisiana, Delaware, and Nebraska.
+*Comparison of firearm-related homicide rates in black men among states with the largest black populations*
+
+Another way to make comparisons is to consider the states that are home to the most black residents, to describe whether these states that are home to a large portion of the US black population vary among themselves in their rates of firearm-related homicide and when compared to spatially contiguous states. Nearly 40% of the US black population lives in Georgia, New York, Florida, Texas, and California, and compose between 30% and 6% of each state's population. Among them, Texas exhibited the smallest black-white difference in firearm-related homicide (13 additional deaths to black men per 100,000 per year), which was also substantially lower than the differences estimated for neighboring states like Louisiana (+37), Oklahoma (+29), and Arkansas (+29). Georgia (+16) and Florida (+22) had differences similar to nearby South and North Carolina (+19 and +17, respectively), while having lower rates than Alabama (+27) and Tennessee (+28). New York's difference (+18) was similar to Massachusetts (+17) and Connecticut (+22), but was substantially lower than the rates of neighboring New Jersey (+30) and Pennsylvania (+41). California exhibited the largest black-white difference (+30) in firearm-related homicide among the five states with the largest black populations. California's black-white difference was larger than those estimated for contiguous states like Nevada (+17) and Oregon (+10), although these states had relatively small black populations.
+
+*Comparison of firearm-unrelated homicide rates*
+
+Although non-firearm homicides are much more rare, they also demonstrated the general pattern of heightened rates among black men compared to white men. Whereas black men experienced rates that varied between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 per year by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]` per 100,000 per year. Across the US, firearm homicide rates were higher than non-firearm rates for black men, and were more than 5.3 times higher in all states in the East North Central region (Wisconsin, Illinois, Indiana, Ohio, and Michigan), and in Missouri, Louisiana, Delaware, and Nebraska.
 
 ```{r results_statistics_suicide, echo=F}
-stats4 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adj.RD.suicide, na.rm = T)),
-                                                    max = round(max(adj.RD.suicide, na.rm = T)))
+stats4 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adj.RD.suicide, na.rm = T)),
+            max = round(max(adj.RD.suicide, na.rm = T)))
 
-stats5 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
-                                                    max = round(max(adjusted.suicide.white, na.rm = T)))
+stats5 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
+            max = round(max(adjusted.suicide.white, na.rm = T)))
 
-stats6 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.black, na.rm = T)),
-                                                    max = round(max(adjusted.suicide.black, na.rm = T)))
+stats6 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adjusted.suicide.black, na.rm = T)),
+            max = round(max(adjusted.suicide.black, na.rm = T)))
 
-stats7 <- Males_AllAges_0814 %>% group_by(type) %>% summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
-                                                    max = round(max(adjusted.suicide.white, na.rm = T)))
+stats7 <- Males_AllAges_0814 %>% 
+  group_by(type) %>% 
+  summarise(min = round(min(adjusted.suicide.white, na.rm = T)),
+            max = round(max(adjusted.suicide.white, na.rm = T)))
 ```
 
-In contrast to homicide, suicide fatality rates were higher among white men compared to black men, independent of firearms involvement, with the exception of firearm-related suicide in DC (**Figure 2**). The white-black difference in suicides involving a firearm varied from `r -(stats4$max[1])` per 100,000 in the District of Columbia to `r -(stats4$min[1])` per 100,000 per year in Missouri, although differences could not be estimated for 12 states with 10 or fewer firearm-related suicides among blacks. The annual rate of suicide involving firearms varied more markedly for white men than for black men: between `r stats5$min[1]` per 100,000 in DC and `r stats5$max[1]` per 100,000 in Wyoming for white men, compared to a range of `r stats6$min[1]` per 100,000 in Massachusetts to `r stats6$max[1]` per 100,000 in New Mexico among black men. 
+*Comparison of firearm-related suicide rates*
 
-Seven of the ten states with the largest white-black differences in firearm-related suicide are located in the South, including Mississippi, Arkansas, West Virginia, Alabama, Texas, South Carolina, and Louisiana, while the remaining three are in the West, including Nevada, Arizona, and Colorado (+12 and 16 per 100,000 per year). Along with DC, the mid-Atlantic states of Massachusetts, New Jersey, Connecticut, and New York had the smallest white-black differences (<4 per 100,000 per year) in firearm-related suicide. Importantly, these states also tended to have the lowest firearm-related suicide rates for both black men and white men, implying that the safest states (in terms of suicide risk) for black men and white men are the same. 
+In contrast to homicide, suicide fatality rates were higher among white men compared to black men, independent of firearms involvement, with the exception of firearm-related suicide in DC (**Figure 2**). The white-black difference in suicides involving a firearm varied from `r -(stats4$max[1])` per 100,000 per year in the District of Columbia to `r -(stats4$min[1])` per 100,000 per year in Missouri, although differences could not be estimated for 12 states with 10 or fewer firearm-related suicides among blacks. The annual rate of suicide involving firearms varied more markedly for white men than for black men: between `r stats5$min[1]` per 100,000 per year in DC and `r stats5$max[1]` per 100,000 per year in Wyoming for white men, compared to a range of `r stats6$min[1]` per 100,000 per year in Massachusetts to `r stats6$max[1]` per 100,000 per year in New Mexico among black men. 
 
-The rates of black- and white- non-firearm-related suicides and the difference between them varied substantially less than those involving firearms. For white men, between `r stats7$min[2]` per 100,000 in Alaska and `r stats7$max[2]` per 100,000 in Hawaii non-firearm-related suicides were committed each year on average across the states, compared to `r stats6$min[2]` per 100,000 in Alabama and `r stats6$max[2]` per 100,000 in Utah among black men.
+Seven of the ten states with the largest white-black differences in firearm-related suicide are located in the South, including Mississippi, Arkansas, West Virginia, Alabama, Texas, South Carolina, and Louisiana, while the remaining three are in the West, including Nevada, Arizona, and Colorado (+12 and 16 per 100,000 per year). Along with DC, the mid-Atlantic states of Massachusetts, New Jersey, Connecticut, and New York had the smallest white-black differences (<4 per 100,000 per year) in firearm-related suicide rates. These states have both the lowest risk of suicide for both black and white men and the smallest rate differences, implying that they are the lowest risk and the closest to achieving racial equity.
 
-The five states with jointly low rates of firearm-related homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) were also in the lowest category of reported gun prevalence (**Figure 3**). Furthermore, many of the states with the highest violence rates belonged to the highest category of gun prevalence, while most states located in the middle of the graph belonged to the middle categories of gun prevalence. Notably, several states that belonged to the highest gun prevalence category had relatively low rates of firearm-related homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. Generally speaking, the strong positive association between firearm-related homicide and suicide among white men suggests that the characteristics that generate variation in homicide and suicide in this racial/ethnic group were similar.
+*Comparison of firearm-unrelated suicide rates*
 
-Among black men, states with the lowest reported prevalence of guns had the lowest rates of firearm-related suicide, and below-average rates of firearm-related homicide (**Figure 4**). States with the highest rates of violence (i.e., Mississippi, Missouri, Oklahoma) had heightened rates of gun prevalence, although several Southern states with relatively high gun prevalence had relatively low rates of firearm-related homicide. The weak relationship between firearm-related homicide and suicide among black men implies that the set of characteristics that generated variation in firearm-related homicide among black men are different from the characteristics that generated variation in firearm-related suicide.
+The rates of black and white firearm-unrelated suicides and the difference between them varied substantially less than those involving firearms. In the US overall, the non-firearm suicide mortality rate was `r Males_AllAges_0814 %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.white) %>% round(1)` per 100,000 per year compared to `r Males_AllAges_0814 %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.black) %>% round(1)` per 100,000 black men per year. Across the states, Alaska had the lowest rate of non-firearm suicides for white men of `r stats7$min[2]` per 100,000 per year, while Hawaii had the highest rate of `r stats7$max[2]` per 100,000 per year, compared to the range estimated for black men from `r stats6$min[2]` per 100,000 per year in Alabama and `r stats6$max[2]` per 100,000 per year in Utah.
+
+*Relationship between firearm-related homicide and suicide with state household gun ownership among white men*
+
+The five states with jointly low rates of firearm-related homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) were also in the lowest category of reported state gun prevalence (**Figure 3**). Furthermore, many of the states with the highest firearm-related homicide and suicide rates belonged to the highest category of gun prevalence, while most states located in the middle of the graph belonged to the middle categories of gun prevalence. Notably, several states that belonged to the highest gun prevalence category had relatively low rates of firearm-related homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. The strong positive association between firearm-related homicide and suicide suggests that the characteristics that generate variation in homicide and suicide group were similar among white men.
+
+*Relationship between firearm-related homicide and suicide with state household gun ownership among black men*
+
+Among black men, states with the lowest reported prevalence of guns had the lowest rates of firearm-related suicide, and below-average rates of firearm-related homicide (**Figure 4**). States with the highest rates of firearm-related homicide or suicide (i.e., Mississippi, Missouri, Oklahoma, New Mexico and Alaska) had heightened rates of gun prevalence, although several Southern states with relatively high gun prevalence had relatively low rates of firearm-related homicide. The weak relationship between firearm-related homicide and suicide among black men implies that the set of characteristics that generated variation in firearm-related homicide among black men are different from the characteristics that generated variation in firearm-related suicide.
 
 #Discussion
 
-Using data from all 50 US states and DC, our study illustrates striking variation in the inequality in firearm-related homicide. Black men experienced between 5 and 51 additional homicides per 100,000, and the magnitude of the difference was largely driven by differences among states in homicide rates for black men. Rust-belt states reported the most firearm homicides among black men and medium levels of gun ownership. In the South, states with high levels of gun ownership, such as Louisiana, reported higher homicide rates among black men than states with medium levels, such as Texas. Disentangling the factors that make several Southern states relatively safe for black men and the rust-belt states relatively unsafe compared to white men should be a high priority in order to reduce health inequalities and foster communities that offer equal safety independently of race. Sociologists have found that structural disadvantage (i.e., concentrated poverty, joblessness, family disruption),^14^ racial residential segregation,^15,16,17,18^ and participation in drug markets^19,20^ are implicated in the higher risk of homicide among black men relative to white men. Thus, multilevel research could incorporate state factors (i.e., gun ownership, and gun policy) alongside these neighborhood and individual characteristics to describe how layers of the social environment affect homicide and inequality. 
+Using data from all 50 US states and DC, our study illustrates striking variation in the inequality in firearm-related homicide. Black men experienced between 5 and 51 additional homicides per 100,000 per year, and the magnitude of the difference was largely driven by differences among states in homicide rates for black men. Missouri and several rust-belt states (Illinois, Indiana, Michigan, and Pennsylvania) reported the most firearm homicides among black men and medium levels of gun ownership. In the South, states with high levels of gun ownership, such as Louisiana, reported higher homicide rates among black men than states with medium levels, such as Texas. Disentangling the factors that led to several Southern states being relatively low risk for black men and several rust-belt states and Missouri to be relatively high risk compared to white men should be a high priority in order to reduce health inequalities and foster communities that reduce the risk of homicide and suicide for all races. Sociologists have found that structural disadvantage (i.e., concentrated poverty, joblessness, family disruption) (14), racial residential segregation (15,16,17,18), and participation in drug markets (19,20) are implicated in the higher risk of homicide among black men relative to white men. Thus, multilevel research could incorporate state factors (i.e., gun ownership, and gun policy) alongside these neighborhood and individual characteristics to describe how layers of the social environment affect homicide and inequality. 
 
-White men were at increased risk for firearm-related suicide, and experienced between 2 fewer and 16 additional suicides per 100,000 compared to black men. The range in the suicide rate across states for white men was large, although less than the range in the homicide rate for black men. State gun prevalence was strongly tied to firearm-related suicide for both black and white men, and is the most lethal means of attempted suicide.^21,22^ States that were the safest also have some of the country's most restrictive gun laws,^23^ highlighting the bidirectional relationship between gun policy and gun ownership, and the constellation of factors associated with the lowest risks of suicide in the country. Alcohol is another important risk factor for suicide, both in terms of history of alcoholism and overuse at the time of suicide.^24,25^ Alcohol was found in the systems of 25% of white male suicides tested and 15% of black males suicides in 2005--2006, with 16% of the white men being described as alcohol dependent at the time of suicide compared to 7% of black men.^26^ Given that white men have higher rates of alcohol abuse than black men,^26^ alcohol use might be implicated both in the direction of the white-black inequality and its variation across states.  
+White men were at increased risk for firearm-related suicide, and experienced between 2 fewer and 16 additional suicides per 100,000 per year compared to black men. The range in the suicide rate across states for white men was large, although less than the range in the homicide rate for black men. State gun prevalence was strongly tied to firearm-related suicide for both black and white men, and is the most lethal means of attempted suicide (21,22). States that were the lowest risk also have some of the country's most restrictive gun laws (23), highlighting the bidirectional relationship between gun policy and gun ownership, and the constellation of factors associated with the lowest risks of suicide in the country. Alcohol is another important risk factor for suicide, both in terms of history of alcoholism and overuse at the time of suicide (24, 25). Alcohol was found in the systems of 25% of white male suicides tested and 15% of black males suicides in 2005--2006, with 16% of the white men being described as alcohol dependent at the time of suicide compared to 7% of black men (26). Given that white men have higher rates of alcohol abuse than black men,^26^ alcohol use might be implicated both in the direction of the white-black inequality and its variation across states.  
+This study is subject to several limitations. Some homicide and suicide deaths are difficult to classify. Homicides may be classified as suicides, or vice versa, and either may be misclassified as an unintentional injury. Misclassification of drug poisonings are of particular importance during the ongoing opioid epidemic because of the sharp increases in drug poisoning deaths [ref]. The most recent data on state gun ownership was collected in 2004, four to ten years prior to the mortality data used in this study. Nationally, household gun ownership has slightly decreased from 34.7% in 2004 to 31.0% in 2014 [cite GSS national trends in ownership report]. Given that firearm suicide attempts are more than 80% fatal (21,22), and firearm homicide attempts are approximately 20% fatal (27), studying only fatal outcomes misses the morbidity endured during nonfatal assaults and suicide attempts. We were limited to contrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more deaths. We did not examine women because their risks of homicide and suicide are much lower than for men, and data for black women were suppressed for more than half of the states. Finally, these results are purely descriptive and make no claims regarding causal mechanisms. Our purpose was to describe how much inequalities in homicide and suicide vary across the United States in order to provide a foundation for future research linking these differences to variations in the social, cultural, and environmental settings where black and white communities are based, including variations in firearm policy and access to firearms. 
 
-This study is subject to several limitations. In terms of the listed cause of death used to identify suicides and homicides, non-firearm suicides may be mistakenly coded as unintentional injuries or vice versa, and it may be especially difficult to determine intent from drug or alcohol overdoses. We considered only fatal outcomes, not attempted suicides and homicides. Given that firearm suicide attempts are more than 80% fatal,^21,22^ and firearm homicide attempts are approximately 20% fatal,^27^ studying only fatal outcomes misses the morbidity endured during nonfatal assaults and suicide attempts. We were limited to contrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more deaths. We did not examine women because their risks of homicide and suicide are much lower than for men, and data for black women were suppressed for more than half of the states. Finally, these results are purely descriptive and make no claims regarding causal mechanisms. Our purpose was to describe how much inequalities in violence vary across the United States in order to provide a foundation for future research linking these differences to variations in the social, cultural, and environmental settings where black and white communities are based, including variations in firearm policy and access to firearms. 
-
-Firearms feature differently in the deaths of black and white men in the United States. The large variation in the homicide and suicide rates and their racial differences across states places a spotlight on states where policies are most urgently needed to reduce rates of violence, and their racial inequalities. This research provides the first step in measuring these inequalities across states, which can be further studied to identify the policies, and social and cultural factors that support reduced rates of violence for all Americans.
+Firearms feature differently in the deaths of black and white men in the United States. The large variation in the homicide and suicide rates and their racial differences across states places a spotlight on states where policies are most urgently needed to reduce homicide and suicide rates, and their racial inequalities. This research provides the first step in measuring these inequalities across states, which can be further studied to identify the policies, and social and cultural factors that support reduced rates of homicide and suicide for all Americans.
 
 ##Figure Legends 
-###Figure 1: Difference in age-standardized homicide fatalities rates for men by state, firearms, and race, 2008-2014
+###Figure 1: Comparison of firearm-related and firearm-unrelated homicide rates between black and white non-Hispanic men by US state, 2008-2014
 
 ```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=T}
-Males_AllAges_0814 <- Males_AllAges_0814 %>% mutate(type.fac = factor(type, labels = c("Firearm-related", "Firearm-unrelated")))
+Males_AllAges_0814 <- Males_AllAges_0814 %>% 
+  mutate(type.fac = factor(type, labels = c("Firearm-related", "Firearm-unrelated")))
 
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.white)) + 
   geom_segment(aes(x = adjusted.homicide.white, xend = adjusted.homicide.black, 
@@ -357,13 +468,18 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
                lwd = 0.5, col = "#8A5C7B", alpha = 0.5) +
   geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21, col = "black") +
   geom_point(aes(x = adjusted.homicide.black, fill = "NH Black", size = average.pop.black), pch = 21, col = "black") + 
+  geom_point(data = Males_AllAges_0814 %>% filter(ST == "US"),  
+            pch = 73, col = "black", size = 4) +
+  geom_point(data = Males_AllAges_0814 %>% filter(ST == "US"), 
+             aes(x = adjusted.homicide.black), 
+             pch = 73, col = "#8A5C7B", size = 4) + 
   scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) +
   scale_alpha_continuous(guide = F) +
   scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
   ylab("") +
-  xlab("Homicide mortality per 100k") + 
+  xlab("Homicide mortality rate (per 100,000 per year)") + 
   theme_bw() + 
-  guides(fill = guide_legend(title = "Race"), size = guide_legend(title = "Population")) + 
+  guides(fill = guide_legend(title = "Race"), size = guide_legend(title = "Race-specific population")) + 
   theme(legend.position = c(0.87, 0.20), 
         plot.title = element_text(size = 10),
         legend.background = element_rect(fill=alpha('white', 0.2)),
@@ -374,10 +490,12 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.homicide, x = adjusted.homicide.w
              aes(x = adjusted.homicide.black + 8, label = paste0("+", round(adj.RD.homicide))),
              size = 3, col = "#754255") +
   facet_wrap( ~ type.fac) +
-  scale_x_continuous(limits = c(0, 70)) 
+  scale_x_continuous(limits = c(0, 70))
 ```
 
-###Figure 2: Difference in age-standardized suicide fatalities rates for men by state, firearms, and race, 2008-2014
+The homicide rate for non-Hispanic white men (white circle) can be compared to the homicide rate for non-Hispanic black men (purple circle) for each state. The area of the circle is proportional to its race-specific population size, with the size legend depicting sizes for a range of population sizes. For each state, the difference between the rates is listed to the right of the black homicide rate and quantifies the excess number of homicides to black men per 100,000 per year. The average firearm-related and firearm-unrelated homicide rates for the entire US are also shown at the top of each graph, with the remaining states organized according to the size of the black-white difference. States that are missing circles for black and/or white men had ten or fewer firearm-related or firearm-unrelated homicides during the time period within the affected racial group and were not available for analysis. 
+
+###Figure 2: Comparison of firearm-related and firearm-unrelated suicide rates between black and white non-Hispanic men by US state, 2008-2014
 
 ```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=T}
 ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.white)) + 
@@ -386,11 +504,16 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
                lwd = 0.5, alpha = 0.5) +
   geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21) + 
   geom_point(aes(x = adjusted.suicide.black, fill = "NH Black", size = average.pop.black), pch = 21) + 
+  geom_point(data = Males_AllAges_0814 %>% filter(ST == "US"),  
+            pch = 73, col = "black", size = 4) +
+  geom_point(data = Males_AllAges_0814 %>% filter(ST == "US"), 
+             aes(x = adjusted.suicide.black), 
+             pch = 73, col = "#8A5C7B", size = 4) + 
   scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) +
   scale_alpha_continuous(guide = F) +
   scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
-  ylab("") + xlab("Suicide mortality per 100k") + theme_bw() + 
-  guides(fill = guide_legend(title = "Race"), size = guide_legend(title = "Population")) + 
+  ylab("") + xlab("Suicide mortality rate (per 100,000 per year)") + theme_bw() + 
+  guides(fill = guide_legend(title = "Race"), size = guide_legend(title = "Race-specific population")) + 
   theme(legend.position = c(0.90, 0.22), 
         plot.title = element_text(size = 10),
         legend.background = element_rect(fill=alpha('white', 0.2)),
@@ -404,15 +527,17 @@ ggplot(Males_AllAges_0814, aes(y = ST.order.RD.suicide, x = adjusted.suicide.whi
   facet_wrap(~type.fac)
 ```
 
-###Figure 3: The relationship between the annual rates of homicide and suicide among white men by state and reported firearm ownership, 2008-2014
+The suicide rate for non-Hispanic white men (white circle) can be compared to the suicide rate for non-Hispanic black men (purple circle) for each state. The area of the circle is proportional to its race-specific population size, with the size legend depicting sizes for a range of population sizes. For each state, the difference between the rates is listed to the right of the white homicide rate and quantifies the excess number of suicides to white men per 100,000 per year. The average firearm-related and firearm-unrelated suicide rates for the entire US are also shown at the top of each graph, with the remaining states organized according to the size of the white-black difference. States that are missing circles for black and/or white men had ten or fewer firearm-related or firearm-unrelated suicides during the time period within the affected racial group and were not available for analysis.
+
+###Figure 3: The relationship between the annual rates of firearm-related homicide and suicide among white men by state and reported household firearm ownership, 2008-2014
 
 ```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F, eval = T}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.white, adjusted.homicide.white)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4) +
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + #042E30,#396A6A,#83ABA3,#E0EDD8
-  ylab("White homicide Rate\n(per 100,000)") +
-  xlab("White suicide Rate (per 100,000)") + 
+  ylab("White homicide mortality rate\n(per 100,000 per year)") +
+  xlab("White suicide mortality rate (per 100,000 per year)") + 
   theme_bw() +
   theme() + #legend.position = "bottom"
   scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000), 
@@ -423,22 +548,27 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(adjusted.
          size = guide_legend(title = "White population"))
 ```
 
-###Figure 4: The relationship between the annual rates of homicide and suicide among black men by state and reported firearm ownership, 2008-2014
+Each state's homicide and suicide mortality rates among non-Hispanic white men are plotted. The area of the circles are proportional to the white men's population size and the color is linked to the state gun ownership prevalence. 
+
+###Figure 4: The relationship between the annual rates of firearm-related homicide and suicide among black men by state and reported household firearm ownership, 2008-2014
 
 ```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F, eval = T}
 ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.black, y = adjusted.homicide.black)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) +
-  ylab("Black homicide rate\n(per 100,000)") +
-  xlab("Black suicide rate (per 100,000)") + 
+  ylab("Black homicide mortality rate\n(per 100,000 per year)") +
+  xlab("Black suicide mortality rate (per 100,000 per year)") + 
   theme_bw() +
   #theme(legend.position = "bottom") +
   scale_size_area(breaks = c(20000, 100000, 500000, 1400000), 
                   labels = c("20k", "100k", "500k", "1.4m"), max_size = 15) +
-  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5), 
-                             size = guide_legend(title = "Black population"))) 
+  guides(fill = guide_legend(title = "Gun ownership", 
+                             override.aes = list(size = 5)), 
+                             size = guide_legend(title = "Black population")) 
 ```
+
+Each state's homicide and suicide mortality rates among non-Hispanic black men are plotted. The area of the circles are proportional to the black men's population size and the color is linked to the state gun ownership prevelance. 
 
 **Acknowledgements:** Corinne Riddell is a post-doctoral researcher at McGill University, and received salary support from the Department of Epidemiology, Biostatistics, and Occupational Health. Sam Harper is supported by a Chercheur Boursier Junior 2 from the Fonds de la Recherche en Santé du Québec. Magdalena Cerdá is a CAMPOS Faculty Scholar, ADVANCE Program at the University of California, Davis and supported by the National Institutes of Health (#1R21 DA041154-01).
 
@@ -497,6 +627,9 @@ ggplot(subset(Males_AllAges_0814, type == "Firearm" & ST != "DC"), aes(x = adjus
 26. Disease Control C for, Prevention. Alcohol and suicide among racial/ethnic populations — 17 states, 2005–2006. *MMWR*. 2009;58:638-640.
 
 27. Cook PJ, Rivera-Aguirre AE, Cerdá M, Wintemute G. Constant lethality of gunshot injuries from firearm assault: United states, 2003–2012. *American Journal of Public Health*. 2017;107(8):1324-1328.
+
+
+reference for increase in drug poisonings: Rossen LM, Bastian B, Warner M, Khan D, Chong Y. Drug poisoning mortality: United States, 1999–2016. National Center for Health Statistics. 2017. (Available from: https://www.cdc.gov/nchs/data-visualization/drug-poisoning-mortality/).
 
 ```{r echo=F, eval=F}
 save(Males_AllAges_0814, file = "./InjuryDisparity/Data/Males_AllAges_0814.Rdata")
