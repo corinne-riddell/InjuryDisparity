@@ -1,0 +1,197 @@
+"Notes"	"State"	"State Code"	"Race"	"Race Code"	Deaths	Population	Crude Rate	Age Adjusted Rate
+	"Alabama"	"01"	"Black or African American"	"2054-5"	148	5376635	2.75	2.84
+	"Alabama"	"01"	"White"	"2106-3"	1222	14267619	8.56	8.64
+	"Alaska"	"02"	"Black or African American"	"2054-5"	12	153664	Unreliable	Unreliable
+	"Alaska"	"02"	"White"	"2106-3"	196	2274605	8.62	8.21
+	"Arizona"	"04"	"Black or African American"	"2054-5"	80	1360042	5.88	5.58
+	"Arizona"	"04"	"White"	"2106-3"	1972	16941107	11.64	11.42
+	"Arkansas"	"05"	"Black or African American"	"2054-5"	75	1991165	3.77	3.93
+	"Arkansas"	"05"	"White"	"2106-3"	1027	9747025	10.54	10.89
+	"California"	"06"	"Black or African American"	"2054-5"	639	10654017	6.00	5.78
+	"California"	"06"	"White"	"2106-3"	9553	69327194	13.78	12.53
+	"Colorado"	"08"	"Black or African American"	"2054-5"	85	1087995	7.81	7.65
+	"Colorado"	"08"	"White"	"2106-3"	2360	16529681	14.28	13.61
+	"Connecticut"	"09"	"Black or African American"	"2054-5"	70	1574975	4.44	4.33
+	"Connecticut"	"09"	"White"	"2106-3"	1300	11120802	11.69	11.03
+	"Delaware"	"10"	"Black or African American"	"2054-5"	52	854654	6.08	6.24
+	"Delaware"	"10"	"White"	"2106-3"	337	2619781	12.86	12.46
+	"District of Columbia"	"11"	"Black or African American"	"2054-5"	83	1283193	6.47	6.45
+	"District of Columbia"	"11"	"White"	"2106-3"	92	1014256	9.07	8.83
+	"Florida"	"12"	"Black or African American"	"2054-5"	514	13301559	3.86	3.97
+	"Florida"	"12"	"White"	"2106-3"	6666	49418512	13.49	13.02
+	"Georgia"	"13"	"Black or African American"	"2054-5"	408	12978074	3.14	3.11
+	"Georgia"	"13"	"White"	"2106-3"	2091	24513388	8.53	8.33
+	"Hawaii"	"15"	"Black or African American"	"2054-5"	19	190790	Unreliable	Unreliable
+	"Hawaii"	"15"	"White"	"2106-3"	375	1784397	21.02	19.37
+	"Idaho"	"16"	"Black or African American"	"2054-5"	Suppressed	72719	Suppressed	Suppressed
+	"Idaho"	"16"	"White"	"2106-3"	653	6082047	10.74	11.09
+	"Illinois"	"17"	"Black or African American"	"2054-5"	337	7969427	4.23	4.34
+	"Illinois"	"17"	"White"	"2106-3"	4325	36094892	11.98	11.53
+	"Indiana"	"18"	"Black or African American"	"2054-5"	120	2759565	4.35	4.55
+	"Indiana"	"18"	"White"	"2106-3"	2422	23638929	10.25	10.30
+	"Iowa"	"19"	"Black or African American"	"2054-5"	30	524732	5.72	5.90
+	"Iowa"	"19"	"White"	"2106-3"	1305	12095757	10.79	10.94
+	"Kansas"	"20"	"Black or African American"	"2054-5"	57	867467	6.57	6.33
+	"Kansas"	"20"	"White"	"2106-3"	1065	10046018	10.60	10.83
+	"Kentucky"	"21"	"Black or African American"	"2054-5"	76	1633656	4.65	4.44
+	"Kentucky"	"21"	"White"	"2106-3"	1414	16742144	8.45	8.49
+	"Louisiana"	"22"	"Black or African American"	"2054-5"	209	6370861	3.28	3.42
+	"Louisiana"	"22"	"White"	"2106-3"	1000	12294807	8.13	8.10
+	"Maine"	"23"	"Black or African American"	"2054-5"	Suppressed	100822	Suppressed	Suppressed
+	"Maine"	"23"	"White"	"2106-3"	585	5564557	10.51	10.27
+	"Maryland"	"24"	"Black or African American"	"2054-5"	354	7388141	4.79	4.78
+	"Maryland"	"24"	"White"	"2106-3"	1428	14125351	10.11	9.72
+	"Massachusetts"	"25"	"Black or African American"	"2054-5"	129	2032556	6.35	6.26
+	"Massachusetts"	"25"	"White"	"2106-3"	2613	22106492	11.82	11.18
+	"Michigan"	"26"	"Black or African American"	"2054-5"	290	6213070	4.67	4.74
+	"Michigan"	"26"	"White"	"2106-3"	3462	33919566	10.21	10.16
+	"Minnesota"	"27"	"Black or African American"	"2054-5"	113	1473393	7.67	7.60
+	"Minnesota"	"27"	"White"	"2106-3"	1888	19969410	9.45	9.19
+	"Mississippi"	"28"	"Black or African American"	"2054-5"	131	4726959	2.77	2.83
+	"Mississippi"	"28"	"White"	"2106-3"	639	7652188	8.35	8.56
+	"Missouri"	"29"	"Black or African American"	"2054-5"	135	3128851	4.31	4.43
+	"Missouri"	"29"	"White"	"2106-3"	2255	21712046	10.39	10.54
+	"Montana"	"30"	"Black or African American"	"2054-5"	Suppressed	40468	Suppressed	Suppressed
+	"Montana"	"30"	"White"	"2106-3"	435	4037254	10.77	10.72
+	"Nebraska"	"31"	"Black or African American"	"2054-5"	28	434055	6.45	5.86
+	"Nebraska"	"31"	"White"	"2106-3"	533	6767476	7.88	7.81
+	"Nevada"	"32"	"Black or African American"	"2054-5"	66	1109000	5.95	5.97
+	"Nevada"	"32"	"White"	"2106-3"	1169	6887626	16.97	15.59
+	"New Hampshire"	"33"	"Black or African American"	"2054-5"	Suppressed	93108	Suppressed	Suppressed
+	"New Hampshire"	"33"	"White"	"2106-3"	646	5441203	11.87	11.45
+	"New Jersey"	"34"	"Black or African American"	"2054-5"	239	4999341	4.78	4.68
+	"New Jersey"	"34"	"White"	"2106-3"	2582	22826317	11.31	10.77
+	"New Mexico"	"35"	"Black or African American"	"2054-5"	11	218820	Unreliable	Unreliable
+	"New Mexico"	"35"	"White"	"2106-3"	508	3720251	13.65	13.36
+	"New York"	"36"	"Black or African American"	"2054-5"	639	12326076	5.18	5.14
+	"New York"	"36"	"White"	"2106-3"	5089	49966278	10.18	9.65
+	"North Carolina"	"37"	"Black or African American"	"2054-5"	320	9011509	3.55	3.62
+	"North Carolina"	"37"	"White"	"2106-3"	2567	28055881	9.15	9.01
+	"North Dakota"	"38"	"Black or African American"	"2054-5"	Suppressed	74752	Suppressed	Suppressed
+	"North Dakota"	"38"	"White"	"2106-3"	246	2855006	8.62	8.60
+	"Ohio"	"39"	"Black or African American"	"2054-5"	307	6436285	4.77	4.88
+	"Ohio"	"39"	"White"	"2106-3"	4125	41547343	9.93	9.88
+	"Oklahoma"	"40"	"Black or African American"	"2054-5"	65	1412148	4.60	4.70
+	"Oklahoma"	"40"	"White"	"2106-3"	1337	11933482	11.20	11.35
+	"Oregon"	"41"	"Black or African American"	"2054-5"	23	421612	5.46	5.48
+	"Oregon"	"41"	"White"	"2106-3"	1703	13755898	12.38	11.95
+	"Pennsylvania"	"42"	"Black or African American"	"2054-5"	327	6106943	5.35	5.43
+	"Pennsylvania"	"42"	"White"	"2106-3"	4773	44444601	10.74	10.41
+	"Rhode Island"	"44"	"Black or African American"	"2054-5"	19	294346	Unreliable	Unreliable
+	"Rhode Island"	"44"	"White"	"2106-3"	514	3497222	14.70	13.84
+	"South Carolina"	"45"	"Black or African American"	"2054-5"	176	5607563	3.14	3.25
+	"South Carolina"	"45"	"White"	"2106-3"	1225	13495970	9.08	9.07
+	"South Dakota"	"46"	"Black or African American"	"2054-5"	Suppressed	83159	Suppressed	Suppressed
+	"South Dakota"	"46"	"White"	"2106-3"	299	3179410	9.40	9.57
+	"Tennessee"	"47"	"Black or African American"	"2054-5"	145	4705110	3.08	3.08
+	"Tennessee"	"47"	"White"	"2106-3"	2066	21539685	9.59	9.61
+	"Texas"	"48"	"Black or African American"	"2054-5"	537	13548892	3.96	3.87
+	"Texas"	"48"	"White"	"2106-3"	5182	52441248	9.88	9.71
+	"Utah"	"49"	"Black or African American"	"2054-5"	15	184880	Unreliable	Unreliable
+	"Utah"	"49"	"White"	"2106-3"	1317	10423834	12.63	13.42
+	"Vermont"	"50"	"Black or African American"	"2054-5"	Suppressed	41964	Suppressed	Suppressed
+	"Vermont"	"50"	"White"	"2106-3"	268	2636605	10.16	9.90
+	"Virginia"	"51"	"Black or African American"	"2054-5"	291	6955870	4.18	4.13
+	"Virginia"	"51"	"White"	"2106-3"	2177	23606339	9.22	8.94
+	"Washington"	"53"	"Black or African American"	"2054-5"	79	1464246	5.40	5.41
+	"Washington"	"53"	"White"	"2106-3"	2652	22711985	11.68	11.13
+	"West Virginia"	"54"	"Black or African American"	"2054-5"	19	345076	Unreliable	Unreliable
+	"West Virginia"	"54"	"White"	"2106-3"	624	7659353	8.15	8.29
+	"Wisconsin"	"55"	"Black or African American"	"2054-5"	82	1694421	4.84	4.44
+	"Wisconsin"	"55"	"White"	"2106-3"	2190	21311378	10.28	10.06
+	"Wyoming"	"56"	"Black or African American"	"2054-5"	Suppressed	42505	Suppressed	Suppressed
+	"Wyoming"	"56"	"White"	"2106-3"	267	2250888	11.86	12.11
+"---"
+"Dataset: Underlying Cause of Death, 1999-2016"
+"Query Parameters:"
+"Title: Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016"
+"2013 Urbanization: All"
+"Autopsy: All"
+"Gender: Male"
+"Hispanic Origin: Not Hispanic or Latino"
+"ICD-10 Codes: X60 (Intentional self-poisoning by and exposure to nonopioid analgesics, antipyretics and antirheumatics), X61"
+"(Intentional self-poisoning by and exposure to antiepileptic, sedative-hypnotic, antiparkinsonism and psychotropic drugs, not"
+"elsewhere classified), X62 (Intentional self-poisoning by and exposure to narcotics and psychodysleptics [hallucinogens], not"
+"elsewhere classified), X63 (Intentional self-poisoning by and exposure to other drugs acting on the autonomic nervous system),"
+"X64 (Intentional self-poisoning by and exposure to other and unspecified drugs, medicaments and biological substances), X65"
+"(Intentional self-poisoning by and exposure to alcohol), X66 (Intentional self-poisoning by and exposure to organic solvents and"
+"halogenated hydrocarbons and their vapours), X67 (Intentional self-poisoning by and exposure to other gases and vapours), X68"
+"(Intentional self-poisoning by and exposure to pesticides), X69 (Intentional self-poisoning by and exposure to other and"
+"unspecified chemicals and noxious substances), X70 (Intentional self-harm by hanging, strangulation and suffocation), X71"
+"(Intentional self-harm by drowning and submersion), X75 (Intentional self-harm by explosive material), X76 (Intentional"
+"self-harm by smoke, fire and flames), X77 (Intentional self-harm by steam, hot vapours and hot objects), X78 (Intentional"
+"self-harm by sharp object), X79 (Intentional self-harm by blunt object), X80 (Intentional self-harm by jumping from a high"
+"place), X81 (Intentional self-harm by jumping or lying before moving object), X82 (Intentional self-harm by crashing of motor"
+"vehicle), X83 (Intentional self-harm by other specified means), X84 (Intentional self-harm by unspecified means)"
+"Place of Death: All"
+"Race: Black or African American, White"
+"States: All"
+"Ten-Year Age Groups: All"
+"Weekday: All"
+"Year/Month: 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016"
+"Group By: State, Race"
+"Show Totals: Disabled"
+"Show Zero Values: True"
+"Show Suppressed: True"
+"Standard Population: 2000 U.S. Std. Population"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/ucd.html for more information."
+"---"
+"Query Date: Jan 16, 2018 2:23:58 PM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. Underlying Cause of Death"
+"1999-2016 on CDC WONDER Online Database, released December, 2017. Data are from the Multiple Cause of Death Files, 1999-2016, as"
+"compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative Program. Accessed"
+"at http://wonder.cdc.gov/ucd-icd10.html on Jan 16, 2018 2:23:58 PM"
+"---"
+Messages:
+"1. Totals are not available for these results due to suppression constraints. More Information:"
+"http://wonder.cdc.gov/wonder/help/faq.html#Privacy."
+"---"
+Caveats:
+"1. As of April 3, 2017, the underlying cause of death has been revised for 125 deaths in 2014. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#2014-Revision."
+"2. Circumstances in Georgia for the years 2008 and 2009 have resulted in unusually high death counts for the ICD-10 cause of"
+"death code R99, ""Other ill-defined and unspecified causes of mortality."" Caution should be used in interpreting these data."
+"More information: http://wonder.cdc.gov/wonder/help/ucd.html#Georgia-Reporting-Anomalies."
+"3. Circumstances in New Jersey for the year 2009 have resulted in unusually high death counts for the ICD-10 cause of death code"
+"R99, ""Other ill-defined and unspecified causes of mortality"" and therefore unusually low death counts in other ICD-10 codes,"
+"most notably R95, ""Sudden Infant Death Syndrome"" and X40-X49, ""Unintentional poisoning."" Caution should be used in"
+"interpreting these data. More information: http://wonder.cdc.gov/wonder/help/ucd.html#New-Jersey-Reporting-Anomalies."
+"4. Data are Suppressed when the data meet the criteria for confidentiality constraints. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#Assurance of Confidentiality."
+"5. Death rates are flagged as Unreliable when the rate is calculated with a numerator of 20 or less. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#Unreliable."
+"6. The populations used to calculate standard age-adjusted rates are documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#2000 Standard Population."
+"7. The method used to calculate age-adjusted rates is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#Age-Adjusted Rates."
+"8. Deaths for persons of unknown age are included in counts and crude rates, but are not included in age-adjusted rates."
+"9. Deaths of persons with Hispanic origin ""Not Stated"" are included in ""All"" counts and rates, but are not distributed among"
+"Hispanic Origin groups, so are not included in the Hispanic Origin specific counts and rates. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#Not Stated."
+"10. Information included on the death certificate about the race and Hispanic ethnicity of the decedent is reported by the"
+"funeral director as provided by an informant, often the surviving next of kin, or, in the absence of an informant, on the basis"
+"of observation. Race and ethnicity information from the census is by self-report. To the extent that race and Hispanic origin"
+"are inconsistent between these two data sources, death rates will be biased. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#Racial Differences."
+"11. The population figures for year 2016 are bridged-race estimates of the July 1 resident population, from the Vintage 2016"
+"postcensal series released by NCHS on June 26, 2017. The population figures for year 2015 are bridged-race estimates of the July"
+"1 resident population, from the Vintage 2015 postcensal series released by NCHS on June 28, 2016. The population figures for"
+"year 2014 are bridged-race estimates of the July 1 resident population, from the Vintage 2014 postcensal series released by NCHS"
+"on June 30, 2015. The population figures for year 2013 are bridged-race estimates of the July 1 resident population, from the"
+"Vintage 2013 postcensal series released by NCHS on June 26, 2014. The population figures for year 2012 are bridged-race"
+"estimates of the July 1 resident population, from the Vintage 2012 postcensal series released by NCHS on June 13, 2013. The"
+"population figures for year 2011 are bridged-race estimates of the July 1 resident population, from the Vintage 2011 postcensal"
+"series released by NCHS on July 18, 2012. Population figures for 2010 are April 1 Census counts. The population figures for"
+"years 2001 - 2009 are bridged-race estimates of the July 1 resident population, from the revised intercensal county-level 2000 -"
+"2009 series released by NCHS on October 26, 2012. Population figures for 2000 are April 1 Census counts. Population figures for"
+"1999 are from the 1990-1999 intercensal series of July 1 estimates. Population figures for the infant age groups are the number"
+"of live births. <br/><b>Note:</b> Rates and population figures for years 2001 - 2009 differ slightly from previously published"
+"reports, due to use of the population estimates which were available at the time of release."
+"12. The population figures used in the calculation of death rates for the age group 'under 1 year' are the estimates of the"
+"resident population that is under one year of age. More information: http://wonder.cdc.gov/wonder/help/ucd.html#Age Group."
+"13. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd.html#ICD-10 Changes."
