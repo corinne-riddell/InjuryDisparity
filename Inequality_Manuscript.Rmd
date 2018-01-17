@@ -31,7 +31,7 @@ Word Count: **Update**
 
 **Design:** Surveillance study.
 
-**Setting:** 50 states and the District of Columbia, 2008 to 2014. The Web-based Injury Statistics Query and Reporting System was used to identify violent deaths, originally reportd by the National Vital Statistics System.
+**Setting:** 50 states and the District of Columbia, 2008 to 2014. Cause of death data was abstracted using the CDC WONDER Online Database, compiled through the Vital Statistics Cooperative Program.
 
 **Participants:** Non-Hispanic black and non-Hispanic white males, all ages.
 
@@ -74,26 +74,6 @@ gun.data <- gun.data %>% arrange(gun.house.prev) %>%
                                        labels = c("10.2%-19.9%", "20.0%-34.9%", "35.0%-44.9%", "45.0%-65.5%")))
 ```
 
-```{r load_data_age_std_males, echo=F, warning=F, message=F}
-#homicide
-NHWM_homicide_FA <- read.table("./Data/Men/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHWM_homicide_NonFA <- read.table("./Data/Men/Homicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBM_homicide_FA <- read.table("./Data/Men/Homicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBM_homicide_NonFA <- read.table("./Data/Men/Homicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-#suicide
-NHWM_suicide_FA <- read.table("./Data/Men/Suicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHWM_suicide_NonFA <- read.table("./Data/Men/Suicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBM_suicide_FA <- read.table("./Data/Men/Suicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-
-NHBM_suicide_NonFA <- read.table("./Data/Men/Suicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt", skip = 21, header = T, sep = ",")
-```
-
 ```{r CDC_wonder}
 #ICD10 codes for firearm related homicide: X93, X94, X95
 CDC_NHM_homicide_FA <- read.table("./Data/CDC-WONDER/Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
@@ -127,17 +107,6 @@ US_CDC_NHM_suicide_NFA$State = "United States"
 
 
 ```{r tidy_fx, echo=F, warning=F, message=F}
-tidy_fx <- function(data, state, death, population, crude, adjusted, race, intent, mechanism) {
-  dat2 <- data[, c(state, death, population, crude, adjusted)]
-  names(dat2)[2] <- paste0(death, ".", intent, ".", race)
-  names(dat2)[3] <- paste0(population, ".", race)
-  names(dat2)[4] <- paste0("crude.", intent, ".", race)
-  names(dat2)[5] <- paste0("adjusted.", intent, ".", race)
-  dat2$type = mechanism
-  
-  return(dat2)
-}
-
 tidy_fx_cdc <- function(data, state, death, population, crude, adjusted, intent, mechanism) {
   dat2 <- data[, c(state, death, population, crude, adjusted, "Race")]
   names(dat2)[2] <- paste0(death, ".", intent)
@@ -312,98 +281,6 @@ rm(NHBM_homicide_FA, NHBM_homicide_NonFA, NHBM_suicide_FA, NHBM_suicide_NonFA,
    NHWM_homicide_FA, NHWM_homicide_NonFA, NHWM_suicide_FA, NHWM_suicide_NonFA)
 ```
 
-```{r annualized_US_point_estimates}
-#The annualized estimates were provided by WISQARS in the header of the data file.
-#We extract them from line 6 of the data files and convert them to data frames for ease of use.
-
-US.Homicide.FA.Black <- read.table("./Data/Men/Homicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-US.Homicide.FA.White <- read.table("./Data/Men/Homicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-US.Homicide.NonFA.Black <- read.table("./Data/Men/Homicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-US.Homicide.NonFA.White <- read.table("./Data/Men/Homicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-
-US.Suicide.FA.Black <- read.table("./Data/Men/Suicide_Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-US.Suicide.FA.White <- read.table("./Data/Men/Suicide_Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-US.Suicide.NonFA.Black <- read.table("./Data/Men/Suicide_Non-Firearms_Black_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-US.Suicide.NonFA.White <- read.table("./Data/Men/Suicide_Non-Firearms_White_NH_Males_Age-adjusted_2008-2014.txt",
-           skip = 5 ,nrow = 1, header = F, sep = ",")
-```
-
-```{r tidy_annualized_point_estimates}
-tidy_fx2 <- function(annualized.dataset, var1){
- name <- deparse(substitute(annualized.dataset))
- variables <- stringr::str_split(name, "\\.")
- dat2 <- data.frame(annualized.dataset[, c(var1)])
- names(dat2) <- paste0("Annualized.rate.", variables[[1]][2], ".", variables[[1]][4])
- dat2$ST <- variables[[1]][1]
- dat2$type <- ifelse(variables[[1]][3]=="FA", "Firearm", "Non-Firearm")
- return(dat2)
-}
-
-US.hom.black <- rbind(tidy_fx2(US.Homicide.FA.Black, "V1"),
-                      tidy_fx2(US.Homicide.NonFA.Black, "V1")) %>%
-  rename(adjusted.homicide.black = Annualized.rate.Homicide.Black) %>% 
-  mutate(adjusted.homicide.black = as.numeric(unlist(regmatches(adjusted.homicide.black,
-                             gregexpr("[[:digit:]]+\\.*[[:digit:]]*",adjusted.homicide.black))
-          )      ))
-  
-US.hom.white <- rbind(tidy_fx2(US.Homicide.FA.White, "V1"),
-                      tidy_fx2(US.Homicide.NonFA.White, "V1")) %>%
-  rename(adjusted.homicide.white = Annualized.rate.Homicide.White) %>% 
-  mutate(adjusted.homicide.white = as.numeric(unlist(regmatches(adjusted.homicide.white,
-                             gregexpr("[[:digit:]]+\\.*[[:digit:]]*",adjusted.homicide.white))
-          )      ))
-
-
-US.sui.black <- rbind(tidy_fx2(US.Suicide.FA.Black, "V1"),
-                      tidy_fx2(US.Suicide.NonFA.Black, "V1")) %>%
-  rename(adjusted.suicide.black = Annualized.rate.Suicide.Black) %>% 
-  mutate(adjusted.suicide.black = as.numeric(unlist(regmatches(adjusted.suicide.black,
-                             gregexpr("[[:digit:]]+\\.*[[:digit:]]*", adjusted.suicide.black))
-                             )      
-                             )
-         )
-  
-US.sui.white <- rbind(tidy_fx2(US.Suicide.FA.White, "V1"),
-                      tidy_fx2(US.Suicide.NonFA.White, "V1")) %>%
-  rename(adjusted.suicide.white = Annualized.rate.Suicide.White) %>% 
-  mutate(adjusted.suicide.white = as.numeric(unlist(regmatches(adjusted.suicide.white,                                                              gregexpr("[[:digit:]]+\\.*[[:digit:]]*",adjusted.suicide.white))
-                                                    )     
-                                             )
-         )
-
-US.homicide.data <- cbind(US.hom.white %>% select(-ST, -type), US.hom.black)
-US.suicide.data <- cbind(US.sui.white %>% select(-ST, -type), US.sui.black)
-
-US.data <- merge(US.homicide.data, US.suicide.data, by = c("ST", "type"))
-rm(US.homicide.data, US.suicide.data)
-```
-
-```{r merge_data_males, echo=F}
-#merge all the data
-Males_AllAges_0814 <- merge(NHBM_homicide, NHBM_suicide %>% select(-Population.black), by = c("ST", "type")) 
-
-Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_homicide, by = c("ST", "type"))
-
-Males_AllAges_0814 <- merge(Males_AllAges_0814, NHWM_suicide %>% select(-Population.white), by = c("ST", "type"))
-
-Males_AllAges_0814 <- plyr::rbind.fill(Males_AllAges_0814, US.data) %>% 
-  mutate(crude.RD.hom.su.black = crude.homicide.black - crude.suicide.black,
-         adj.RD.hom.su.black = adjusted.homicide.black - adjusted.suicide.black,
-         crude.RD.hom.su.white = crude.homicide.white - crude.suicide.white, 
-         adj.RD.hom.su.white = adjusted.homicide.white - adjusted.suicide.white, 
-         crude.RD.suicide = crude.suicide.black - crude.suicide.white,
-         adj.RD.suicide = adjusted.suicide.black - adjusted.suicide.white,
-         crude.RD.homicide = crude.homicide.black - crude.homicide.white,
-         adj.RD.homicide = adjusted.homicide.black - adjusted.homicide.white)
-```
-
 ```{r add_factor_sorting_males, echo = F}
 #used for plotting -- to arrange the states on the y-axis according to the magnitude of the black-white inequality
 levels.firearm.homicide <- Males_AllAges_0814 %>% 
@@ -468,71 +345,43 @@ Males_AllAges_0814$gun.level[Males_AllAges_0814$ST == "US"] <- NA
 
 
 #Introduction
+```{r CDC-wonder-intro-data, echo = F}
+#homicides
+intro.data.homicide <- read.table("./Data/Introduction/Homicide_NH_Males_Age-adjusted_2016.txt", 
+                                  header = T, nrows = 2, sep = "\t")
 
-```{r WISQARS-data-intro, echo=F}
-#source: WISQARS fatal injury mapping tool
-#note:I used homicide, not homicide and legal intervention -- this changes the numbers slightly, not materially. 
+homicide.stats <- intro.data.homicide %>% select(Race, Age.Adjusted.Rate) %>% 
+  spread(key = Race, value = Age.Adjusted.Rate) %>% 
+  mutate(RR = `Black or African American`/White) %>% rename(Black = `Black or African American`)
 
-#HOMICIDE relative rates
-nh.black.homicide.rate.agestd <- 33.58 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
-nh.black.homicide.rate.crude <- 35.53 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
+intro.data.homicide.FA <- read.table("./Data/Introduction/Homicide_Firearms_NH_Males_Age-adjusted_2016.txt", 
+                                  header = T, nrows = 2, sep = "\t")
 
-nh.white.homicide.rate.agestd <- 3.46 #per 100k, annualized age standardized, 2008-2004, entire US, white, non-hispanic, males
-nh.white.homicide.rate.crude <- 3.45 #per 100k, annualized crude, 2008-2004, entire US, white, non-hispanic, males
+prop.homicides.FA <- round(sum(intro.data.homicide.FA$Deaths)/sum(intro.data.homicide$Deaths)*100)
 
-rr.homicide.black.white.agestd <- nh.black.homicide.rate.agestd/nh.white.homicide.rate.agestd
-rr.homicide.black.white.crude <- nh.black.homicide.rate.crude/nh.white.homicide.rate.crude
+FA.homicide.stats <- intro.data.homicide.FA %>% select(Race, Age.Adjusted.Rate) %>% 
+  spread(key = Race, value = Age.Adjusted.Rate) %>% 
+  mutate(RR = `Black or African American`/White) %>% rename(Black = `Black or African American`)
 
-#SUICIDE relative rates
-nh.black.suicide.rate.agestd <- 9.64 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
-nh.black.suicide.rate.crude <- 9.32 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
+#suicides
+intro.data.suicide <- read.table("./Data/Introduction/Suicide_NH_Males_Age-adjusted_2016.txt", 
+                                  header = T, nrows = 2, sep = "\t")
 
-nh.white.suicide.rate.agestd <- 24.49 #per 100k, annualized age standardized, 2008-2004, entire US, white, non-hispanic, males
-nh.white.suicide.rate.crude <- 26.01 #per 100k, annualized crude, 2008-2004, entire US, white, non-hispanic, males
+suicide.stats <- intro.data.suicide %>% select(Race, Age.Adjusted.Rate) %>% 
+  spread(key = Race, value = Age.Adjusted.Rate) %>% 
+  mutate(RR = White/`Black or African American`) %>% rename(Black = `Black or African American`)
 
-rr.suicide.white.black.agestd <- nh.white.suicide.rate.agestd/nh.black.suicide.rate.agestd
-rr.suicide.white.black.crude <- nh.white.suicide.rate.crude/nh.black.suicide.rate.crude
+intro.data.suicide.FA <- read.table("./Data/Introduction/Suicide_Firearms_NH_Males_Age-adjusted_2016.txt", 
+                                  header = T, nrows = 2, sep = "\t")
 
+prop.suicides.FA <- round(sum(intro.data.suicide.FA$Deaths)/sum(intro.data.suicide$Deaths)*100)
+
+FA.suicide.stats <- intro.data.suicide.FA %>% select(Race, Age.Adjusted.Rate) %>% 
+  spread(key = Race, value = Age.Adjusted.Rate) %>% 
+  mutate(RR = White/`Black or African American`) %>% rename(Black = `Black or African American`)
 ```
 
-```{r WISQARS-data-intro-2, echo=F}
-
-risk.homicide.nh.male <- 8.33 #per 100k, non-hispanic blacks + whites, 2008-2014, males
-risk.homicide.nh.male.firearm <- 6.17 #per 100k, non-hispanic blacks + whites, 2008-2014, males
-prop.homicide.nh.male.firearm <- (risk.homicide.nh.male.firearm/risk.homicide.nh.male)*100
-
-risk.suicide.nh.male <- 22.42 #per 100k, non-hispanic blacks + whites, 2008-2014, males
-risk.suicide.nh.male.firearm <- 12.87 #per 100k, non-hispanic blacks + whites, 2008-2014, males
-prop.suicide.nh.male.firearm <- (risk.suicide.nh.male.firearm/risk.suicide.nh.male)*100
-```
-
-```{r WISQARS-data-intro-3, echo=F}
-#source: WISQARS fatal injury mapping tool
-#note:I uses homicide, not homicide and legal intervention -- this changes the numbers slightly, not materially. 
-
-#FIREARM HOMICIDE relative rates
-nh.black.homicide.rate.agestd.fa <- 27.58 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
-nh.black.homicide.rate.crude.fa <- 29.57 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
-
-nh.white.homicide.rate.agestd.fa <- 2.04 #per 100k, annualized age standardized, 2008-2004, entire US, white, non-hispanic, males
-nh.white.homicide.rate.crude.fa <- 2.01 #per 100k, annualized crude, 2008-2004, entire US, white, non-hispanic, males
-
-rr.homicide.black.white.agestd.fa <- nh.black.homicide.rate.agestd.fa/nh.white.homicide.rate.agestd.fa
-rr.homicide.black.white.crude.fa <- nh.black.homicide.rate.crude.fa/nh.white.homicide.rate.crude.fa
-
-#FIREARM SUICIDE relative rates
-nh.black.suicide.rate.agestd.fa <- 5.33 #per 100k, annualized age standardized, 2008-2004, entire US, black, non-hispanic, males
-nh.black.suicide.rate.crude.fa <- 5.04 #per 100k, annualized crude, 2008-2004, entire US, black, non-hispanic, males
-
-nh.white.suicide.rate.agestd.fa <- 14.06 #per 100k, annualized age standardized, 2008-2004, entire US, white, non-hispanic, males
-nh.white.suicide.rate.crude.fa <- 15.27 #per 100k, annualized crude, 2008-2004, entire US, white, non-hispanic, males
-
-rr.suicide.white.black.agestd.fa <- nh.white.suicide.rate.agestd.fa/nh.black.suicide.rate.agestd.fa
-rr.suicide.white.black.crude.fa <- nh.white.suicide.rate.crude.fa/nh.black.suicide.rate.crude.fa
-
-```
-
-Non-Hispanic black males are nearly `r round(rr.homicide.black.white.agestd)` times more likely to die from homicide than non-Hispanic white males in the United States, whereas white males are `r round(rr.suicide.white.black.agestd,1)` times more likely than black males to die from suicide.^1^ `r round(prop.homicide.nh.male.firearm)`% of these homicides and `r round(prop.suicide.nh.male.firearm)`% of these suicides involved firearms. The relative racial inequalities in violent deaths are especially marked for homicide involving firearms and slightly increased for suicide involving firearms. Black males are `r round(rr.homicide.black.white.agestd.fa,1)` times more likely to die of a firearm-related homicide than white males, whereas white males are `r round(rr.suicide.white.black.agestd.fa,1)` times as likely to die from firearm-related suicide (1).
+In 2016, non-Hispanic black males were nearly `r round(homicide.stats$RR[1], 1)` times more likely to die from homicide than non-Hispanic white males in the United States, whereas white males were `r round(suicide.stats$RR[1], 1)` times more likely than black males to die from suicide.(1) `r round(prop.homicides.FA)`% of these homicides and `r round(prop.suicides.FA)`% of these suicides involved firearms. The relative racial inequalities in violent deaths are especially marked for homicide involving firearms and slightly increased for suicide involving firearms. Black males are `r round(FA.homicide.stats$RR[1], 1)` times more likely to die of a firearm-related homicide than white males, whereas white males are `r round(FA.suicide.stats$RR[1], 1)` times as likely to die from firearm-related suicide than black males (1).
 
 While racial inequalities in violent deaths are well-established for the United States overall, it is unknown whether and how much they vary by state. Large variation in racial inequalities suggests the presence of "explanatory factors" that differ across states. These factors could reflect differences in the demographics of each state, or in social, cultural, or policy environments that are known to affect health [ref to add]. Demonstrating the amount of variability in racial inequalities in homicide and suicide across states is the first step towards identifying states with high rates of homicide or suicide, or large racial inequalities in either outcome. Policies to address inequalities could then be targeted.
 
@@ -768,7 +617,7 @@ Each state's homicide and suicide mortality rates among non-Hispanic black men a
 
 ###References
 
-1. Statistics, Programming & Economics Branch, National Center for Injury Prevention & Control, Centers for Disease Control and Prevention. Fatal injury mapping. Available from: https://wisqars.cdc.gov:8443/cdcMapFramework/. [cited 3 Oct 2017].
+1. Centers for Disease Control and Prevention, National Center for Health Statistics. Underlying Cause of Death 1999-2016 on CDC WONDER Online Database, released December, 2017. Data are from the Multiple Cause of Death Files, 1999-2016, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative Program. Available from: http://wonder.cdc.gov/ucd-icd10.html. [cited 17 Jan 2018]
 
 2. Miller M, Azreal D, Hemenway D. Firearms and violent death in the United States. In: Webster DW, Vernick JS, eds. *Reducing Gun Violence in America. Informing Policy with Evidence and Analysis*. Baltimore: The Johns Hopkins University Press; 2013:14-15.
 
