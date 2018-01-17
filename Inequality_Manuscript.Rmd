@@ -74,7 +74,7 @@ gun.data <- gun.data %>% arrange(gun.house.prev) %>%
                                        labels = c("10.2%-19.9%", "20.0%-34.9%", "35.0%-44.9%", "45.0%-65.5%")))
 ```
 
-```{r CDC_wonder}
+```{r load_CDC_wonder_data, eval=T, echo=F}
 #ICD10 codes for firearm related homicide: X93, X94, X95
 CDC_NHM_homicide_FA <- read.table("./Data/CDC-WONDER/Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
@@ -90,6 +90,7 @@ CDC_NHM_suicide_FA <- read.table("./Data/CDC-WONDER/Suicide_Firearms_NH_Males_Ag
 CDC_NHM_suicide_NFA <- read.table("./Data/CDC-WONDER/Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
+#load US-level data (aggregated across entire US)
 US_CDC_NHM_homicide_FA <- read.table("./Data/CDC-WONDER/All-US_Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 US_CDC_NHM_homicide_NFA <- read.table("./Data/CDC-WONDER/All-US_Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
@@ -99,14 +100,16 @@ US_CDC_NHM_suicide_FA <- read.table("./Data/CDC-WONDER/All-US_Suicide_Firearms_N
 US_CDC_NHM_suicide_NFA <- read.table("./Data/CDC-WONDER/All-US_Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
+#Make variable called "State" to help with rbind to State-level dataset
 US_CDC_NHM_homicide_FA$State = "United States"
 US_CDC_NHM_homicide_NFA$State = "United States"
 US_CDC_NHM_suicide_FA$State = "United States"
 US_CDC_NHM_suicide_NFA$State = "United States"
 ```
 
+```{r tidy_fx_cdc, echo=F, warning=F, message=F}
 
-```{r tidy_fx, echo=F, warning=F, message=F}
+#this function tidies the abstracted data
 tidy_fx_cdc <- function(data, state, death, population, crude, adjusted, intent, mechanism) {
   dat2 <- data[, c(state, death, population, crude, adjusted, "Race")]
   names(dat2)[2] <- paste0(death, ".", intent)
@@ -118,7 +121,7 @@ tidy_fx_cdc <- function(data, state, death, population, crude, adjusted, intent,
 }
 ```
 
-```{r}
+```{r perform_tidying, echo = F}
 CDC_NHM_homicide_FA2 <- tidy_fx_cdc(data = CDC_NHM_homicide_FA, state = "State", 
                                     death = "Deaths", population = "Population", 
                                     crude = "Crude.Rate", adjusted = "Age.Adjusted.Rate", 
@@ -155,7 +158,7 @@ US_CDC_NHM_suicide_NFA2 <- tidy_fx_cdc(data = US_CDC_NHM_suicide_NFA, state = "S
                                     intent = "suicide", mechanism = "Non-Firearm")
 ```
 
-```{r}
+```{r more-tidying, echo = F}
 US_CDC_NHM_homicide_2 <- rbind(US_CDC_NHM_homicide_FA2, US_CDC_NHM_homicide_NFA2)
 US_CDC_NHM_suicide_2 <- rbind(US_CDC_NHM_suicide_FA2, US_CDC_NHM_suicide_NFA2)
 
@@ -186,7 +189,9 @@ CDC_Males_AllAges_0816 <- CDC_Males_AllAges_0816 %>%
           
 ```
 
-```{r make_wide}
+```{r make_wide_dataset, echo = F}
+#put the black and white data in the same row -- makes plotting the rate differences easier than when in long format
+#use dcast from data.table package to reformat the dataset
 
 US_CDC_Males_0816_wide_FA <- dcast(setDT(US_CDC_Males_0816 %>% filter(type == "Firearm")), State ~ Race, 
             value.var = c("Population", "Deaths.homicide", "crude.homicide", "adjusted.homicide",
@@ -200,8 +205,7 @@ US_CDC_Males_0816_wide_NFA$type <- "Non-Firearm"
 
 US_CDC_Males_0816_wide <- rbind(US_CDC_Males_0816_wide_FA, US_CDC_Males_0816_wide_NFA)
 
-rm(US_CDC_Males_0816_wide_FA, US_CDC_Males_0816_wide_NFA)
-rm(US_CDC_NHM_homicide_2, US_CDC_NHM_suicide_2)
+rm(US_CDC_Males_0816_wide_FA, US_CDC_Males_0816_wide_NFA, US_CDC_NHM_homicide_2, US_CDC_NHM_suicide_2)
 
 CDC_Males_AllAges_0816_wide_FA <- dcast(setDT(CDC_Males_AllAges_0816 %>% filter(type == "Firearm")), State ~ Race, 
                                      value.var = c("Population", "Deaths.homicide", "crude.homicide", "adjusted.homicide",
@@ -214,96 +218,86 @@ CDC_Males_AllAges_0816_wide_NFA$type <- "Non-Firearm"
 
 CDC_Males_AllAges_0816_wide <- rbind(CDC_Males_AllAges_0816_wide_FA, CDC_Males_AllAges_0816_wide_NFA)
 
-rm(CDC_Males_AllAges_0816_wide_FA, CDC_Males_AllAges_0816_wide_NFA)
-rm(CDC_NHM_homicide_2, CDC_NHM_suicide_2)
+rm(CDC_Males_AllAges_0816_wide_FA, CDC_Males_AllAges_0816_wide_NFA, CDC_NHM_homicide_2, CDC_NHM_suicide_2)
 ```
 
-```{r wide_US_and_state}
+```{r append_US_and_state_wide_datasets, echo = F}
 #Add United States as a new factor level
 CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>% mutate(State = forcats::fct_expand(State, "United States"))
 
 #check:
 #levels(CDC_Males_AllAges_0816_wide)
-
-dim(CDC_Males_AllAges_0816_wide)
+#dim(CDC_Males_AllAges_0816_wide)
 CDC_Males_AllAges_0816_wide <- rbind(CDC_Males_AllAges_0816_wide, US_CDC_Males_0816_wide)
-dim(CDC_Males_AllAges_0816_wide)
+#dim(CDC_Males_AllAges_0816_wide)
 ```
 
-```{r calculate_rate_differences}
+```{r calculate_rate_differences, echo = F}
 CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>% 
-  mutate(crude.RD.hom.su.black = crude.homicide.Black - crude.suicide.Black,
-         adj.RD.hom.su.black = adjusted.homicide.Black - adjusted.suicide.Black,
-         crude.RD.hom.su.white = crude.homicide.White - crude.suicide.White, 
-         adj.RD.hom.su.white = adjusted.homicide.White - adjusted.suicide.White, 
-         crude.RD.suicide = crude.suicide.Black - crude.suicide.White,
+  mutate(crude.RD.suicide = crude.suicide.Black - crude.suicide.White,
          adj.RD.suicide = adjusted.suicide.Black - adjusted.suicide.White,
          crude.RD.homicide = crude.homicide.Black - crude.homicide.White,
          adj.RD.homicide = adjusted.homicide.Black - adjusted.homicide.White)
 
+#add state abbreviation variable
 CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>% mutate(ST = state.abb[match(State, state.name)])
-
 CDC_Males_AllAges_0816_wide$ST[CDC_Males_AllAges_0816_wide$State == "United States"] <- "US"
 CDC_Males_AllAges_0816_wide$ST[CDC_Males_AllAges_0816_wide$State == "District of Columbia"] <- "DC"
 
-length(unique(CDC_Males_AllAges_0816_wide$State))
-length(unique(CDC_Males_AllAges_0816_wide$ST))
+#length(unique(CDC_Males_AllAges_0816_wide$State))
+#length(unique(CDC_Males_AllAges_0816_wide$ST))
 ```
 
-```{r}
-Males_AllAges_0816 <- CDC_Males_AllAges_0816_wide
-```
-
-```{r add_factor_sorting_males, echo = F}
+```{r add_factor_sorting_males, echo = F, warning = F}
 #used for plotting -- to arrange the states on the y-axis according to the magnitude of the black-white inequality
-levels.firearm.homicide <- Males_AllAges_0816 %>% 
+levels.firearm.homicide <- CDC_Males_AllAges_0816_wide %>% 
   filter(type == "Firearm") %>%
   transmute(ST.order.RD.homicide = reorder(ST, adj.RD.homicide))
 
-Males_AllAges_0816 %>% 
+CDC_Males_AllAges_0816_wide %>% 
   filter(is.na(adjusted.homicide.Black) == T & type == "Firearm") %>%  #changed with updated data
   select(ST, adjusted.homicide.White) %>% 
   arrange(adjusted.homicide.White) #changed with updated data
 
-Males_AllAges_0816$ST.order.RD.homicide <- factor(Males_AllAges_0816$ST, 
+CDC_Males_AllAges_0816_wide$ST.order.RD.homicide <- factor(CDC_Males_AllAges_0816_wide$ST, 
                                                   levels = c("HI","NH", "SD", "VT", "UT", "ND", "ID", "ME", "MT", "WY", 
                                                              levels(levels.firearm.homicide$ST.order.RD.homicide)[c(1:23, 25:42)],
                                                              "US"))
 
-levels.firearm.suicide <- Males_AllAges_0816 %>% filter(type == "Firearm") %>%
+levels.firearm.suicide <-CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm") %>%
   transmute(ST.order.RD.suicide = reorder(ST, -adj.RD.suicide))
 
- Males_AllAges_0816 %>% 
+CDC_Males_AllAges_0816_wide %>% 
    filter(is.na(adjusted.suicide.Black) == T & type == "Firearm") %>%  #changed with updated data
    select(ST, adjusted.suicide.White) %>% 
    arrange(adjusted.suicide.White)#changed with updated data
 
-Males_AllAges_0816$ST.order.RD.suicide <- factor(Males_AllAges_0816$ST, 
+CDC_Males_AllAges_0816_wide$ST.order.RD.suicide <- factor(CDC_Males_AllAges_0816_wide$ST, 
                                                   levels = c("RI", "HI", "IA", "NH", "ME", "SD", "ND", "VT", "UT", "ID", "MT", "WY",
                                                              levels(levels.firearm.suicide$ST.order.RD.suicide)[c(1:17, 19:40)],
                                                              "US"))
 
 ```
 
-```{r add_variables_males, echo=F}
+```{r add_variables_males, echo=F, warning = F}
 num.years = 2016-2008+1 #changed with updated data
 
-Males_AllAges_0816 <- Males_AllAges_0816 %>% 
+CDC_Males_AllAges_0816_wide <-CDC_Males_AllAges_0816_wide %>% 
   mutate(average.pop.white = Population.White/num.years,#changed with updated data
          average.pop.black = Population.Black/num.years)#changed with updated data
 
-Males_AllAges_0816$gun.level <- "Middle"
-Males_AllAges_0816$gun.level[Males_AllAges_0816$ST %in% c("LA", "UT", "OK", "IA", "TN","KY", "AL", 
+CDC_Males_AllAges_0816_wide$gun.level <- "Middle"
+CDC_Males_AllAges_0816_wide$gun.level[CDC_Males_AllAges_0816_wide$ST %in% c("LA", "UT", "OK", "IA", "TN","KY", "AL", 
                                                           "MS", "ID","ND", "WV", "AR", "AK", "SD", "MT", "WY")] <- "High"
-Males_AllAges_0816$gun.level[Males_AllAges_0816$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
+CDC_Males_AllAges_0816_wide$gun.level[CDC_Males_AllAges_0816_wide$ST %in% c("HI", "NJ", "MA", "RI", "CT", "NY")] <- "Low"
 
-Males_AllAges_0816$gun.level <- factor(Males_AllAges_0816$gun.level, levels = c("Low", "Middle", "High"))
+CDC_Males_AllAges_0816_wide$gun.level <- factor(CDC_Males_AllAges_0816_wide$gun.level, levels = c("Low", "Middle", "High"))
 
-#dim(Males_AllAges_0816)
-Males_AllAges_0816 <- merge(Males_AllAges_0816, gun.data, by = "ST", all.x = T)
-#dim(Males_AllAges_0816)
+#dim(CDC_Males_AllAges_0816_wide)
+CDC_Males_AllAges_0816_wide <- merge(CDC_Males_AllAges_0816_wide, gun.data, by = "ST", all.x = T)
+#dim(CDC_Males_AllAges_0816_wide)
 
-Males_AllAges_0816$gun.level[Males_AllAges_0816$ST == "US"] <- NA
+CDC_Males_AllAges_0816_wide$gun.level[CDC_Males_AllAges_0816_wide$ST == "US"] <- NA
 ```
 
 #Introduction
@@ -343,7 +337,7 @@ FA.suicide.stats <- intro.data.suicide.FA %>% select(Race, Age.Adjusted.Rate) %>
   mutate(RR = White/`Black or African American`) %>% rename(Black = `Black or African American`)
 ```
 
-In 2016, non-Hispanic black males were nearly `r round(homicide.stats$RR[1], 1)` times more likely to die from homicide than non-Hispanic white males in the United States, whereas white males were `r round(suicide.stats$RR[1], 1)` times more likely than black males to die from suicide.(1) `r round(prop.homicides.FA)`% of these homicides and `r round(prop.suicides.FA)`% of these suicides involved firearms. The relative racial inequalities in violent deaths are especially marked for homicide involving firearms and slightly increased for suicide involving firearms. Black males are `r round(FA.homicide.stats$RR[1], 1)` times more likely to die of a firearm-related homicide than white males, whereas white males are `r round(FA.suicide.stats$RR[1], 1)` times as likely to die from firearm-related suicide than black males (1).
+In 2016, non-Hispanic black males were nearly `r round(homicide.stats$RR[1], 1)` times more likely to die from homicide than non-Hispanic white males in the United States, whereas white males were `r round(suicide.stats$RR[1], 1)` times more likely than black males to die from suicide (1). `r round(prop.homicides.FA)`% of these homicides and `r round(prop.suicides.FA)`% of these suicides involved firearms. The relative racial inequalities in violent deaths are especially marked for homicide involving firearms. Black males are `r round(FA.homicide.stats$RR[1], 1)` times more likely to die of a firearm-related homicide than white males (1).
 
 While racial inequalities in violent deaths are well-established for the United States overall, it is unknown whether and how much they vary by state. Large variation in racial inequalities suggests the presence of "explanatory factors" that differ across states. These factors could reflect differences in the demographics of each state, or in social, cultural, or policy environments that are known to affect health [ref to add]. Demonstrating the amount of variability in racial inequalities in homicide and suicide across states is the first step towards identifying states with high rates of homicide or suicide, or large racial inequalities in either outcome. Policies to address inequalities could then be targeted.
 
@@ -370,29 +364,29 @@ This research was not formally supported by a research grant, although one of th
 #Results
 
 ```{r results_statistics, echo=F}
-stats <- Males_AllAges_0816 %>% 
+stats <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adj.RD.homicide, na.rm = T)), 
             max = round(max(adj.RD.homicide, na.rm = T)))
 
-stats2 <- Males_AllAges_0816 %>% 
+stats2 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adjusted.homicide.White, na.rm = T)), 
             max = round(max(adjusted.homicide.White, na.rm = T)))
 
-white.pop.dc <- Males_AllAges_0816 %>% 
+white.pop.dc <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST == "DC" & type == "Firearm") %>% 
   select(Population.White)
 
-stats3 <- Males_AllAges_0816 %>% 
+stats3 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adjusted.homicide.Black, na.rm = T)), 
             max = round(max(adjusted.homicide.Black, na.rm = T)))
 
-tib1 <- Males_AllAges_0816 %>% 
+tib1 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(sum.deaths.homicide.black = sum(Deaths.homicide.Black, na.rm = T), 
@@ -400,17 +394,17 @@ tib1 <- Males_AllAges_0816 %>%
             sum.deaths.suicide.black = sum(Deaths.suicide.Black, na.rm = T), 
             sum.deaths.suicide.white = sum(Deaths.suicide.White, na.rm = T))
 
-Males_AllAges_0816 %>% filter(type == "Firearm", is.na(adjusted.homicide.Black) == T) %>% select(State)
-Males_AllAges_0816 %>% filter(type == "Non-Firearm", is.na(adjusted.homicide.Black) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", is.na(adjusted.homicide.Black) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.homicide.Black) == T) %>% select(State)
 
-Males_AllAges_0816 %>% filter(type == "Firearm", is.na(adjusted.homicide.White) == T) %>% select(State)
-Males_AllAges_0816 %>% filter(type == "Non-Firearm", is.na(adjusted.homicide.White) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", is.na(adjusted.homicide.White) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.homicide.White) == T) %>% select(State)
 
-Males_AllAges_0816 %>% filter(type == "Firearm",is.na(adjusted.suicide.Black) == T) %>% select(State)
-Males_AllAges_0816 %>% filter(type == "Non-Firearm",is.na(adjusted.suicide.Black) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm",is.na(adjusted.suicide.Black) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm",is.na(adjusted.suicide.Black) == T) %>% select(State)
 
-Males_AllAges_0816 %>% filter(type == "Firearm", is.na(adjusted.suicide.White) == T) %>% select(State) #no states
-Males_AllAges_0816 %>% filter(type == "Non-Firearm", is.na(adjusted.suicide.White) == T) %>% select(State) #no states
+CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", is.na(adjusted.suicide.White) == T) %>% select(State) #no states
+CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.suicide.White) == T) %>% select(State) #no states
 
 ```
 
@@ -419,36 +413,43 @@ There were `r formatC(sum(tib1$sum.deaths.homicide.black) + sum(tib1$sum.deaths.
 
 *Comparison of firearm-related homicide rates*
 
-**Figure 1** displays the homicide rates among black men compared to white men, according to state and firearms use. The black-white difference in homicide fatality rates varied strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and was driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. Homicide rates for white men showed relatively little variation across states, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also had the largest differences in rates between blacks and whites, signaling states that were most high-risk for blacks but relatively low-risk for whites. The District of Columbia also had a high rate of firearm homicide for blacks, but its rate for white men was suppressed. Given its abstracted cumulative population denominator of `r formatC(white.pop.dc$Population.White, format  = "d", big.mark = ",")`, this implies a rate $\leq$ 10 per `r formatC(white.pop.dc$Population.White, format  = "d", big.mark = ",")` per year, or `r round((10/white.pop.dc)*100000, 1)` per 100,000 per year, implying that DC was also relatively dangerous for black men, but not for white men.
+**Figure 1** displays the homicide rates among black men compared to white men, according to state and firearms use. Across the entire US, black men experience 27 additional homicides per 100,00 compared to white men. The black-white difference in homicide fatality rates varied strikingly by state, between `r stats$min[1]` and `r stats$max[1]` per 100,000 per year, and was driven by marked variation in firearm homicides to black men across states. States with the smallest black firearm homicide rates saw fewer than 15 deaths per 100,000 per year over the time period, compared to more than 40 deaths per 100,000 per year in states with the highest rates. Homicide rates for white men showed relatively little variation across states, between `r stats2$min[1]` and `r stats2$max[1]` deaths per 100,000 per year. The states with the highest rates of firearm homicide for black men (e.g., Missouri, Michigan, Illinois, Indiana) also had the largest differences in rates between blacks and whites, signaling states that were most high-risk for blacks but relatively low-risk for whites. The District of Columbia also had a high rate of firearm homicide for blacks, but its rate for white men was suppressed. Given its abstracted cumulative population denominator of `r formatC(white.pop.dc$Population.White, format  = "d", big.mark = ",")`, this implies a rate $\leq$ 10 per `r formatC(white.pop.dc$Population.White, format  = "d", big.mark = ",")` per year, or `r round((10/white.pop.dc)*100000, 1)` per 100,000 per year, implying that DC was also relatively dangerous for black men, but not for white men.
 
 *Comparison of firearm-related homicide rates in black men among states with the largest black populations*
+```{r}
+four.states <- CDC_Males_AllAges_0816_wide %>% filter(ST %in% c("FL", "TX", "CA", "GA"), type == "Firearm") %>% select(ST, adj.RD.homicide) %>% arrange(adj.RD.homicide)
 
-Another way to make comparisons is to consider the states that are home to the most black residents, to describe whether these states that are home to a large portion of the US black population vary among themselves in their rates of firearm-related homicide and when compared to spatially contiguous states. Nearly 40% of the US black population lives in Georgia, New York, Florida, Texas, and California, and compose between 30% and 6% of each state's population. Among them, Texas exhibited the smallest black-white difference in firearm-related homicide (13 additional deaths to black men per 100,000 per year), which was also substantially lower than the differences estimated for neighboring states like Louisiana (+37), Oklahoma (+29), and Arkansas (+29). Georgia (+16) and Florida (+22) had differences similar to nearby South and North Carolina (+19 and +17, respectively), while having lower rates than Alabama (+27) and Tennessee (+28). New York's difference (+18) was similar to Massachusetts (+17) and Connecticut (+22), but was substantially lower than the rates of neighboring New Jersey (+30) and Pennsylvania (+41). California exhibited the largest black-white difference (+30) in firearm-related homicide among the five states with the largest black populations. California's black-white difference was larger than those estimated for contiguous states like Nevada (+17) and Oregon (+10), although these states had relatively small black populations.
+four.states %>% filter(ST == "TX") %>% select(adj.RD.homicide) %>% round()
+
+CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", ST == "LA") %>% select(adj.RD.homicide) %>% round()
+```
+
+Another way to make comparisons is to consider the states that are home to the most black residents, to describe whether these states that are home to a large portion of the US black population vary among themselves in their rates of firearm-related homicide and when compared to spatially contiguous states. Nearly 40% of the US black population lives in Georgia, New York, Florida, Texas, and California, and compose between 30% and 6% of each state's population. Among them, Texas exhibited the smallest black-white difference in firearm-related homicide (`r four.states %>% filter(ST == "TX") %>% select(adj.RD.homicide) %>% round()` additional deaths to black men per 100,000 per year), which was also substantially lower than the differences estimated for neighboring states like Louisiana (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", ST == "LA") %>% select(adj.RD.homicide) %>% round()`), Oklahoma (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", ST == "OK") %>% select(adj.RD.homicide) %>% round()`), and Arkansas (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Arkansas") %>% select(adj.RD.homicide) %>% round()`). Georgia (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Georgia") %>% select(adj.RD.homicide) %>% round()`) and Florida (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Florida") %>% select(adj.RD.homicide) %>% round()`) had differences similar to nearby South and North Carolina (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "South Carolina") %>% select(adj.RD.homicide) %>% round()` and +`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "North Carolina") %>% select(adj.RD.homicide) %>% round()`, respectively), while having lower rates than Alabama (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Alabama") %>% select(adj.RD.homicide) %>% round()`) and Tennessee (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Tennessee") %>% select(adj.RD.homicide) %>% round()`). New York's difference (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "New York") %>% select(adj.RD.homicide) %>% round()`) was similar to Massachusetts (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Massachusetts") %>% select(adj.RD.homicide) %>% round()`) and Connecticut (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Connecticut") %>% select(adj.RD.homicide) %>% round()`), but was substantially lower than the rates of neighboring New Jersey (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "New Jersey") %>% select(adj.RD.homicide) %>% round()`) and Pennsylvania (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Pennsylvania") %>% select(adj.RD.homicide) %>% round()`). California exhibited the largest black-white difference (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "California") %>% select(adj.RD.homicide) %>% round()`) in firearm-related homicide among the five states with the largest black populations. California's black-white difference was larger than those estimated for contiguous states like Nevada (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Nevada") %>% select(adj.RD.homicide) %>% round()`) and Oregon (+`r CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", State == "Oregon") %>% select(adj.RD.homicide) %>% round()`), although these states had relatively small black populations.
 
 *Comparison of firearm-unrelated homicide rates*
 
 Although non-firearm homicides are much more rare, they also demonstrated the general pattern of heightened rates among black men compared to white men. Whereas black men experienced rates that varied between `r stats3$min[2]` and `r stats3$max[2]` per 100,000 per year by state, white rates varied between `r stats2$min[2]` and `r stats2$max[2]` per 100,000 per year. Across the US, firearm homicide rates were higher than non-firearm rates for black men, and were more than 5.3 times higher in all states in the East North Central region (Wisconsin, Illinois, Indiana, Ohio, and Michigan), and in Missouri, Louisiana, Delaware, and Nebraska.
 
 ```{r results_statistics_suicide, echo=F}
-stats4 <- Males_AllAges_0816 %>% 
+stats4 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adj.RD.suicide, na.rm = T)),
             max = round(max(adj.RD.suicide, na.rm = T)))
 
-stats5 <- Males_AllAges_0816 %>% 
+stats5 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adjusted.suicide.White, na.rm = T)),
             max = round(max(adjusted.suicide.White, na.rm = T)))
 
-stats6 <- Males_AllAges_0816 %>% 
+stats6 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adjusted.suicide.Black, na.rm = T)),
             max = round(max(adjusted.suicide.Black, na.rm = T)))
 
-stats7 <- Males_AllAges_0816 %>% 
+stats7 <-CDC_Males_AllAges_0816_wide %>% 
   filter(ST != "US") %>%
   group_by(type) %>% 
   summarise(min = round(min(adjusted.suicide.White, na.rm = T)),
@@ -463,7 +464,7 @@ Seven of the ten states with the largest white-black differences in firearm-rela
 
 *Comparison of firearm-unrelated suicide rates*
 
-The rates of black and white firearm-unrelated suicides and the difference between them varied substantially less than those involving firearms. In the US overall, the non-firearm suicide mortality rate was `r Males_AllAges_0816 %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.White) %>% round(1)` per 100,000 per year compared to `r Males_AllAges_0816 %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.Black) %>% round(1)` per 100,000 black men per year. Across the states, Alaska had the lowest rate of non-firearm suicides for white men of `r stats7$min[2]` per 100,000 per year, while Hawaii had the highest rate of `r stats7$max[2]` per 100,000 per year, compared to the range estimated for black men from `r stats6$min[2]` per 100,000 per year in Alabama and `r stats6$max[2]` per 100,000 per year in Utah.
+The rates of black and white firearm-unrelated suicides and the difference between them varied substantially less than those involving firearms. In the US overall, the non-firearm suicide mortality rate was `r CDC_Males_AllAges_0816_wide %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.White) %>% round(1)` per 100,000 per year compared to `r CDC_Males_AllAges_0816_wide %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.Black) %>% round(1)` per 100,000 black men per year. Across the states, Alaska had the lowest rate of non-firearm suicides for white men of `r stats7$min[2]` per 100,000 per year, while Hawaii had the highest rate of `r stats7$max[2]` per 100,000 per year, compared to the range estimated for black men from `r stats6$min[2]` per 100,000 per year in Alabama and `r stats6$max[2]` per 100,000 per year in Utah.
 
 *Relationship between firearm-related homicide and suicide with state household gun ownership among white men*
 
@@ -487,18 +488,18 @@ Firearms feature differently in the deaths of black and white men in the United 
 ###Figure 1: Comparison of firearm-related and firearm-unrelated homicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=T}
-Males_AllAges_0816 <- Males_AllAges_0816 %>% 
+CDC_Males_AllAges_0816_wide <-CDC_Males_AllAges_0816_wide %>% 
   mutate(type.fac = factor(type, labels = c("Firearm-related", "Firearm-unrelated")))
 
-ggplot(Males_AllAges_0816, aes(y = ST.order.RD.homicide, x = adjusted.homicide.White)) + 
+ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.homicide, x = adjusted.homicide.White)) + 
   geom_segment(aes(x = adjusted.homicide.White, xend = adjusted.homicide.Black, 
                    y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
                lwd = 0.5, col = "#8A5C7B", alpha = 0.5) +
   geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21, col = "black") +
   geom_point(aes(x = adjusted.homicide.Black, fill = "NH Black", size = average.pop.black), pch = 21, col = "black") + 
-  geom_point(data = Males_AllAges_0816 %>% filter(ST == "US"),  
+  geom_point(data =CDC_Males_AllAges_0816_wide %>% filter(ST == "US"),  
             pch = 73, col = "black", size = 4) +
-  geom_point(data = Males_AllAges_0816 %>% filter(ST == "US"), 
+  geom_point(data =CDC_Males_AllAges_0816_wide %>% filter(ST == "US"), 
              aes(x = adjusted.homicide.Black), 
              pch = 73, col = "#8A5C7B", size = 4) + 
   scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) +
@@ -514,7 +515,7 @@ ggplot(Males_AllAges_0816, aes(y = ST.order.RD.homicide, x = adjusted.homicide.W
         strip.background = element_rect(fill="white"), 
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
-   geom_text(data = Males_AllAges_0816 %>% filter(is.na(adj.RD.homicide) == F),
+   geom_text(data =CDC_Males_AllAges_0816_wide %>% filter(is.na(adj.RD.homicide) == F),
              aes(x = adjusted.homicide.Black + 8, label = paste0("+", round(adj.RD.homicide))),
              size = 3, col = "#754255") +
   facet_wrap( ~ type.fac) +
@@ -526,15 +527,15 @@ The homicide rate for non-Hispanic white men (white circle) can be compared to t
 ###Figure 2: Comparison of firearm-related and firearm-unrelated suicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=T}
-ggplot(Males_AllAges_0816, aes(y = ST.order.RD.suicide, x = adjusted.suicide.White)) + 
+ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.suicide, x = adjusted.suicide.White)) + 
   geom_segment(aes(x = adjusted.suicide.White, xend = adjusted.suicide.Black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
                lwd = 0.5, alpha = 0.5) +
   geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21) + 
   geom_point(aes(x = adjusted.suicide.Black, fill = "NH Black", size = average.pop.black), pch = 21) + 
-  geom_point(data = Males_AllAges_0816 %>% filter(ST == "US"),  
+  geom_point(data =CDC_Males_AllAges_0816_wide %>% filter(ST == "US"),  
             pch = 73, col = "black", size = 4) +
-  geom_point(data = Males_AllAges_0816 %>% filter(ST == "US"), 
+  geom_point(data =CDC_Males_AllAges_0816_wide %>% filter(ST == "US"), 
              aes(x = adjusted.suicide.Black), 
              pch = 73, col = "#8A5C7B", size = 4) + 
   scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) +
@@ -549,7 +550,7 @@ ggplot(Males_AllAges_0816, aes(y = ST.order.RD.suicide, x = adjusted.suicide.Whi
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
   scale_x_continuous(limits = c(0, 35)) +
-  geom_text(data = subset(Males_AllAges_0816, is.na(adj.RD.suicide)==F), 
+  geom_text(data = subset(CDC_Males_AllAges_0816_wide, is.na(adj.RD.suicide)==F), 
             aes(x = adjusted.suicide.White + 4, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), 
             size = 3) +
   facet_wrap(~type.fac)
@@ -560,7 +561,7 @@ The suicide rate for non-Hispanic white men (white circle) can be compared to th
 ###Figure 3: The relationship between the annual rates of firearm-related homicide and suicide among white men by state and reported household firearm ownership, 2008-2016
 
 ```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F, eval = T}
-ggplot(subset(Males_AllAges_0816, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
+ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & ST != "DC"), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4) +
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + #042E30,#396A6A,#83ABA3,#E0EDD8
@@ -581,7 +582,7 @@ Each state's homicide and suicide mortality rates among non-Hispanic white men a
 ###Figure 4: The relationship between the annual rates of firearm-related homicide and suicide among black men by state and reported household firearm ownership, 2008-2016
 
 ```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F, eval = T}
-ggplot(subset(Males_AllAges_0816, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.Black, y = adjusted.homicide.Black)) + 
+ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & ST != "DC"), aes(x = adjusted.suicide.Black, y = adjusted.homicide.Black)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) +
@@ -660,6 +661,6 @@ Each state's homicide and suicide mortality rates among non-Hispanic black men a
 reference for increase in drug poisonings: Rossen LM, Bastian B, Warner M, Khan D, Chong Y. Drug poisoning mortality: United States, 1999–2016. National Center for Health Statistics. 2017. (Available from: https://www.cdc.gov/nchs/data-visualization/drug-poisoning-mortality/).
 
 ```{r echo=F, eval=F}
-save(Males_AllAges_0816, file = "./InjuryDisparity/Data/Males_AllAges_0816.Rdata")
+save(CDC_Males_AllAges_0816_wide, file = "./InjuryDisparity/Data/Males_AllAges_0816.Rdata")
 ```
 
