@@ -483,13 +483,14 @@ Among black men, states with the lowest reported prevalence of guns had the lowe
 Structure the discussion in the following manner. Provide a brief synopsis of key findings. Discuss possible mechanisms and explanations for the findings. Perform a literature search to identify recent pertinent evidence relevant to your study Specify the data sources (e.g., MEDLINE) and search dates, major search terms, and language restrictions used to identify that other published work. Discuss those relevant previous findings, and explain how your work adds to or differs from it. Then discuss limitations of the study. Mention future research directions. Conclude with a brief section that summarizes in a straightforward and circumspect manner the clinical implications of the work. 
 
 Incorporate into the results:
-- These states (DC, Mass, NJ, CT, NY) have both the lowest risk of suicide for both black and white men and the smallest white-black differences, implying that they are the lowest risk and the closest to achieving racial equality.
-- The strong positive association between firearm-related homicide and suicide suggests that the characteristics that generate variation in homicide and suicide group were similar among white men.
-- The weak relationship between firearm-related homicide and suicide among black men implies that the set of characteristics that generated variation in firearm-related homicide among black men are different from the characteristics that generated variation in firearm-related suicide.
+DONE - These states (DC, Mass, NJ, CT, NY) have both the lowest risk of suicide for both black and white men and the smallest white-black differences, implying that they are the lowest risk and the closest to achieving racial equality.
+DONE - The strong positive association between firearm-related homicide and suicide suggests that the characteristics that generate variation in homicide and suicide group were similar among white men.
+DONE - add the the discussion disparities in non firearm homicides and suicides
+DONE - The weak relationship between firearm-related homicide and suicide among black men implies that the set of characteristics that generated variation in firearm-related homicide among black men are different from the characteristics that generated variation in firearm-related suicide.
+
 - "The discussion does not do full justice to your findings. It should begin with an overall summary of findings. It should also include a discussion of the fact that risk factors for homicide and suicide likely differ – this could go in a (new) (summary) first para for the discussion?"
     - I agree that they differ, but if there is a strong positive association between homicide and suicide it suggest that the factors are strongly related or the presence of dominating factors in these lethal outcomes (cough, guns, cough). 
 - make the discussion of suicide disparities stronger. discuss more specifically the relationship between gun ownership and firearm suicide rates
-- add the the discussion disparities in non firearm homicides and suicides
 - discuss the relatively low rates of black homicide and suicide in some states with relatively high rates of gun ownership: gun ownership is not the only factor and wholly deterministic of these rates - there are other factors deterministic of risk. Would be good to see what else is predictive of risk
 - discuss the relationship between homicide and cities. Most of the populations for many states are within large urban areas and across the board blacks and whites tend to live in different neighborhoods, with varying levels of racial segregation.
 
@@ -629,7 +630,7 @@ Each state's homicide and suicide mortality rates among non-Hispanic black men a
 
 3. Miller M, Azrael D, Hemenway D. Rates of household firearm ownership and homicide across us regions and states, 1988–1997. *American Journal of Public Health*. 2002;92(12):1988-1993.
 
-4. Miller M, Hemenway D, Azrael D. State-level homicide victimization rates in the us in relation to survey measures of household firearm ownership, 2001–2003. *Social Science & Medicine*. 2007;64(3):656-664.
+4. Miller M, Hemenway D, Azrael D. State-level homicide victimization rates in the US in relation to survey measures of household firearm ownership, 2001–2003. *Social Science & Medicine*. 2007;64(3):656-664.
 
 5. Siegel M, Ross CS, King III C. The relationship between gun ownership and firearm homicide rates in the united states, 1981–2010. *American Journal of Public Health*. 2013.
 
