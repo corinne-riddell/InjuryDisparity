@@ -1,4 +1,4 @@
-# Inequalities in violent death among men, by state, race, and firearms use
+# Comparison of rates of firearm-related and firearm-unrelated homicide and suicide in black and white non-Hispanic men by US state
 ### [Corinne A Riddell](corinneriddell.com), [Sam Harper](samharper.org), [Magdalena Cerda](https://www.ucdmc.ucdavis.edu/emergency/ourteam/faculty/cerda.html), and [Jay S Kaufman](jayskaufman.com)
 
 This repository contains the data, code, and R markdown version of a manuscript submitted to *Annals of Internal Medicine* on November 7th, 2017. 
