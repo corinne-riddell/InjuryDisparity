@@ -311,14 +311,14 @@ ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.homicide, x = adjusted.h
   geom_segment(aes(x = adjusted.homicide.White, xend = adjusted.homicide.Black, #the purple line segment between the black and white rate
                    y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
                lwd = 0.5, col = "#8A5C7B", alpha = 0.5) +
-  geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21, col = "black") + #the white rate. For this point type, colour is the *outline*
+  geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21, col = "black") + #the white homicide rate. For this point type, colour is the *outline*
   geom_point(aes(x = adjusted.homicide.Black, fill = "NH Black", size = average.pop.black), pch = 21, col = "black") + #the black rate
   geom_point(data = CDC_Males_AllAges_0816_wide %>% filter(ST == "US"),   #the US data for whites, shown with a black vertical line
             pch = 73, col = "black", size = 4) +
   geom_point(data =CDC_Males_AllAges_0816_wide %>% filter(ST == "US"), #the US data for blacks, shown with a purple vertical line
              aes(x = adjusted.homicide.Black), 
              pch = 73, col = "#8A5C7B", size = 4) + 
-  scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) + #manually set the fill colours for the circles to purple and white
+  scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) + #manually set the *fill* colours for the circles to purple and white
   scale_alpha_continuous(guide = F) +
   scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) + #define what areas to show in the legend
   ylab("") +
@@ -331,7 +331,7 @@ ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.homicide, x = adjusted.h
         strip.background = element_rect(fill="white"), 
         strip.text.x = element_text(size = 12),
         strip.text.y = element_text(size = 12)) + 
-   geom_text(data =CDC_Males_AllAges_0816_wide %>% filter(is.na(adj.RD.homicide) == F),
+   geom_text(data =CDC_Males_AllAges_0816_wide %>% filter(is.na(adj.RD.homicide) == F), #add labels
              aes(x = adjusted.homicide.Black + 8, label = paste0("+", round(adj.RD.homicide))),
              size = 3, col = "#754255") +
   scale_x_continuous(limits = c(0, 70))
@@ -376,15 +376,16 @@ The suicide rate for non-Hispanic white men (white circle) can be compared to th
 ###Figure 3: The relationship between the annual rates of firearm-related homicide and suicide among white men by state and reported household firearm ownership, 2008-2016
 
 ```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F, eval = T}
-#note: removed DC from the subset because we dont have gun ownership data for DC and including it makes a NA in the color legend.
-ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(adjusted.suicide.White, adjusted.homicide.White)) + # & ST != "DC"
-  geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
-  geom_text_repel(aes(label = ST), size = 4) +
-  scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + #042E30,#396A6A,#83ABA3,#E0EDD8
+#note: removed DC from the subset because we dont have gun ownership data for DC and including it makes a NA in the fill legend.
+
+ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
+  geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) + #add the points sized by population
+  geom_text_repel(aes(label = ST), size = 4) + #add the labels _repel limits overlap
+  scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + #orange colour ramp
   ylab("White homicide mortality rate\n(per 100,000 per year)") +
   xlab("White suicide mortality rate (per 100,000 per year)") + 
   theme_bw() +
-  theme() + #legend.position = "bottom"
+  theme() + 
   scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000), 
                   max_size = 15, 
                   labels = c("200k", "500k", "1.5m", "3m", "7m")
