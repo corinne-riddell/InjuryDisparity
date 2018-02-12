@@ -120,6 +120,8 @@ We used the Center for Disease Control and Prevention (CDC) WONDER Online databa
 
 We computed the average annual fatality rate according to race, intent, and firearm involvement by dividing the number of fatalities by the total population estimate (i.e., the sum of population estimates over 2008 to 2016) and we calculated the absolute inequality (rate difference) in estimates between black and white men. For homicide, we subtract the fatality rate of white men from that of black men. For suicide these rates are reversed, such that the estimated rate differences are mostly positive and interpreted as the number of additional deaths to black (white) men due to homicide (suicide) associated with the heightened fatality rate experienced by black (white) men. When either of the race-specific rates was suppressed, a rate difference was not calculated for the state. To reflect varying population sizes among states and by race, we we represent the area of each data marker to be proportional to the race-specific average annualized population size. 
 
+To summarize the strength of the association between firearm homicide and firearm suicide, we calculated the Spearman's rank coefficient separately for black and white men. A high level of association would signify that firearm homicide and suicide share common causes and may be amenable to the same prevention strategies. A lower association would point to a greater degree of dissimalirity in causes in need of distinct preventive approaches.
+
 To examine the relationships between household gun ownership, firearm homicide, and firearm suicide by race and state, we used the last available state-level estimates of household firearm ownership from the National Behavioral Risk Factor Surveillance System (BRFSS) from 2004. The BRFSS is an annual telephone survey on the non-institutionalized adult population that asks respondents about their health-related risk behaviors, chronic health conditions, and use of preventive services. In 2001, 2002, and 2004, the BRFSS asked, “Are any firearms kept in or around your home?” More than 293,000 people responded to this question and estimates of household gun ownership prevalence (%) by state were computed previously and ranged between 10.2% in Hawaii and 65.5% in Wyoming (14). Given that individuals may under-report gun ownership, and that state gun prevalence may have shifted since 2004, we grouped states into four broad categories of gun prevalence: (i) 10% - 19.9%, (ii) 20% - 34.9%, (iii) 35% - 44.9%, and (iv) 45% - 66%, to provide a reasonable approximation of current levels of ownership. 
 
 We assessed the relationships between state gun prevalence, firearm homicide, and firearm suicide by plotting the rate of firearm homicide as a function of firearm suicide. We color-coded the points by category of gun prevalence, separately for black men and white men. A positive association between rates of firearm homicide and suicide would imply that conditions that generate variation in homicide also generate variation in suicide, such as cultural, social, or economic conditions, including household gun ownership rates or the firearm policy environment. Thus, the purpose of this descriptive exercise is to illustrate whether states with relatively high rates of firearm homicide also have relatively high rates of firearm suicide, and if this pattern exists for both black men and white men and is associated with state gun ownership. 
@@ -254,13 +256,26 @@ NFA_suicide_stats_b <- CDC_Males_AllAges_0816_wide %>%
 
 The rates of black and white non-firearm suicides and the difference between them varied substantially less than those involving firearms. In the US overall, the non-firearm suicide mortality rate was `r CDC_Males_AllAges_0816_wide %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.White) %>% round(1)` per 100,000 per year compared to `r CDC_Males_AllAges_0816_wide %>% filter(ST == "US" & type == "Non-Firearm") %>% select(adjusted.suicide.Black) %>% round(1)` per 100,000 black men per year. Across the states, `r NFA_suicide_stats[1, 1]` had the highest rate of non-firearm suicides for white men of `r round(NFA_suicide_stats[1,2])` per 100,000 per year, while `r NFA_suicide_stats[nrow(NFA_suicide_stats), 1]` had the lowest rate of `r round(NFA_suicide_stats[nrow(NFA_suicide_stats), 2])` per 100,000 per year, compared to the range estimated for black men from `r round(NFA_suicide_stats_b[1,2])` per 100,000 per year in `r NFA_suicide_stats_b[1,1]` and `r round(NFA_suicide_stats_b[nrow(NFA_suicide_stats_b), 2])` per 100,000 per year in `r NFA_suicide_stats_b[nrow(NFA_suicide_stats_b), 1]`.
 
+```{r calc-spearman-rank-correlation, echo=F}
+spearman.white <-CDC_Males_AllAges_0816_wide %>%
+  filter(!(ST %in% c("US", "DC", "HI") )) %>%
+  summarize(spearmans = cor.test(x = adjusted.suicide.White,
+                                 y = adjusted.homicide.White,
+                                 method = "spearman")$estimate)
+spearman.black <- CDC_Males_AllAges_0816_wide %>%
+  filter(!(ST %in% c("US", "DC", "HI") )) %>%
+  summarize(spearmans = cor.test(x = adjusted.suicide.Black,
+                                 y = adjusted.homicide.Black,
+                                 method = "spearman")$estimate)
+```
+
 *Relationship between firearm homicide and suicide with state household gun ownership among white men*
 
-The five states with lower rates of both firearm homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) were also in the lowest category of reported state gun prevalence (**Figure 3**). Furthermore, many of the states with the highest firearm homicide and suicide rates belonged to the highest category of gun prevalence, while most states located in the middle of the graph belonged to the middle categories of gun prevalence. Notably, several states that belonged to the highest gun prevalence category had relatively low rates of firearm homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. 
+Firearm homicide and suicide were strongly associated for white men (**Figure 3**). The spearman's rank coefficient for the relationship equalled 0.72. In terms of the relationship between firearm homicide, suicide, and state gun prevalence, the five states with lower rates of both firearm homicide and suicide among white men (i.e., Massachusetts, New Jersey, Rhode Island, New York, and Connecticut) were also in the lowest category of reported state gun prevalence. Furthermore, many of the states with the highest firearm homicide and suicide rates belonged to the highest category of gun prevalence, while most states located in the middle of the graph belonged to the middle categories of gun prevalence. Notably, several states that belonged to the highest gun prevalence category had relatively low rates of firearm homicide, including Iowa, Nebraska, the Dakotas, Idaho, Montana, and Wyoming. 
 
 *Relationship between firearm homicide and suicide with state household gun ownership among black men*
 
-Among black men, states with the lowest reported prevalence of guns had the lowest rates of firearm suicide, and below-average rates of firearm homicide (**Figure 4**). Missouri and several rust-belt states (Illinois, Indiana, Michigan, and Pennsylvania) reported the most firearm homicides among black men and medium levels of gun ownership. Among the Southern states, those with high levels of gun ownership, such as Louisiana, reported higher homicide rates among black men than states with medium levels, such as Texas.
+Among black men, firearm homicide and suicide were less strongly associated as summarized by their Spearman's rank coefficient of 0.34 (**Figure 4**). States with the lowest reported prevalence of guns had the lowest rates of firearm suicide, and below-average rates of firearm homicide. Missouri and several rust-belt states (Illinois, Indiana, Michigan, and Pennsylvania) reported the most firearm homicides among black men and medium levels of gun ownership. Among the Southern states, those with high levels of gun ownership, such as Louisiana, reported higher homicide rates among black men than states with medium levels, such as Texas.
 
 #Discussion
 
@@ -274,25 +289,25 @@ The relationship between firearm homicide and suicide was weak for black men. In
 
 *Mechanisms*
 
-The spatial distribution of homicides is known to vary, with suicides occurring at the highest rates in the most rural settings and homicides occurring at the highest rates in the most urban settings (18). In particular to homicide, this urban/rural divide likely reflects risk factors present in urban or metropolitan environments such as ... stopped here. see https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1446205/pdf/10754973.pdf.
+The spatial distribution of homicides is known to vary, with suicides occurring at the highest rates in the most rural settings and homicides occurring at the highest rates in the most urban settings (18). In particular to homicide, this urban/rural divide likely reflects predictors present in urban or metropolitan environments such as higher levels of income inequality, female-headed households, and crowded housing, and lower rates of educational attainment (19). Higher rates of suicide among rural areas have been attributed to social and geographic isolation, access to lethal mechanisms, and stresses associated with occupations in agriculture (20). 
 
-While there is ample research on risk factors for homicide and suicide, there is less clarity on the mechanisms that have led to varying racial inequalities across states. Structural disadvantage (i.e., concentrated poverty, joblessness, family disruption) (19), racial residential segregation (20,21,22,23), and participation in drug markets (24,25) have all been implicated in the higher risk of homicide among black men relative to white men. Thus, these risk factors may occur more frequently among black men residing in states with the largest inequalities in firearm homicide.  
+While there is ample research on risk factors for homicide and suicide, there is less clarity on the mechanisms that have led to varying racial inequalities across states. Structural disadvantage (i.e., concentrated poverty, joblessness, family disruption) (21), racial residential segregation (22,23,24,25), and participation in drug markets (26,27) have all been implicated in the higher risk of homicide among black men relative to white men. Thus, these risk factors may occur more frequently among black men residing in states with the largest inequalities in firearm homicide.  
 
-Firearm policy has also been implicated in differences in overall rates of homicide and suicide across the US. A cross-sectional ecologic study found that states with more restrictive firearm legislative environments had 6.6 fewer firearm deaths per 100,000 per year than states with the least restrictive environments (26). Analyses that compare changes in states with firearm policy changes to a synthetic control have estimated that policy changes to permit-to-purchase laws are linked with decreases in firearm homicide rates (but not non-firearm homicide) and in suicide rates (27,28). Thus, differences in state policy environments have also have contributed to the levels of homicide and suicide estimates in this study, although it is less clear whether policies are linked to racial inequalities.
+Firearm policy has also been implicated in differences in overall rates of homicide and suicide across the US. A cross-sectional ecologic study found that states with more restrictive firearm legislative environments had 6.6 fewer firearm deaths per 100,000 per year than states with the least restrictive environments (28). Analyses that compare changes in states with firearm policy changes to a synthetic control have estimated that policy changes to permit-to-purchase laws are linked with decreases in firearm homicide rates (but not non-firearm homicide) and in suicide rates (29,30). Thus, differences in state policy environments have also have contributed to the levels of homicide and suicide estimates in this study, although it is less clear whether policies are linked to racial inequalities.
 
-State gun prevalence was strongly tied to firearm suicide for both black and white men, and is the most lethal means of attempted suicide (29,30). In addition, states that were the lowest risk for firearm suicide also have implemented the most restrictive gun laws (31). 
+State gun prevalence was strongly tied to firearm suicide for both black and white men, and is the most lethal means of attempted suicide (31,32). In addition, states that were the lowest risk for firearm suicide also have implemented the most restrictive gun laws (33). 
 
-Alcohol is another important risk factor for suicide, both in terms of history of alcoholism and overuse at the time of suicide (32,33). Alcohol was found in the systems of 25% of white male suicides tested and 15% of black male suicides in 2005–2006, with 16% of the white men being described as alcohol dependent at the time of suicide compared to 7% of black men (34). Given that white men have higher rates of alcohol abuse than black men (34), alcohol use might be implicated both in the direction of the white-black inequality and its variation across states.
+Alcohol is another important risk factor for suicide, both in terms of history of alcoholism and overuse at the time of suicide (34,35). Alcohol was found in the systems of 25% of white male suicides tested and 15% of black male suicides in 2005–2006, with 16% of the white men being described as alcohol dependent at the time of suicide compared to 7% of black men (36). Given that white men have higher rates of alcohol abuse than black men (36), alcohol use might be implicated both in the direction of the white-black inequality and its variation across states.
 
-While we were not able to estimate state-level inequalities in age-specific rates of mortality, national figures indicate very different trends for black and white men (35). Suicidal risk increases for white men as they age, and exceeds 30 firearm suicides per 100,000 per year for men 75 and older. For black men, the peak rate of 10 firearm suicides per 100,000 per year occurs at ages 25 to 29 years old (35). The estimated white-black differences in suicide mortality and their variation by state may therefore be reflective of differences across states in the risks of younger black men and older white men to commit suicide by firearm.
+While we were not able to estimate state-level inequalities in age-specific rates of mortality, national figures indicate very different trends for black and white men (37). Suicidal risk increases for white men as they age, and exceeds 30 firearm suicides per 100,000 per year for men 75 and older. For black men, the peak rate of 10 firearm suicides per 100,000 per year occurs at ages 25 to 29 years old (37). The estimated white-black differences in suicide mortality and their variation by state may therefore be reflective of differences across states in the risks of younger black men and older white men to commit suicide by firearm.
 
 *Previous Research*
 
-We searched MEDLINE for literature on racial disparities in homicide or suicide using the search strategy: (“Homicide”[Mesh] OR “Suicide”[Mesh]) AND (health disparit*[Text Word] OR health inequal*[Text Word] OR health inequit*[Text Word] OR social disparit*[Text Word] OR social inequit*[Text Word] OR social inequal*[Text Word]) from database conception to January 19, 2018 with no language restriction. One hundred and two articles were identified, none of which estimated inequalities in homicide and/or suicide mortality by US state. One report did classify states according to their rates of overall homicide mortality. This report estimated that overall rates of homicide mortality ranged from 1.1 to 12.8 deaths per 100,000 in 2009, with Southern states generally having the highest rates (36). Given the large differences in homicide mortality by race, our analysis adds to these findings by emphasizing racial inequalities and demonstrating their considerable variation across states. Furthermore, this research emphasizes the key role of firearms in deaths overall, and their disparities. 
+We searched MEDLINE for literature on racial disparities in homicide or suicide using the search strategy: (“Homicide”[Mesh] OR “Suicide”[Mesh]) AND (health disparit*[Text Word] OR health inequal*[Text Word] OR health inequit*[Text Word] OR social disparit*[Text Word] OR social inequit*[Text Word] OR social inequal*[Text Word]) from database conception to January 19, 2018 with no language restriction. One hundred and two articles were identified, none of which estimated inequalities in homicide and/or suicide mortality by US state. One report did classify states according to their rates of overall homicide mortality. This report estimated that overall rates of homicide mortality ranged from 1.1 to 12.8 deaths per 100,000 in 2009, with Southern states generally having the highest rates (38). Given the large differences in homicide mortality by race, our analysis adds to these findings by emphasizing racial inequalities and demonstrating their considerable variation across states. Furthermore, this research emphasizes the key role of firearms in deaths overall, and their disparities. 
 
 *Study Limitations*
 
-This study is subject to several limitations. Some homicide and suicide deaths are difficult to classify. Homicides may be classified as suicides, or vice versa, and either may be misclassified as an unintentional injury. Misclassification of drug poisoning deaths are of particular importance during the opioid epidemic that has led to a sharp increase in fatal overdoses (37). The most recent data on state gun ownership was collected in 2004, four to twelve years prior to the mortality data used in this study. Given that firearm suicide attempts are more than 80% fatal (29,30), and firearm homicide attempts are approximately 20% fatal (38), studying only fatal outcomes misses the morbidity endured during nonfatal assaults and suicide attempts. We were limited to contrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more deaths. We did not examine women because their risks of homicide and suicide are much lower than for men, and data for black women were suppressed for more than half of the states. We did not examine Hispanics because it is subject to higher rates of misclassification on death certificate than for blacks and whites (39), and extracting Hispanics from the black/white grouping would have cut the data too sparsely Finally, these results are purely descriptive and make no claims regarding causal mechanisms. 
+This study is subject to several limitations. Some homicide and suicide deaths are difficult to classify. Homicides may be classified as suicides, or vice versa, and either may be misclassified as an unintentional injury. Misclassification of drug poisoning deaths are of particular importance during the opioid epidemic that has led to a sharp increase in fatal overdoses (39). The most recent data on state gun ownership was collected in 2004, four to twelve years prior to the mortality data used in this study. Given that firearm suicide attempts are more than 80% fatal (31,32), and firearm homicide attempts are approximately 20% fatal (40), studying only fatal outcomes misses the morbidity endured during nonfatal assaults and suicide attempts. We were limited to contrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more deaths. We did not examine women because their risks of homicide and suicide are much lower than for men, and data for black women were suppressed for more than half of the states. We did not examine Hispanics because it is subject to higher rates of misclassification on death certificate than for blacks and whites (41), and extracting Hispanics from the black/white grouping would have cut the data too sparsely Finally, these results are purely descriptive and make no claims regarding causal mechanisms. 
 
 *Future Research Directions*
 
@@ -375,12 +390,12 @@ The suicide rate for non-Hispanic white men (white circle) can be compared to th
 
 ###Figure 3: The relationship between the annual rates of firearm homicide and suicide among white men by state and reported household firearm ownership, 2008-2016
 
-```{r Figure3, fig.width=6, fig.height=6, echo = F, warning=F, eval = T}
+```{r Figure3, fig.width=8, fig.height=6, echo = F, warning=F, eval = T}
 #note: removed DC from the subset because we dont have gun ownership data for DC and including it makes a NA in the fill legend.
 
 ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) + #add the points sized by population
-  geom_text_repel(aes(label = ST), size = 4) + #add the labels _repel limits overlap
+  geom_text_repel(aes(label = ST), size = 4, min.segment.length = 1) + #add the labels _repel limits overlap
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + #orange colour ramp
   ylab("White homicide mortality rate\n(per 100,000 per year)") +
   xlab("White suicide mortality rate (per 100,000 per year)") + 
@@ -391,7 +406,8 @@ ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US",
                   labels = c("200k", "500k", "1.5m", "3m", "7m")
                   ) +
   guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5)), 
-         size = guide_legend(title = "White population"))
+         size = guide_legend(title = "White population")) + 
+  geom_text(aes(x = 25, y = 0.2, label = paste0("Spearman's rank: ", round(spearman.white$spearmans, 2))), check_overlap = T)
 ```
 
 Each state's homicide and suicide mortality rates among non-Hispanic white men are plotted. The area of the circle is proportional to the white men's population size and the color represents the state gun ownership prevalence. States with suppressed estimates for white men for either firearm homicide or firearm suicide are not plotted. These states are the District of Columbia and Hawaii.
@@ -411,7 +427,8 @@ ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US",
                   labels = c("20k", "100k", "500k", "1.4m"), max_size = 15) +
   guides(fill = guide_legend(title = "Gun ownership", 
                              override.aes = list(size = 5)), 
-                             size = guide_legend(title = "Black population")) 
+                             size = guide_legend(title = "Black population")) + 
+  geom_text(aes(x = 10, y = 0.2, label = paste0("Spearman's rank: ", round(spearman.black$spearmans, 2))), check_overlap = T)
 ```
 
 Each state's homicide and suicide mortality rates among non-Hispanic black men are plotted. The area of the circle is proportional to the black men's population size and the color represents the state gun ownership prevalence. States with suppressed estimates for black men for either firearm homicide or firearm suicide are not plotted. These states are Hawaii, Idaho, Iowa, Maine, Montana, North Dakota, New Hampshire, South Dakota, Rhode Island, Utah, Vermont, and Wyoming.
@@ -456,47 +473,51 @@ Each state's homicide and suicide mortality rates among non-Hispanic black men a
 
 18. Branas CC, Nance ML, Elliott MR, Richmond TS, Schwab CW. Urban–rural shifts in intentional firearm death: Different causes, same results. *American Journal of Public Health*. 2004 Oct;94(10):1750-5.
 
-19. Wilson WJ. *The Truly Disadvantaged: The Inner City, the Underclass, and Public Policy*. University of Chicago Press; 1987.
+19. McCarthy JF, Blow FC, Ignacio RV, Ilgen MA, Austin KL, Valenstein M. Suicide Among Patients in the Veterans Affairs Health System: Rural–Urban Differences in Rates, Risks, and Methods. *American Journal of Public Health*. 2012;102:S111-S117.
 
-20. Massey D. *Problem of the Century*. New York: Russell Sage; 2001:314-344.
+20. Hirsch JK. A review of the literature on rural suicide: Risk and protective factors, incidence, and prevention. *Crisis*. 2006;27(4):189.
 
-21. Ousey GC, Kubrin CE. Exploring the connection between immigration and violent crime rates in US cities, 1980–2000. *Social Problems*. 2009;56(3):447-473.
+21. Wilson WJ. *The Truly Disadvantaged: The Inner City, the Underclass, and Public Policy*. University of Chicago Press; 1987.
 
-22. Shihadeh ES, Flynn N. Segregation and crime: The effect of black social isolation on the rates of black urban violence. *Social Forces*. 1996;74(4):1325-1352.
+22. Massey D. *Problem of the Century*. New York: Russell Sage; 2001:314-344.
 
-23. Peterson RD, Krivo LJ. Racial segregation and black urban homicide. *Social Forces*. 1993;71(4):1001-1026.
+23. Ousey GC, Kubrin CE. Exploring the connection between immigration and violent crime rates in US cities, 1980–2000. *Social Problems*. 2009;56(3):447-473.
 
-24. Blumstein A. Youth violence, guns, and the illicit-drug industry. *The Journal of Criminal Law and Criminology*. 1995;86(1):10-36.
+24. Shihadeh ES, Flynn N. Segregation and crime: The effect of black social isolation on the rates of black urban violence. *Social Forces*. 1996;74(4):1325-1352.
 
-25. Fryer RG, Heaton PS, Levitt SD, Murphy KM. Measuring crack cocaine and its impact. *Economic Inquiry*. 2013;51(3):1651-1681.
+25. Peterson RD, Krivo LJ. Racial segregation and black urban homicide. *Social Forces*. 1993;71(4):1001-1026.
 
-26. Fleegler EW, Lee LK, Monuteaux MC, Hemenway D, Mannix R. Firearm legislation and firearm fatalities in the United States. *JAMA internal medicine*. 2013;173(9):732-40.
+26. Blumstein A. Youth violence, guns, and the illicit-drug industry. *The Journal of Criminal Law and Criminology*. 1995;86(1):10-36.
 
-27. Crifasi CK, Meyers JS, Vernick JS, Webster DW. Effects of changes in permit-to-purchase handgun laws in Connecticut and Missouri on suicide rates. *Preventive Medicine*. 2015;79:43-9.
+27. Fryer RG, Heaton PS, Levitt SD, Murphy KM. Measuring crack cocaine and its impact. *Economic Inquiry*. 2013;51(3):1651-1681.
 
-28. Rudolph KE, Stuart EA, Vernick JS, Webster DW. Association between Connecticut’s permit-to-purchase handgun law and homicides. *American Journal of Public Health*. 2015;105(8):e49-54.
+28. Fleegler EW, Lee LK, Monuteaux MC, Hemenway D, Mannix R. Firearm legislation and firearm fatalities in the United States. *JAMA internal medicine*. 2013;173(9):732-40.
 
-29. Spicer RS, Miller TR. Suicide acts in 8 states: Incidence and case fatality rates by demographics and method. *American Journal of Public Health*. 2000;90(12):1885.
+29. Crifasi CK, Meyers JS, Vernick JS, Webster DW. Effects of changes in permit-to-purchase handgun laws in Connecticut and Missouri on suicide rates. *Preventive Medicine*. 2015;79:43-9.
 
-30. Miller M, Azrael D, Hemenway D. The epidemiology of case fatality rates for suicide in the Northeast. *Annals of Emergency Medicine*. 2004;43(6):723-730.
+30. Rudolph KE, Stuart EA, Vernick JS, Webster DW. Association between Connecticut’s permit-to-purchase handgun law and homicides. *American Journal of Public Health*. 2015;105(8):e49-54.
 
-31. Siegel M, Pahn M, Xuan Z, et al. firearm laws in all 50 US states, 1991–2016. *American Journal of Public Health*. 2017;(0):e1-e8.
+31. Spicer RS, Miller TR. Suicide acts in 8 states: Incidence and case fatality rates by demographics and method. *American Journal of Public Health*. 2000;90(12):1885.
 
-32. Mościcki EK. Identification of suicide risk factors using epidemiologic studies. *Psychiatric Clinics of North America*. 1997;20(3):499-517.
+32. Miller M, Azrael D, Hemenway D. The epidemiology of case fatality rates for suicide in the Northeast. *Annals of Emergency Medicine*. 2004;43(6):723-730.
 
-33. Mościcki EK. Epidemiology of completed and attempted suicide: Toward a framework for prevention. *Clinical Neuroscience Research*. 2001;1(5):310-323.
+33. Siegel M, Pahn M, Xuan Z, et al. firearm laws in all 50 US states, 1991–2016. *American Journal of Public Health*. 2017;(0):e1-e8.
 
-34. Centers for Disease Control and Prevention. Alcohol and suicide among racial/ethnic populations-17 states, 2005-2006. *MMWR: Morbidity and mortality weekly report*. 2009;58(23):637-41.
+34. Mościcki EK. Identification of suicide risk factors using epidemiologic studies. *Psychiatric Clinics of North America*. 1997;20(3):499-517.
 
-35. Wintemute GJ. The epidemiology of firearm violence in the twenty-first century United States. *Annual Review of Public Health*. 2015;18(36):5-19.
+35. Mościcki EK. Epidemiology of completed and attempted suicide: Toward a framework for prevention. *Clinical Neuroscience Research*. 2001;1(5):310-323.
 
-36. Centers for Disease Control and Prevention. Homicides --- United States, 2007 and 2009. *MMWR: Morbidity and Mortality Weekly Report*. 2013;62(Suppl 3):164-170.
+36. Centers for Disease Control and Prevention. Alcohol and suicide among racial/ethnic populations-17 states, 2005-2006. *MMWR: Morbidity and mortality weekly report*. 2009;58(23):637-41.
 
-37. Rossen LM, Bastian B, Warner M, Khan D, Chong Y. Drug poisoning mortality: United States, 1999–2016. National Center for Health Statistics. 2017. Accessed at:  https://www.cdc.gov/nchs/data-visualization/drug-poisoning-mortality/) on January 15, 2018.
+37. Wintemute GJ. The epidemiology of firearm violence in the twenty-first century United States. *Annual Review of Public Health*. 2015;18(36):5-19.
 
-38. Cook PJ, Rivera-Aguirre AE, Cerdá M, Wintemute G. Constant lethality of gunshot injuries from firearm assault: United states, 2003–2012. *American Journal of Public Health*. 2017;107(8):1324-1328.
+38. Centers for Disease Control and Prevention. Homicides --- United States, 2007 and 2009. *MMWR: Morbidity and Mortality Weekly Report*. 2013;62(Suppl 3):164-170.
 
-39. Arias E, Schauman WS, Eschbach K, Sorlie PD, Backlund E. The validity of race and Hispanic origin reporting on death certificates in the United States. National Center for Health Statistics. *Vital and Health Statistics*. 2008;2(148):1-23.
+39. Rossen LM, Bastian B, Warner M, Khan D, Chong Y. Drug poisoning mortality: United States, 1999–2016. National Center for Health Statistics. 2017. Accessed at:  https://www.cdc.gov/nchs/data-visualization/drug-poisoning-mortality/) on January 15, 2018.
+
+40. Cook PJ, Rivera-Aguirre AE, Cerdá M, Wintemute G. Constant lethality of gunshot injuries from firearm assault: United states, 2003–2012. *American Journal of Public Health*. 2017;107(8):1324-1328.
+
+41. Arias E, Schauman WS, Eschbach K, Sorlie PD, Backlund E. The validity of race and Hispanic origin reporting on death certificates in the United States. National Center for Health Statistics. *Vital and Health Statistics*. 2008;2(148):1-23.
 
 ```{r Figure3_non_firearm, fig.width=6, fig.height=6, echo = F, warning=F, eval = T}
 #NON FIREARM FOR REVIEWER COMMENTS
