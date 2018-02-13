@@ -281,7 +281,7 @@ Among black men, firearm homicide and suicide were less strongly associated as s
 
 *Key Findings*
 
-Rates of firearm homicide among black men varied substantially across states. For white men, rates were consistently lower and less variable, leading to large racial inequalities in firearm homicide, especially in Missouri, Michigan, Illinois, Indiana, and Pennsylvania. Non-firearm homicides occurred much less frequently than firearm homicides and exhibited little variation across states. However, these homicides still occurred more frequently among black men than white men. White men were at higher risk than black men for firearm suicide, most notably in Mississippi, Nevada, Arizona, New Mexico, Arizona, and Alabama. Northeastern states with reliable data (New York, Connecticut, New Jersey, Massachusetts) and DC exhibited the smallest differences in firearm suicides. These states also had the lowest risk of suicide for both black and white men, implying that they offer the lowest race-specific risks and are the closest to achieving racial equality in firearm suicide. In terms of non-firearm suicide, white men had higher rates than black men, though these rates were less variable than firearm suicide.
+Rates of firearm homicide among black men varied substantially across states. For white men, rates were consistently lower and less variable, leading to large racial inequalities in firearm homicide, especially in Missouri, Michigan, Illinois, Indiana, and Pennsylvania. Non-firearm homicides occurred much less frequently than firearm homicides and exhibited little variation across states. However, these homicides still occurred more frequently among black men than white men. White men were at higher risk than black men for firearm suicide, most notably in Mississippi, Nevada, Arizona, New Mexico, Arizona, and Alabama. Northeastern states with reliable data (New York, Connecticut, New Jersey, Massachusetts) and DC exhibited the smallest differences in firearm suicides. These states also had the lowest risk of suicide for both black and white men, implying that they offer the lowest race-specific risks and are the closest to achieving racial equality in firearm suicide. In terms of non-firearm suicide, white men had higher rates than black men, though these rates were less variable than for firearm suicide.
 
 For white men, firearm homicide and suicide shared a strong positive association. This suggests that the characteristics that generate variation across states in firearm homicide and suicide are similar for white men. States with the lowest gun ownership rates had the lowest rates of firearm homicide and firearm suicide among white men, and several states with the highest rates of ownership had the highest rates of firearm homicide and relatively high rates of firearm suicide. 
 
@@ -307,7 +307,7 @@ We searched MEDLINE for literature on racial disparities in homicide or suicide 
 
 *Study Limitations*
 
-This study is subject to several limitations. Some homicide and suicide deaths are difficult to classify. Homicides may be classified as suicides, or vice versa, and either may be misclassified as an unintentional injury. Misclassification of drug poisoning deaths are of particular importance during the opioid epidemic that has led to a sharp increase in fatal overdoses (39). The most recent data on state gun ownership was collected in 2004, four to twelve years prior to the mortality data used in this study. Given that firearm suicide attempts are more than 80% fatal (31,32), and firearm homicide attempts are approximately 20% fatal (40), studying only fatal outcomes misses the morbidity endured during nonfatal assaults and suicide attempts. We were limited to contrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more deaths. We did not examine women because their risks of homicide and suicide are much lower than for men, and data for black women were suppressed for more than half of the states. We did not examine Hispanics because it is subject to higher rates of misclassification on death certificate than for blacks and whites (41), and extracting Hispanics from the black/white grouping would have cut the data too sparsely Finally, these results are purely descriptive and make no claims regarding causal mechanisms. 
+This study is subject to several limitations. Some homicide and suicide deaths are difficult to classify. Homicides may be classified as suicides, or vice versa, and either may be misclassified as an unintentional injury. Misclassification of drug poisoning deaths are of particular importance during the opioid epidemic that has led to a sharp increase in fatal overdoses (39). The most recent data on state gun ownership was collected in 2004, four to twelve years prior to the mortality data used in this study. Given that firearm suicide attempts are more than 80% fatal (31,32), and firearm homicide attempts are approximately 20% fatal (40), studying only fatal outcomes misses the morbidity endured during nonfatal assaults and suicide attempts. We were limited to contrasting age-standardized mortality rates, but would have rather contrasted age-specific rates, had there been more deaths. We did not examine women because their risks of homicide and suicide are much lower than for men, and data for black women were suppressed for more than half of the states. We did not examine Hispanics because it is subject to higher rates of misclassification on death certificate than for blacks and whites (41), and extracting Hispanics from the black/white grouping would have cut the data too sparsely. Finally, these results are purely descriptive and make no claims regarding causal mechanisms. 
 
 *Future Research Directions*
 
@@ -321,8 +321,8 @@ Firearms feature differently in the deaths of black and white men in the United 
 ###Figure 1: Comparison of firearm and non-firearm homicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r figure1, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=T}
-ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.homicide, x = adjusted.homicide.White)) + 
-  facet_wrap( ~ type.fac) +
+figure.1 <- ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.homicide, x = adjusted.homicide.White)) + 
+  facet_wrap( ~ type) +
   geom_segment(aes(x = adjusted.homicide.White, xend = adjusted.homicide.Black, #the purple line segment between the black and white rate
                    y = ST.order.RD.homicide, yend = ST.order.RD.homicide), 
                lwd = 0.5, col = "#8A5C7B", alpha = 0.5) +
@@ -337,7 +337,7 @@ ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.homicide, x = adjusted.h
   scale_alpha_continuous(guide = F) +
   scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) + #define what areas to show in the legend
   ylab("") +
-  xlab("Homicide mortality rate (per 100,000 per year)") + 
+  xlab("Homicide rate (per 100,000 per year)") + 
   theme_bw() + 
   guides(fill = guide_legend(title = "Race"), size = guide_legend(title = "Race-specific\npopulation")) + 
   theme(legend.position = c(0.87, 0.20), 
@@ -357,7 +357,7 @@ The homicide rate for non-Hispanic white men (white circle) can be compared to t
 ###Figure 2: Comparison of firearm and non-firearm suicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r figure2, fig.width=6, fig.height=8.5, echo = F, warning=F, eval=T}
-ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.suicide, x = adjusted.suicide.White)) + 
+figure.2 <- ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.suicide, x = adjusted.suicide.White)) + 
   geom_segment(aes(x = adjusted.suicide.White, xend = adjusted.suicide.Black, 
                    y = ST.order.RD.suicide, yend = ST.order.RD.suicide), 
                lwd = 0.5, alpha = 0.5) +
@@ -371,7 +371,7 @@ ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.suicide, x = adjusted.su
   scale_fill_manual(values = c("#8A5C7B", "white"), labels = c("Black", "White")) +
   scale_alpha_continuous(guide = F) +
   scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) +
-  ylab("") + xlab("Suicide mortality rate (per 100,000 per year)") + theme_bw() + 
+  ylab("") + xlab("Suicide rate (per 100,000 per year)") + theme_bw() + 
   guides(fill = guide_legend(title = "Race"), size = guide_legend(title = "Race-specific\npopulation")) + 
   theme(legend.position = c(0.90, 0.22), 
         plot.title = element_text(size = 10),
@@ -381,9 +381,9 @@ ggplot(CDC_Males_AllAges_0816_wide, aes(y = ST.order.RD.suicide, x = adjusted.su
         strip.text.y = element_text(size = 12)) + 
   scale_x_continuous(limits = c(0, 35)) +
   geom_text(data = subset(CDC_Males_AllAges_0816_wide, is.na(adj.RD.suicide)==F), 
-            aes(x = adjusted.suicide.White + 4, label = ifelse(ST != "DC", paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), 
+            aes(x = adjusted.suicide.White + 4, label = ifelse(!(ST == "DC" & type == "Firearm"), paste0("+", round(-adj.RD.suicide)), round(-adj.RD.suicide))), 
             size = 3) +
-  facet_wrap(~type.fac)
+  facet_wrap(~type)
 ```
 
 The suicide rate for non-Hispanic white men (white circle) can be compared to the suicide rate for non-Hispanic black men (purple circle) for each state. The area of the circle is proportional to its race-specific population size, with the size legend depicting sizes for a range of population sizes. For each state, the difference between the rates is listed to the right of the white homicide rate and quantifies the excess number of suicides to white men per 100,000 per year. The average firearm and non-firearm suicide rates for the entire US are also shown at the top of each graph, with the remaining states organized according to the size of the white-black difference. States that are missing circles for black and/or white men had 19 or fewer firearm or non-firearm suicides during the time period within the affected racial group and were not available for analysis.
@@ -393,21 +393,25 @@ The suicide rate for non-Hispanic white men (white circle) can be compared to th
 ```{r Figure3, fig.width=8, fig.height=6, echo = F, warning=F, eval = T}
 #note: removed DC from the subset because we dont have gun ownership data for DC and including it makes a NA in the fill legend.
 
-ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
+figure.3 <- ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) + #add the points sized by population
   geom_text_repel(aes(label = ST), size = 4, min.segment.length = 1) + #add the labels _repel limits overlap
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + #orange colour ramp
-  ylab("White homicide mortality rate\n(per 100,000 per year)") +
-  xlab("White suicide mortality rate (per 100,000 per year)") + 
+  ylab("White homicide rate (per 100,000 per year)") +
+  xlab("White suicide rate (per 100,000 per year)") + 
+  scale_y_continuous(limits = c(0, 5)) +
+  scale_x_continuous(limits = c(0, 30)) +
   theme_bw() +
   theme() + 
   scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000), 
-                  max_size = 15, 
-                  labels = c("200k", "500k", "1.5m", "3m", "7m")
-                  ) +
-  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5)), 
-         size = guide_legend(title = "White population")) + 
-  geom_text(aes(x = 25, y = 0.2, label = paste0("Spearman's rank: ", round(spearman.white$spearmans, 2))), check_overlap = T)
+                  labels = c("200k", "500k", "1.5m", "3m", "7m"),
+                  max_size = 15) +
+  guides(fill = guide_legend(title = "Gun ownership", 
+                             override.aes = list(size = 5), order = 1), 
+         size = guide_legend(title = "White population"), order = 2) + 
+  geom_text(aes(x = 25, y = 0.2, 
+                label = paste0("Spearman's rank: ", round(spearman.white$spearmans, 2))), 
+            check_overlap = T)
 ```
 
 Each state's homicide and suicide mortality rates among non-Hispanic white men are plotted. The area of the circle is proportional to the white men's population size and the color represents the state gun ownership prevalence. States with suppressed estimates for white men for either firearm homicide or firearm suicide are not plotted. These states are the District of Columbia and Hawaii.
@@ -415,20 +419,30 @@ Each state's homicide and suicide mortality rates among non-Hispanic white men a
 ###Figure 4: The relationship between the annual rates of firearm homicide and suicide among black men by state and reported household firearm ownership, 2008-2016
 
 ```{r figure4, fig.width = 6, fig.height = 6, echo=F, warning=F, eval = T}
-ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(x = adjusted.suicide.Black, y = adjusted.homicide.Black)) + 
+figure.4 <- ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Firearm" & !(ST %in% c("US", "DC"))), aes(x = adjusted.suicide.Black, y = adjusted.homicide.Black)) + 
   geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
   geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
   scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) +
-  ylab("Black homicide mortality rate\n(per 100,000 per year)") +
-  xlab("Black suicide mortality rate (per 100,000 per year)") + 
+  ylab("Black homicide rate (per 100,000 per year)") +
+  xlab("Black suicide rate (per 100,000 per year)") +
+  scale_y_continuous(limits = c(0, 60)) +
+  scale_x_continuous(limits = c(0, 12)) +
   theme_bw() +
   #theme(legend.position = "bottom") +
   scale_size_area(breaks = c(20000, 100000, 500000, 1400000), 
-                  labels = c("20k", "100k", "500k", "1.4m"), max_size = 15) +
+                  labels = c("20k", "100k", "500k", "1.4m"), 
+                  max_size = 15) +
   guides(fill = guide_legend(title = "Gun ownership", 
-                             override.aes = list(size = 5)), 
-                             size = guide_legend(title = "Black population")) + 
-  geom_text(aes(x = 10, y = 0.2, label = paste0("Spearman's rank: ", round(spearman.black$spearmans, 2))), check_overlap = T)
+                             override.aes = list(size = 5), order = 1), 
+         size = guide_legend(title = "Black population"), order = 2) + 
+  geom_text(aes(x = 10, y = 2, label = paste0("Spearman's rank: ", round(spearman.black$spearmans, 2))), check_overlap = T)
+```
+
+```{r save-figures}
+ggsave(filename = "Plots/figure1.jpeg", plot = figure.1, device = "jpeg", width = 6, height = 9, units = "in")
+ggsave(filename = "Plots/figure2.jpeg", plot = figure.2, device = "jpeg", width = 6, height = 9, units = "in")
+ggsave(filename = "Plots/figure3.jpeg", plot = figure.3, device = "jpeg", width = 8, height = 6, units = "in")
+ggsave(filename = "Plots/figure4.jpeg", plot = figure.4, device = "jpeg", width = 8, height = 6, units = "in")
 ```
 
 Each state's homicide and suicide mortality rates among non-Hispanic black men are plotted. The area of the circle is proportional to the black men's population size and the color represents the state gun ownership prevalence. States with suppressed estimates for black men for either firearm homicide or firearm suicide are not plotted. These states are Hawaii, Idaho, Iowa, Maine, Montana, North Dakota, New Hampshire, South Dakota, Rhode Island, Utah, Vermont, and Wyoming.
