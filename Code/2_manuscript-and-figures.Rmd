@@ -1,7 +1,8 @@
 ---
 title: "Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state"
-output: word_document:
-            reference_docx: reference.docx
+output: 
+  word_document:
+      reference_docx: reference.docx
 ---
 
 ```{r load-libraries, echo = F, warning = F}
@@ -11,7 +12,7 @@ library(ggrepel)  # for formatting the labels on a ggplot with many points
 
 ```{r load-clean-data, echo = F}
 # This loads the dataset created in step 1 into memory. It is called CDC_Males_AllAges_0816_wide
-load(file = "../Data/Males_AllAges_0816.Rdata")
+load(file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
 
 Corinne A Riddell, PhD
@@ -61,11 +62,11 @@ Word Count: **Currently 3575 (limit is 3500)**
 
 ```{r CDC-wonder-intro-data, echo = F}
 #The introduction to the paper provides the relative risk of homicide and suicide between black and white men. 
-#These summary statistics were calculated using data from CDC WONDER that I stored in the Data/Introduction directory.
+#These summary statistics were calculated using data from CDC WONDER that I stored in the Data/Cited-data directory.
 #Have a look at the notes inside the data files for the selections made using CDC WONDER to generate these results.
 
 #Read in the homicide data
-intro.data.homicide <- read.table("./Data/Introduction/Homicide_NH_Males_Age-adjusted_2016.txt", 
+intro.data.homicide <- read.table("./Data/Cited-data/Homicide_NH_Males_Age-adjusted_2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
 #calculate the risk ratio
@@ -74,7 +75,7 @@ homicide.stats <- intro.data.homicide %>% select(Race, Age.Adjusted.Rate) %>%
   mutate(RR = `Black or African American`/White) %>% rename(Black = `Black or African American`)
 
 #Read in the *firearm* homicide data
-intro.data.homicide.FA <- read.table("./Data/Introduction/Homicide_Firearms_NH_Males_Age-adjusted_2016.txt", 
+intro.data.homicide.FA <- read.table("./Data/Cited-data/Homicide_Firearms_NH_Males_Age-adjusted_2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
 #Calculate and store the portion of homicides that are committed using firearms
@@ -86,14 +87,14 @@ FA.homicide.stats <- intro.data.homicide.FA %>% select(Race, Age.Adjusted.Rate) 
   mutate(RR = `Black or African American`/White) %>% rename(Black = `Black or African American`)
 
 #Suicides -- repeat all the above steps.
-intro.data.suicide <- read.table("./Data/Introduction/Suicide_NH_Males_Age-adjusted_2016.txt", 
+intro.data.suicide <- read.table("./Data/Cited-data/Suicide_NH_Males_Age-adjusted_2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
 suicide.stats <- intro.data.suicide %>% select(Race, Age.Adjusted.Rate) %>% 
   spread(key = Race, value = Age.Adjusted.Rate) %>% 
   mutate(RR = White/`Black or African American`) %>% rename(Black = `Black or African American`)
 
-intro.data.suicide.FA <- read.table("./Data/Introduction/Suicide_Firearms_NH_Males_Age-adjusted_2016.txt", 
+intro.data.suicide.FA <- read.table("./Data/Cited-data/Suicide_Firearms_NH_Males_Age-adjusted_2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
 prop.suicides.FA <- round(sum(intro.data.suicide.FA$Deaths)/sum(intro.data.suicide$Deaths)*100)
