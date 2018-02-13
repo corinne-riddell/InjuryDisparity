@@ -68,26 +68,26 @@ We used [CDC WONDER](https://wonder.cdc.gov/) to extract homicide and suicide da
 
 ```{r load_CDC_wonder_data}
 #load the state-specific datasets:
-CDC_NHM_homicide_FA <- read.table("../Data/CDC-WONDER/Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_homicide_FA <- read.table("../Data/Raw-data/Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t") #nrows stops at row 102, the last row of data, before the data notes attached by CDC WONDER.
 
-CDC_NHM_homicide_NFA <- read.table("../Data/CDC-WONDER/Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_homicide_NFA <- read.table("../Data/Raw-data/Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
-CDC_NHM_suicide_FA <- read.table("../Data/CDC-WONDER/Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_suicide_FA <- read.table("../Data/Raw-data/Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
-CDC_NHM_suicide_NFA <- read.table("../Data/CDC-WONDER/Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_suicide_NFA <- read.table("../Data/Raw-data/Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
 #load US-level data (aggregated across entire US)
-US_CDC_NHM_homicide_FA <- read.table("../Data/CDC-WONDER/All-US_Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_homicide_FA <- read.table("../Data/Raw-data/All-US_Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
-US_CDC_NHM_homicide_NFA <- read.table("../Data/CDC-WONDER/All-US_Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_homicide_NFA <- read.table("../Data/Raw-data/All-US_Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
-US_CDC_NHM_suicide_FA <- read.table("../Data/CDC-WONDER/All-US_Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_suicide_FA <- read.table("../Data/Raw-data/All-US_Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
-US_CDC_NHM_suicide_NFA <- read.table("../Data/CDC-WONDER/All-US_Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_suicide_NFA <- read.table("../Data/Raw-data/All-US_Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
 #Add a variable "State" to the US-level datasets that is necessary for later use.
@@ -340,5 +340,5 @@ CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>%
 ###Save the dataset for use in manuscript file
 
 ```{r save-data, echo=F}
-save(CDC_Males_AllAges_0816_wide, file = "../Data/Males_AllAges_0816.Rdata")
+save(CDC_Males_AllAges_0816_wide, file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
