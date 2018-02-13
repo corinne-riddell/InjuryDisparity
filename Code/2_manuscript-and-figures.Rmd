@@ -1,18 +1,17 @@
 ---
 title: "Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state"
-output:
-  word_document:
-      reference_docx: reference.docx
+output: word_document:
+            reference_docx: reference.docx
 ---
 
 ```{r load-libraries, echo = F, warning = F}
-library(tidyverse) #a collection of packages which we use for data manipulation)
-library(ggrepel) #for formatting the labels on a ggplot with many points
+library(tidyverse)  # a collection of packages which we use for data manipulation)
+library(ggrepel)  # for formatting the labels on a ggplot with many points
 ```
 
-```{r, echo = F}
-#This loads the dataset created in step 1 into memory. It is called CDC_Males_AllAges_0816_wide
-load(file = "./Data/Males_AllAges_0816.Rdata")
+```{r load-clean-data, echo = F}
+# This loads the dataset created in step 1 into memory. It is called CDC_Males_AllAges_0816_wide
+load(file = "../Data/Males_AllAges_0816.Rdata")
 ```
 
 Corinne A Riddell, PhD
