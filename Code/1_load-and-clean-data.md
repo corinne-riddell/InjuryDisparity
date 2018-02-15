@@ -10,24 +10,21 @@ library(data.table) #for reshaping the data
 library(tidyverse) #a collection of packages which we use for data manipulation
 ```
 
-    ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
+    ## Loading tidyverse: ggplot2
+    ## Loading tidyverse: tibble
+    ## Loading tidyverse: tidyr
+    ## Loading tidyverse: readr
+    ## Loading tidyverse: purrr
+    ## Loading tidyverse: dplyr
 
-    ## ✔ ggplot2 2.2.1.9000     ✔ purrr   0.2.4     
-    ## ✔ tibble  1.4.2          ✔ dplyr   0.7.4     
-    ## ✔ tidyr   0.8.0          ✔ stringr 1.2.0     
-    ## ✔ readr   1.1.1          ✔ forcats 0.2.0
+    ## Conflicts with tidy packages ----------------------------------------------
 
-    ## Warning: package 'tibble' was built under R version 3.4.3
-
-    ## Warning: package 'tidyr' was built under R version 3.4.3
-
-    ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::between()   masks data.table::between()
-    ## ✖ dplyr::filter()    masks stats::filter()
-    ## ✖ dplyr::first()     masks data.table::first()
-    ## ✖ dplyr::lag()       masks stats::lag()
-    ## ✖ dplyr::last()      masks data.table::last()
-    ## ✖ purrr::transpose() masks data.table::transpose()
+    ## between():   dplyr, data.table
+    ## filter():    dplyr, stats
+    ## first():     dplyr, data.table
+    ## lag():       dplyr, stats
+    ## last():      dplyr, data.table
+    ## transpose(): purrr, data.table
 
 ### Create a dataset of state gun ownership rates based on BRFSS data
 
@@ -88,26 +85,26 @@ We used [CDC WONDER](https://wonder.cdc.gov/) to extract homicide and suicide da
 
 ``` r
 #load the state-specific datasets:
-CDC_NHM_homicide_FA <- read.table("../Data/CDC-WONDER/Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_homicide_FA <- read.table("../Data/Raw-data/Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t") #nrows stops at row 102, the last row of data, before the data notes attached by CDC WONDER.
 
-CDC_NHM_homicide_NFA <- read.table("../Data/CDC-WONDER/Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_homicide_NFA <- read.table("../Data/Raw-data/Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
-CDC_NHM_suicide_FA <- read.table("../Data/CDC-WONDER/Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_suicide_FA <- read.table("../Data/Raw-data/Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
-CDC_NHM_suicide_NFA <- read.table("../Data/CDC-WONDER/Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+CDC_NHM_suicide_NFA <- read.table("../Data/Raw-data/Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 102, sep = "\t")
 
 #load US-level data (aggregated across entire US)
-US_CDC_NHM_homicide_FA <- read.table("../Data/CDC-WONDER/All-US_Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_homicide_FA <- read.table("../Data/Raw-data/All-US_Homicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
-US_CDC_NHM_homicide_NFA <- read.table("../Data/CDC-WONDER/All-US_Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_homicide_NFA <- read.table("../Data/Raw-data/All-US_Homicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
-US_CDC_NHM_suicide_FA <- read.table("../Data/CDC-WONDER/All-US_Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_suicide_FA <- read.table("../Data/Raw-data/All-US_Suicide_Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
-US_CDC_NHM_suicide_NFA <- read.table("../Data/CDC-WONDER/All-US_Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
+US_CDC_NHM_suicide_NFA <- read.table("../Data/Raw-data/All-US_Suicide_Non-Firearms_NH_Males_Age-adjusted_2008-2016.txt", 
                                   header = T, nrows = 2, sep = "\t")
 
 #Add a variable "State" to the US-level datasets that is necessary for later use.
@@ -234,23 +231,23 @@ CDC_Males_AllAges_0816 <- CDC_Males_AllAges_0816 %>%
   mutate_at(.vars = c(5:10), funs(as.numeric(as.character(.)))) #reformat factor variables as numeric. "Supressed" and "Unreliable" get recoded as missing NA.
 ```
 
-    ## Warning in evalq(as.numeric(as.character(Deaths.homicide)), <environment>):
-    ## NAs introduced by coercion
+    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+    ## coercion
 
-    ## Warning in evalq(as.numeric(as.character(crude.homicide)), <environment>):
-    ## NAs introduced by coercion
+    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+    ## coercion
 
-    ## Warning in evalq(as.numeric(as.character(adjusted.homicide)),
-    ## <environment>): NAs introduced by coercion
+    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+    ## coercion
 
-    ## Warning in evalq(as.numeric(as.character(Deaths.suicide)), <environment>):
-    ## NAs introduced by coercion
+    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+    ## coercion
 
-    ## Warning in evalq(as.numeric(as.character(crude.suicide)), <environment>):
-    ## NAs introduced by coercion
+    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+    ## coercion
 
-    ## Warning in evalq(as.numeric(as.character(adjusted.suicide)),
-    ## <environment>): NAs introduced by coercion
+    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
+    ## coercion
 
 We would also like the dataset to be wide with respect to race so that we can easily calculate rate-differences in homicide and suicide between black and white men. We use the `dcast` function from the `data.table` package to reshape these data from long to wide. This set of commands also brings together the firearm and nonfirearm datasets into one dataset.
 
