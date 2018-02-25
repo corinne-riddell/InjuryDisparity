@@ -10,21 +10,24 @@ library(data.table) #for reshaping the data
 library(tidyverse) #a collection of packages which we use for data manipulation
 ```
 
-    ## Loading tidyverse: ggplot2
-    ## Loading tidyverse: tibble
-    ## Loading tidyverse: tidyr
-    ## Loading tidyverse: readr
-    ## Loading tidyverse: purrr
-    ## Loading tidyverse: dplyr
+    ## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
 
-    ## Conflicts with tidy packages ----------------------------------------------
+    ## ✔ ggplot2 2.2.1.9000     ✔ purrr   0.2.4     
+    ## ✔ tibble  1.4.2          ✔ dplyr   0.7.4     
+    ## ✔ tidyr   0.8.0          ✔ stringr 1.2.0     
+    ## ✔ readr   1.1.1          ✔ forcats 0.2.0
 
-    ## between():   dplyr, data.table
-    ## filter():    dplyr, stats
-    ## first():     dplyr, data.table
-    ## lag():       dplyr, stats
-    ## last():      dplyr, data.table
-    ## transpose(): purrr, data.table
+    ## Warning: package 'tibble' was built under R version 3.4.3
+
+    ## Warning: package 'tidyr' was built under R version 3.4.3
+
+    ## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::between()   masks data.table::between()
+    ## ✖ dplyr::filter()    masks stats::filter()
+    ## ✖ dplyr::first()     masks data.table::first()
+    ## ✖ dplyr::lag()       masks stats::lag()
+    ## ✖ dplyr::last()      masks data.table::last()
+    ## ✖ purrr::transpose() masks data.table::transpose()
 
 ### Create a dataset of state gun ownership rates based on BRFSS data
 
@@ -231,23 +234,23 @@ CDC_Males_AllAges_0816 <- CDC_Males_AllAges_0816 %>%
   mutate_at(.vars = c(5:10), funs(as.numeric(as.character(.)))) #reformat factor variables as numeric. "Supressed" and "Unreliable" get recoded as missing NA.
 ```
 
-    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
-    ## coercion
+    ## Warning in evalq(as.numeric(as.character(Deaths.homicide)), <environment>):
+    ## NAs introduced by coercion
 
-    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
-    ## coercion
+    ## Warning in evalq(as.numeric(as.character(crude.homicide)), <environment>):
+    ## NAs introduced by coercion
 
-    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
-    ## coercion
+    ## Warning in evalq(as.numeric(as.character(adjusted.homicide)),
+    ## <environment>): NAs introduced by coercion
 
-    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
-    ## coercion
+    ## Warning in evalq(as.numeric(as.character(Deaths.suicide)), <environment>):
+    ## NAs introduced by coercion
 
-    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
-    ## coercion
+    ## Warning in evalq(as.numeric(as.character(crude.suicide)), <environment>):
+    ## NAs introduced by coercion
 
-    ## Warning in eval(substitute(expr), envir, enclos): NAs introduced by
-    ## coercion
+    ## Warning in evalq(as.numeric(as.character(adjusted.suicide)),
+    ## <environment>): NAs introduced by coercion
 
 We would also like the dataset to be wide with respect to race so that we can easily calculate rate-differences in homicide and suicide between black and white men. We use the `dcast` function from the `data.table` package to reshape these data from long to wide. This set of commands also brings together the firearm and nonfirearm datasets into one dataset.
 
@@ -409,3 +412,7 @@ CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>%
 ```
 
 ### Save the dataset for use in manuscript file
+
+``` r
+save(CDC_Males_AllAges_0816_wide, file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
+```

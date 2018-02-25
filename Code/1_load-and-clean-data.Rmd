@@ -339,6 +339,6 @@ CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>%
 
 ###Save the dataset for use in manuscript file
 
-```{r save-data, echo=F}
+```{r save-data}
 save(CDC_Males_AllAges_0816_wide, file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
