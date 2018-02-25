@@ -29,7 +29,7 @@ MC: Violence Prevention Research Program, Department of Emergency Medicine, Univ
 
 Address correspondence to: Corinne Riddell, PhD, Department of Epidemiology, Biostatistics & Occupational Health, McGill University, 1020 Pine Avenue West, Room 27, Montreal, QC H3A 1A2, Canada. Email: <corinne.riddell@mail.mcgill.ca>. Phone: +1-438-863-0402
 
-Word Count: 3783
+Word Count: 3647
 
 ##### PAGE BREAK
 
@@ -529,37 +529,3 @@ Each state's homicide and suicide mortality rates among non-Hispanic black men a
 40. Cook PJ, Rivera-Aguirre AE, Cerdá M, Wintemute G. Constant lethality of gunshot injuries from firearm assault: United states, 2003–2012. *American Journal of Public Health*. 2017;107(8):1324-1328.
 
 41. Arias E, Schauman WS, Eschbach K, Sorlie PD, Backlund E. The validity of race and Hispanic origin reporting on death certificates in the United States. National Center for Health Statistics. *Vital and Health Statistics*. 2008;2(148):1-23.
-
-```{r Figure3_non_firearm, fig.width=6, fig.height=6, echo = F, warning=F, eval = T}
-#NON FIREARM FOR REVIEWER COMMENTS
-###Figure 3: The relationship between the annual rates of NON firearm homicide and suicide among white men by state and reported household firearm ownership, 2008-2016
-ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Non-Firearm" & !(ST %in% c("US", "DC"))), aes(adjusted.suicide.White, adjusted.homicide.White)) + 
-  geom_point(aes(fill = gun.house.prev.category, size = average.pop.white), col = "black", pch = 21, alpha = 0.9) +
-  geom_text_repel(aes(label = ST), size = 4) +
-  scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) + 
-  ylab("White non-firearm homicide mortality rate\n(per 100,000 per year)") +
-  xlab("White non-firearm suicide mortality rate (per 100,000 per year)") + 
-  theme_bw() +
-  theme() +
-  scale_x_continuous(limits = c(7.5, 16)) +
-  scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000), 
-                  max_size = 15, 
-                  labels = c("200k", "500k", "1.5m", "3m", "7m")
-                  ) +
-  guides(fill = guide_legend(title = "Gun ownership", override.aes = list(size = 5)), 
-         size = guide_legend(title = "White population"))
-
-ggplot(subset(CDC_Males_AllAges_0816_wide, type == "Non-Firearm" & !(ST %in% c("US", "DC"))), aes(x = adjusted.suicide.Black, y = adjusted.homicide.Black)) + 
-  geom_point(aes(fill = gun.house.prev.category, size = average.pop.black), col = "black", pch = 21, alpha = 0.9) +
-  geom_text_repel(aes(label = ST), size = 4, check_overlap = T) +
-  scale_fill_manual(values = c("#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f")) +
-  ylab("Black non-firearm homicide mortality rate\n(per 100,000 per year)") +
-  xlab("Black non-firearm suicide mortality rate (per 100,000 per year)") + 
-  theme_bw() +
-  #theme(legend.position = "bottom") +
-  scale_size_area(breaks = c(20000, 100000, 500000, 1400000), 
-                  labels = c("20k", "100k", "500k", "1.4m"), max_size = 15) +
-  guides(fill = guide_legend(title = "Gun ownership", 
-                             override.aes = list(size = 5)), 
-                             size = guide_legend(title = "Black population")) 
-```
