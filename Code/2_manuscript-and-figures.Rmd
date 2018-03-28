@@ -149,8 +149,8 @@ CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.hom
 CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", is.na(adjusted.homicide.White) == T) %>% select(State)
 CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.homicide.White) == T) %>% select(State)
 
-CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm",is.na(adjusted.suicide.Black) == T) %>% select(State)
-CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm",is.na(adjusted.suicide.Black) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", is.na(adjusted.suicide.Black) == T) %>% select(State)
+CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.suicide.Black) == T) %>% select(State)
 
 CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", is.na(adjusted.suicide.White) == T) %>% select(State) #no states
 CDC_Males_AllAges_0816_wide %>% filter(type == "Non-Firearm", is.na(adjusted.suicide.White) == T) %>% select(State) #no states
