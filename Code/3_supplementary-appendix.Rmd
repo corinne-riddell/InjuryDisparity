@@ -1,8 +1,7 @@
 ---
 title: "Supplementary appendix to: 'Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state'"
 output: 
-  word_document:
-      reference_docx: reference.docx
+  github_document
 ---
 
 Corinne A Riddell, Sam Harper, Magdalena Cerdá, and Jay S Kaufman
@@ -18,7 +17,6 @@ load(file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 
 While Figure 1 and Figure 2 do a good job at visualizing the magnitude of the differences between black and white homicide and suicide, it is difficult to read the exact rates from the figures. These tables provide these rate estimates.Tables S1 and S2 provide the estimates for firearm and non-firearm homicide, and Tables S3 and S4 provide the estimates for firearm and nonfirearm suicide.
 
-##### PAGE BREAK
 ###Table S1: Comparison of firearm homicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r homicide-fa-table, echo=F, comment=NA}
@@ -32,7 +30,6 @@ CDC_Males_AllAges_0816_wide %>%
 
 Notes: These homicide rates are age adjusted, as is the rate difference. They represent the average number of homicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to white men. 
 
-##### PAGE BREAK
 ###Table S2: Comparison of non-firearm homicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r homicide-nfa-table, echo=F}
@@ -46,7 +43,6 @@ CDC_Males_AllAges_0816_wide %>%
 
 Notes: These homicide rates are age adjusted, as is the rate difference. They represent the average number of homicides per 100,000 men per year between 2008 and 2016 and their rate difference with respect to white men.
 
-##### PAGE BREAK
 ###Table S3: Comparison of firearm suicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r suicide-fa-table, echo=F}
@@ -60,7 +56,6 @@ CDC_Males_AllAges_0816_wide %>%
 
 Notes: These suicide rates are age adjusted, as is the rate difference. They represent the average number of suicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to black men.
 
-##### PAGE BREAK
 ###Table S4: Comparison of non-firearm suicide rates between black and white non-Hispanic men by US state, 2008-2016
 
 ```{r suicide-nfa-table, echo=F}
