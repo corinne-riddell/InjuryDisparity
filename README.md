@@ -9,7 +9,7 @@ This repository contains the data, code, and R markdown version of a manuscript 
 
 ### Code/ directory
 
-The Code folder contains the two analysis files: Code/1_load-and-clean-data imports the data for analysis and prepares it. Code/2_manuscript-and-figures contains the analytical code, the manuscript text, and the codes to produce the figures.
+The Code folder contains the two analysis files: Code/1_load-and-clean-data imports the data for analysis and prepares it. Code/2_manuscript-and-figures contains the analytical code, the manuscript text, and the codes to produce the figures. It also contains a supplementary appendix file that contains "table versions" of Figures 1 and 2 that are shown in the Plots/ directory. This file is Code/3_supplementary-appendix. The .Rmd version shows the code and the .md version contains the rendered tables that are formatted for online viewing.
 
 ### Data/ directory
 
