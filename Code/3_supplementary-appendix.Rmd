@@ -1,10 +1,11 @@
 ---
 title: "Supplementary appendix to: 'Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state'"
 output: 
-  github_document
+  word_document:
+      reference_docx: reference.docx
 ---
 
-Corinne A Riddell, Sam Harper, Magdalena Cerdá, and Jay S Kaufman
+Authors: Corinne A Riddell, Sam Harper, Magdalena Cerdá, and Jay S Kaufman
 
 ```{r load-libraries, echo = F, warning = F, message=F}
 library(dplyr) 
@@ -15,7 +16,7 @@ library(dplyr)
 load(file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
 
-While Figure 1 and Figure 2 do a good job at visualizing the magnitude of the differences between black and white homicide and suicide, it is difficult to read the exact rates from the figures. These tables provide these rate estimates.Tables S1 and S2 provide the estimates for firearm and non-firearm homicide, and Tables S3 and S4 provide the estimates for firearm and nonfirearm suicide.
+While Figure 1 and Figure 2 do a good job at visualizing the magnitude of the differences between black and white homicide and suicide, it is difficult to read the exact rates from the figures. These tables provide these rate estimates. Tables S1 and S2 provide the estimates for firearm and non-firearm homicide, and Tables S3 and S4 provide the estimates for firearm and non-firearm suicide.
 
 ###Table S1: Comparison of firearm homicide rates between black and white non-Hispanic men by US state, 2008-2016
 
@@ -24,11 +25,12 @@ CDC_Males_AllAges_0816_wide %>%
   filter(type == "Firearm") %>% 
   select(State, ST, adjusted.homicide.Black, adjusted.homicide.White, adj.RD.homicide) %>% 
   arrange(-adj.RD.homicide) %>% 
+  mutate_at(.vars = c("adjusted.homicide.Black", "adjusted.homicide.White", "adj.RD.homicide"), .funs = funs(replace(., which(is.na(.)), "--"))) %>%
   rename(`Black homicide rate` = adjusted.homicide.Black, `White homicide rate` = adjusted.homicide.White, `Rate difference` = adj.RD.homicide) %>%
   knitr::kable()
 ```
 
-Notes: These homicide rates are age adjusted, as is the rate difference. They represent the average number of homicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to white men. 
+Notes: These homicide rates are age adjusted, as is the rate difference. They represent the average number of firearm homicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to white men. Rates that are missing in this table were withheld by the data provider for having twenty or fewer firearm homicides for the state-race strata during 2008 to 2016.
 
 ###Table S2: Comparison of non-firearm homicide rates between black and white non-Hispanic men by US state, 2008-2016
 
@@ -37,11 +39,12 @@ CDC_Males_AllAges_0816_wide %>%
   filter(type == "Non-Firearm") %>% 
   select(State, ST, adjusted.homicide.Black, adjusted.homicide.White, adj.RD.homicide) %>% 
   arrange(-adj.RD.homicide) %>% 
+  mutate_at(.vars = c("adjusted.homicide.Black", "adjusted.homicide.White", "adj.RD.homicide"), .funs = funs(replace(., which(is.na(.)), "--"))) %>%
   rename(`Black homicide rate` = adjusted.homicide.Black, `White homicide rate` = adjusted.homicide.White, `Rate difference` = adj.RD.homicide) %>%
   knitr::kable()
 ```
 
-Notes: These homicide rates are age adjusted, as is the rate difference. They represent the average number of homicides per 100,000 men per year between 2008 and 2016 and their rate difference with respect to white men.
+Notes: These homicide rates are age adjusted, as is the rate difference. They represent the average number of nonfirearm homicides per 100,000 men per year between 2008 and 2016 and their rate difference with respect to white men. Rates that are missing in this table were withheld by the data provider for having twenty or fewer non-firearm homicides for the state-race strata during 2008 to 2016.
 
 ###Table S3: Comparison of firearm suicide rates between black and white non-Hispanic men by US state, 2008-2016
 
@@ -50,11 +53,12 @@ CDC_Males_AllAges_0816_wide %>%
   filter(type == "Firearm") %>% 
   select(State, ST, adjusted.suicide.Black, adjusted.suicide.White, adj.RD.suicide) %>% 
   arrange(-adj.RD.suicide) %>% 
+  mutate_at(.vars = c("adjusted.suicide.Black", "adjusted.suicide.White", "adj.RD.suicide"), .funs = funs(replace(., which(is.na(.)), "--"))) %>%
   rename(`Black suicide rate` = adjusted.suicide.Black, `White suicide rate` = adjusted.suicide.White, `Rate difference` = adj.RD.suicide) %>%
   knitr::kable()
 ```
 
-Notes: These suicide rates are age adjusted, as is the rate difference. They represent the average number of suicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to black men.
+Notes: These suicide rates are age adjusted, as is the rate difference. They represent the average number of firearm suicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to black men. Rates that are missing in this table were withheld by the data provider for having twenty or fewer firearm suicides for the state-race strata during 2008 to 2016.
 
 ###Table S4: Comparison of non-firearm suicide rates between black and white non-Hispanic men by US state, 2008-2016
 
@@ -63,8 +67,9 @@ CDC_Males_AllAges_0816_wide %>%
   filter(type == "Non-Firearm") %>% 
   select(State, ST, adjusted.suicide.Black, adjusted.suicide.White, adj.RD.suicide) %>% 
   arrange(-adj.RD.suicide) %>% 
+  mutate_at(.vars = c("adjusted.suicide.Black", "adjusted.suicide.White", "adj.RD.suicide"), .funs = funs(replace(., which(is.na(.)), "--"))) %>%
   rename(`Black suicide rate` = adjusted.suicide.Black, `White suicide rate` = adjusted.suicide.White, `Rate difference` = adj.RD.suicide) %>%
   knitr::kable()
 ```
 
-Notes: These suicide rates are age adjusted, as is the rate difference. They represent the average number of suicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to black men.
+Notes: These suicide rates are age adjusted, as is the rate difference. They represent the average number of non-firearm suicides per 100,000 men per year between 2008 and 2016, and their rate difference with respect to black men. Rates that are missing in this table were withheld by the data provider for having twenty or fewer non-firearm suicides for the state-race strata during 2008 to 2016.
