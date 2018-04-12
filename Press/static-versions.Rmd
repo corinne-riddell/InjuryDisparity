@@ -1,0 +1,128 @@
+---
+title: "R Notebook"
+output: 
+  word_document:
+      reference_docx: reference.docx
+---
+
+```{r load-libraries, echo = F, warning = F}
+library(tidyverse)  # a collection of packages which we use for data manipulation)
+library(ggrepel)  # for formatting the labels on a ggplot with many points
+library(ggbeeswarm)
+library(patchwork)
+```
+
+```{r load-clean-data, echo = F}
+# This loads the dataset created in step 1 into memory. It is called CDC_Males_AllAges_0816_wide
+load(file = "./Data/Cleaned-data/Males_AllAges_0816.Rdata")
+```
+
+```{r}
+white.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Suicides of white men") + geom_text(aes(label = ST))
+  
+white.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Homicides of white men")
+
+black.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.Black)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Suicides of black men")
+  
+black.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.Black)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Homicides of black men")
+
+all <- white.sui + white.hom + black.sui + black.hom + plot_layout(ncol = 2)
+
+all
+
+subplot(ggplotly(white.sui), ggplotly(black.sui), 
+        ggplotly(white.hom), ggplotly(black.hom), 
+        nrows = 2)
+
+
+
+ggsave(plot = all, filename = "./Plots/press-option1.jpeg", width = 10, height = 8)
+```
+
+```{r}
+white.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Suicides of white men") +
+  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30))
+  
+white.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Homicides of white men") +
+  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60))
+
+black.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.Black)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Suicides of black men") +
+  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30))
+  
+black.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.Black)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Homicides of black men") +
+  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60))
+
+all <- white.sui + black.sui + white.hom + black.hom + plot_layout(ncol = 2)
+
+all
+
+ggsave(plot = all, filename = "./Plots/press-option2.jpeg", width = 10, height = 8)
+```
+
+```{r}
+
+ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
+  geom_col(position = "dodge", aes(group = ST), col = "white")
+
+ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
+  geom_col(position = "dodge", aes(group = ST), col = "white")
+
+
+```
+
+help! #rstats data vis team: Is there a clever hack to label points that were plotted using geom_quasirandom() (from the ggbeeswarm package)? The labels are specified by a third var.
+
+```{r}
+library(ggbeeswarm)
+library(tidyverse)
+library(ggrepel)
+set.seed(1)
+iris.samp <- sample_n(iris, 26)
+iris.samp$lab <- LETTERS
+ggplot(iris.samp, aes(Species, Sepal.Length)) + 
+  geom_quasirandom(aes(label = lab)) + 
+  geom_text_repel(aes(label = lab))
+```
+
