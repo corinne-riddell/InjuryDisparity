@@ -1,0 +1,142 @@
+---
+title: "Interactive homicide and suicide plots"
+output: html_document
+---
+
+THE LABELS ARE WRONG D:
+IGNORE....
+
+```{r load-libraries, echo = F, warning = F, message = F}
+library(tidyverse) 
+library(ggbeeswarm)
+library(patchwork)
+library(plotly)
+```
+
+```{r load-clean-data, echo = F}
+load(file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
+```
+
+```{r, echo = F, warning = F, message = F }
+a <- list(
+  text = "Suicides of white men",
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE
+)
+
+b <- list(
+  text = "Homicides of white men",
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE
+)
+
+c <- list(
+  text = "Suicides of black men", 
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE
+)
+
+d <- list(
+  text = "Homicides of black men",
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE
+)
+
+
+white.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.White, group = State)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + theme_bw() + ylab("Suicide Rate (per 100k)") +
+  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30))
+
+ws <- ggplotly(white.sui) %>% layout(annotations = a)
+  
+white.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.White, group = State)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership")  + theme_bw() + ylab("Homicide Rate (per 100k)") +
+  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60))
+
+wh <- ggplotly(white.hom) %>% layout(annotations = b)
+
+black.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.Black, group = State)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership")  + theme_bw() +
+  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30)) 
+
+bs <- ggplotly(black.sui) %>% layout(annotations = c)
+  
+black.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.Black, group = State)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership")  + theme_bw() +
+  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60)) 
+
+bh <- ggplotly(black.hom) %>% layout(annotations = d)
+
+    for(i in 1:length(bh$x$data)){
+      bh$x$data[[i]]$text <- gsub("gun.house.prev.category", "State gun ownership", bh$x$data[[i]]$text)
+      bh$x$data[[i]]$text <- gsub("adjusted.homicide.Black", "Homicide rate", bh$x$data[[i]]$text)
+      bh$x$data[[i]]$text <- gsub("adjusted.homicide.White", "Homicide rate", bh$x$data[[i]]$text)
+    }
+
+    for(i in 1:length(bs$x$data)){
+      bs$x$data[[i]]$text <- gsub("gun.house.prev.category", "State gun ownership", bs$x$data[[i]]$text)
+      bs$x$data[[i]]$text <- gsub("adjusted.suicide.Black", "Suicide rate", bs$x$data[[i]]$text)
+      bs$x$data[[i]]$text <- gsub("adjusted.suicide.White", "Suicide rate", bs$x$data[[i]]$text)
+    }
+
+    for(i in 1:length(wh$x$data)){
+      wh$x$data[[i]]$text <- gsub("gun.house.prev.category", "State gun ownership", wh$x$data[[i]]$text)
+      wh$x$data[[i]]$text <- gsub("adjusted.homicide.Black", "Homicide rate", wh$x$data[[i]]$text)
+      wh$x$data[[i]]$text <- gsub("adjusted.homicide.White", "Homicide rate", wh$x$data[[i]]$text)
+    }
+
+    for(i in 1:length(ws$x$data)){
+      ws$x$data[[i]]$text <- gsub("gun.house.prev.category", "State gun ownership", ws$x$data[[i]]$text)
+      ws$x$data[[i]]$text <- gsub("adjusted.suicide.Black", "Suicide rate", ws$x$data[[i]]$text)
+      ws$x$data[[i]]$text <- gsub("adjusted.suicide.White", "Suicide rate", ws$x$data[[i]]$text)
+    }
+```
+
+###Suicides
+
+```{r suicides, fig.width = 8, fig.height=3, echo=F}
+subplot(ws, bs, nrows = 1, titleY = T, titleX = T, shareX = T, shareY = T)
+```
+
+###Homicides
+
+```{r homicides, fig.width = 8, fig.height=3, echo=F}
+subplot(wh, bh, nrows = 1, titleY = T, titleX = T, shareX = T, shareY = T)
+ 
+```
