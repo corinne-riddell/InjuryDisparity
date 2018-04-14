@@ -1,0 +1,224 @@
+---
+title: "Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state"
+author: "Corinne Riddell, PhD"
+date: "4/28/2018"
+output: ioslides_presentation
+css: custom.css
+---
+
+```{r load-libraries, echo=F, warning=F, message=F}
+library(data.table) #for reshaping the data
+library(tidyverse) #a collection of packages which we use for data manipulation
+library(forcats)
+library(stringr)
+library(patchwork)
+library(geofacet)
+library(grid)
+library(jpeg)
+library(plotly)
+library(ggrepel)
+library(gridExtra)
+```
+
+```{r load-hom-sui-cide-data, echo = F}
+load(file = "../Data/Males_AllAges_0816.Rdata")
+```
+
+##Rate differences in firearm homicide
+```{r homicide, echo = F, fig.height = 5, fig.width= 8.5, warning=F, message=F}
+
+CDC_Males_AllAges_0816_wide$ST.order.RD.homicide2 = with(CDC_Males_AllAges_0816_wide, factor(ST.order.RD.homicide, levels = rev(levels(ST.order.RD.homicide))))
+
+CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>% mutate(label.homicide = ifelse(ST.order.RD.homicide2 %in% c("US", "MO", "RI", "LA", "FL", "NC", "TX", "NY", "CA"), 
+                                                               paste0("+", round(adj.RD.homicide)),
+                                                               ""))
+
+figure.1 <- ggplot(CDC_Males_AllAges_0816_wide %>% 
+                     filter(type == "Firearm", ! ST.order.RD.homicide2 %in% c("WY", "MT", "ME", "ID", "ND", "UT", "VT", "SD", "NH", "HI")), 
+                   aes(y = ST.order.RD.homicide2, x = adjusted.homicide.White)) + 
+  coord_flip() +
+  geom_segment(aes(x = adjusted.homicide.White, xend = adjusted.homicide.Black, #the purple line segment between the black and white rate
+                   y = ST.order.RD.homicide2, yend = ST.order.RD.homicide2), 
+               lwd = 0.5, col = "#762a83", alpha = 0.5) +
+  geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21, col = "black") + #the white homicide rate. For this point type, colour is the *outline*
+  geom_point(aes(x = adjusted.homicide.Black, fill = "NH Black", size = average.pop.black), pch = 21, col = "black") + #the black rate
+  geom_point(data = CDC_Males_AllAges_0816_wide %>% filter(ST == "US" & type == "Firearm"),   #the US data for whites, shown with a black vertical line
+            pch = 22, fill = "#1b7837", size = 4) +
+  geom_point(data =CDC_Males_AllAges_0816_wide %>% 
+               filter(ST == "US" & type == "Firearm"), #the US data for blacks, shown with a purple vertical line
+             aes(x = adjusted.homicide.Black), 
+             pch = 22, fill = "#762a83", size = 4) + 
+  scale_fill_manual(values = c("#762a83", "#1b7837"), labels = c("Black", "White")) + #manually set the *fill* colours for the circles to purple and white
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) + #define what areas to show in the legend
+  ylab("") +
+  xlab("Homicide rate (per 100k per year)") + 
+  theme_bw() + 
+  guides(fill = guide_legend(title = element_blank(), override.aes = list(size=5)), 
+         size = guide_legend(title = "Race-specific\npopulation")) + 
+  theme(#legend.position = c(0.87, 0.20), 
+        plot.title = element_text(size = 15),
+        legend.background = element_rect(fill=alpha('white', 0.2)),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 15),
+        strip.text.y = element_text(size = 15),
+        axis.title = element_text(size = 12), 
+        axis.text = element_text(size = 9),
+        legend.text = element_text(size = 12),
+        legend.position = "top",
+        axis.text.x = element_text(angle = 45, hjust = 1)) + 
+   geom_text(data =CDC_Males_AllAges_0816_wide %>% filter(is.na(adj.RD.homicide) == F & type == "Firearm"), #add labels
+             aes(x = adjusted.homicide.Black + 8, label = label.homicide),
+             size = 4, col = "#762a83") +
+  scale_x_continuous(limits = c(0, 70))
+
+figure.1
+
+#ggplotly(figure.1)
+```  
+
+##Rate differences in homicide and suicide
+  
+```{r suicide, echo = F, fig.height = 5, fig.width= 8.5, warning=F, message=F}
+
+CDC_Males_AllAges_0816_wide$ST.order.RD.suicide2 = with(CDC_Males_AllAges_0816_wide, factor(ST.order.RD.suicide, levels = rev(levels(ST.order.RD.suicide))))
+
+CDC_Males_AllAges_0816_wide <- CDC_Males_AllAges_0816_wide %>% 
+  mutate(label.suicide = ifelse(ST.order.RD.suicide2 %in% c("US", "MS", "RI", "LA", "FL", "NC", "TX", "NY", "CA"), 
+                                                               paste0("+", round(-adj.RD.suicide)),
+                                                               ""))
+
+figure.2 <- ggplot(CDC_Males_AllAges_0816_wide %>% 
+                     filter(type == "Firearm", 
+                            ! ST.order.RD.suicide2 %in% c("WY", "MT", "ID", "UT", "VT", "ND", "SD", "ME", "NH", "IA", "HI", "RI")), 
+                   aes(y = ST.order.RD.suicide2, x = adjusted.suicide.White)) + 
+  coord_flip() +
+  geom_segment(aes(x = adjusted.suicide.White, xend = adjusted.suicide.Black,
+                   y = ST.order.RD.suicide2, yend = ST.order.RD.suicide2), 
+               lwd = 0.5, col = "#762a83", alpha = 0.5) +
+  geom_point(aes(fill = "NH White", size = average.pop.white), pch = 21, col = "black") + 
+  geom_point(aes(x = adjusted.suicide.Black, fill = "NH Black", size = average.pop.black), pch = 21, col = "black") + 
+  geom_point(data = CDC_Males_AllAges_0816_wide %>% filter(ST == "US" & type == "Firearm"),   
+            pch = 22, fill = "#1b7837", size = 4) +
+  geom_point(data =CDC_Males_AllAges_0816_wide %>% 
+               filter(ST == "US" & type == "Firearm"), 
+             aes(x = adjusted.suicide.Black), 
+             pch = 22, fill = "#762a83", size = 4) + 
+  scale_fill_manual(values = c("#762a83", "#1b7837"), labels = c("Black", "White")) + 
+  scale_alpha_continuous(guide = F) +
+  scale_size_area(breaks = c(10000, 100000, 500000, 1500000, 3000000, 7000000)) + 
+  ylab("") +
+  xlab("Suicide rate") + 
+  theme_bw() + 
+  guides(fill = F, size = F) + 
+  theme(#legend.position = c(0.87, 0.20), 
+        plot.title = element_text(size = 15),
+        strip.background = element_rect(fill="white"), 
+        strip.text.x = element_text(size = 15),
+        strip.text.y = element_text(size = 15),
+        axis.title = element_text(size = 12), 
+        axis.text = element_text(size = 9),
+        axis.text.x = element_text(angle = 45, hjust = 1)) + 
+   geom_text(data = CDC_Males_AllAges_0816_wide %>% filter(is.na(adj.RD.suicide) == F & type == "Firearm"), #add labels
+             aes(x = adjusted.suicide.White + 5, label = label.suicide),
+             size = 4, col = "#1b7837") +
+  scale_x_continuous(limits = c(0, 30)) + labs(caption = "Riddell et al. Adapted from Annals of Internal Medicine (in press). 2018.")
+
+figure.1 + figure.2 + plot_layout(ncol = 1, heights = c(2, 1))
+
+#figure.2
+#ggplotly(figure.2)
+```  
+
+***
+
+```{r association-guns-white, echo=F, fig.width=8.5, fig.height=6, warning=F, message=F}
+guns.white <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", "DC")), type == "Firearm"), aes(y=adjusted.suicide.White, x=adjusted.homicide.White)) + 
+  geom_point(aes(size = average.pop.white, pch = "White", fill = gun.house.prev.category), alpha = 0.75) +
+  #geom_point(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, size = average.pop.black, 
+  #               pch = "Black", fill = gun.house.prev.category), alpha = 0.75) +
+  scale_fill_viridis_d(option = "D", direction = -1) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000),
+                  labels = c("200k", "500k", "1.5m", "3m", "7m"),
+                  max_size = 15) +
+  scale_y_continuous(limits = c(0, 30)) +
+  scale_x_continuous(limits = c(0, 5)) +
+  xlab("Homicide rate (per 100k)") + ylab("Suicide rate (per 100k)") +
+  geom_text_repel(aes(label = ST)) +
+  #geom_text_repel(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, label = ST)) +
+  theme(legend.key = element_blank(), #legend.box = "horizontal",
+        legend.background = element_rect(fill= "transparent",colour = "transparent")) +
+  guides(shape = guide_legend(title = "Race", override.aes = list(size=5)),
+         size = guide_legend(title = "Population size", override.aes = list(pch = 21)),
+         fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
+         ) + 
+  ggtitle("Homicide, suicide, and state gun ownership (%) for white men") +
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine (in press). 2018.")
+
+guns.white
+```  
+
+***
+
+```{r guns-white-blue-rect, echo=F,  fig.width=8.5, fig.height=6, warning=F, message=F}
+guns.white + geom_rect(aes(ymin = 3, ymax = 30, xmin = 0.5, xmax = 5), col = "blue", fill = "transparent")
+```
+
+***
+
+```{r guns-both, echo=F, fig.width=8, fig.height=6, warning=F, message=F}
+guns.both <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", "DC")), type == "Firearm"), aes(y=adjusted.suicide.White, x=adjusted.homicide.White)) + 
+  geom_rect(aes(ymin = 3, ymax = 30, xmin = 0.5, xmax = 5), col = "blue", fill = "transparent") +
+  geom_point(aes(size = average.pop.white, pch = "White", fill = gun.house.prev.category), alpha = 0.75) +
+  #geom_point(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, size = average.pop.black, 
+  #               pch = "Black", fill = gun.house.prev.category), alpha = 0.75) +
+  scale_fill_viridis_d(option = "D", direction = -1) +
+  scale_shape_manual(values = c(21)) +
+  scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000),
+                  labels = c("200k", "500k", "1.5m", "3m", "7m"),
+                  max_size = 15) +
+  scale_y_continuous(limits = c(-2, 32)) +
+  scale_x_continuous(limits = c(-2, 60)) +
+  xlab("Homicide rate (per 100k)") + ylab("Suicide rate (per 100k)") +
+  geom_text_repel(aes(label = ST)) +
+  theme(legend.position = "bottom", legend.key = element_blank(), #legend.box = "horizontal",
+        legend.background = element_rect(fill= "transparent",colour = "transparent")) +
+  guides(shape = guide_legend(title = "Race", override.aes = list(size=5)),
+         size = FALSE, #guide_legend(title = "Population size", override.aes = list(pch = 21)),
+         fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
+         ) +
+  ggtitle("Homicide, suicide, and state gun ownership (%) for white and black men") +
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine (in press). 2018")
+
+guns.both
+```  
+
+***
+
+```{r guns-both-2, echo=F, fig.width=8, fig.height=6, warning=F, message=F}
+guns2 <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", "DC")), type == "Firearm"), aes(y=adjusted.suicide.White, x=adjusted.homicide.White)) + 
+  geom_point(aes(size = average.pop.white, pch = "White", fill = gun.house.prev.category), alpha = 0.75) +
+  geom_point(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, size = average.pop.black, 
+                 pch = "Black", fill = gun.house.prev.category), alpha = 0.75) +
+  scale_fill_viridis_d(option = "D", direction = -1) +
+  scale_y_continuous(limits = c(-2, 32)) +
+  scale_x_continuous(limits = c(-2, 60)) +
+  scale_shape_manual(values = c(22, 21)) +
+  scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000),
+                  labels = c("200k", "500k", "1.5m", "3m", "7m"),
+                  max_size = 15) +
+  xlab("Homicide rate (per 100k)") + ylab("Suicide rate (per 100k)") +
+  geom_text_repel(aes(label = ST)) +
+  geom_text_repel(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, label = ST)) +
+  theme(legend.position = "bottom", legend.key = element_blank(), #legend.box = "horizontal",
+        legend.background = element_rect(fill= "transparent",colour = "transparent")) +
+  guides(shape = guide_legend(title = "Race", override.aes = list(size=5)),
+         size = FALSE, #guide_legend(title = "Population size", override.aes = list(pch = 21)),
+         fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
+         ) +
+  ggtitle("Homicide, suicide, and state gun ownership (%) for white and black men") +
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine (in press). 2018")
+
+guns2
+``` 
