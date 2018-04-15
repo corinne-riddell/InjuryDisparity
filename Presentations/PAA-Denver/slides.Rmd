@@ -1,8 +1,11 @@
 ---
 title: "Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state"
-author: "Corinne Riddell, PhD"
-date: "4/28/2018"
-output: ioslides_presentation
+author: "Corinne Riddell, PhD, Postdoctoral Fellow, McGill University"
+date: "April 28, 2018"
+output: 
+  slidy_presentation:
+    incremental: true
+    footer: "Copyright (c) 2018, Corinne Riddell"
 css: custom.css
 ---
 
@@ -21,8 +24,90 @@ library(gridExtra)
 ```
 
 ```{r load-hom-sui-cide-data, echo = F}
-load(file = "../Data/Males_AllAges_0816.Rdata")
+load(file = "../../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
+
+##Racial disparities in violent deaths are well-established in the US
+
+```{r hom-sui-disparities-US, echo=F}
+mort.dat <- data.frame("rates" = c(3.82, 26.54, 39.85, 10.58), 
+                     "race" = c(rep("White", 2), rep("Black", 2)), 
+                     "intent" = c(rep(c("Homicide", "Suicide"), 2)))
+
+mort.gap <- ggplot(mort.dat, aes(x = rates, y = intent)) + 
+  geom_segment(aes(x = 10.58, xend = 26.54, y = "Suicide", yend = "Suicide"), col = "grey", lwd = 2) + 
+  geom_segment(aes(x = 3.82, xend = 39.85, y = "Homicide", yend = "Homicide"), col = "grey", lwd = 2) + 
+  geom_point(aes(col = race), size = 5) + 
+  geom_text(col = "black", aes(label = round(rates, 1)), nudge_y = 0.2, size = 5) +
+  scale_colour_manual(values = c("#762a83", "#1b7837")) +
+  #theme_minimal() + 
+  theme(axis.title = element_text(size = 15), 
+        axis.text = element_text(size = 15),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 15),
+        legend.position = "top",# c(0.8, 0.8), 
+        plot.caption = element_text(size = 10)
+        ) +
+  labs(x = "\nMortality rate (per 100k)", 
+       y = "", 
+       caption = "\n2016 data. Extracted using CDC WONDER.")
+
+mort.gap
+
+#- In 2016, non-Hispanic black men were 10 times more likely than non-Hispanic white men to die by homicide 
+#- White men were 2.5 times more likely than black men to die by suicide 
+#- Whether these inequalities vary by state is unknown
+```
+
+## What might variation across states imply?
+
+- Differences in race-specific levels of exposures to:
+    - Neighborhood residential conditions
+    - Medical care
+    - Policy environments
+    - etc.
+    
+## Why does it matter?
+
+- Identification of subpopulations with an excess burden
+- Interventions directed to reduce inequalities
+
+## Gun ownership, homicide, and suicide
+
+- States with the highest levels of gun ownership have the highest rates of homicide and suicide
+- Case-control studies estimate positive associations between 
+    - gun in the home and homicide in the home^1^ 
+    - gun in the home and household risk of suicide^2^
+    
+<small>1. Kellermann et al. N Engl J Med. (1993)</small><br/>
+
+<small>2. Kellermann et al. N Engl J Med. (1992)</small>
+
+##Hypothetical pathways: suicide
+```{r, echo = F, out.width = 750}
+knitr::include_graphics(path = "../../Presentations/UCDavis/images/DAG_suicide.png")
+```
+
+##Hypothetical pathways: homicide
+```{r, echo = F, out.width = 750}
+knitr::include_graphics(path = "../../Presentations/UCDavis/images/DAG_homicide.png")
+```
+
+##Study objectives
+
+- Estimate the absolute inequality between non-Hispanic black and white men in firearm- and non-firearm-related homicide and suicide across US states
+
+- Examine the relationships between state gun ownership prevalence, firearm-related homicide, and firearm-related suicide, separately for black and white men.
+
+##Data
+
+- 50 states + DC
+- 2008--2016
+- All ages
+- Males (<b class = "violettext">Men</b>, without loss of generality)
+- Non-Hispanic black and white
+- For each state: <b class = "violettext">Homicide</b> and <b class = "violettext">suicide</b> age-adjusted fatality rates and their racial inequalities, by <b class = "violettext">firearms use</b>
+- From the 2004 <b class = "violettext">BRFSS</b>, calculated state gun prevalence for the second objective.
 
 ##Rate differences in firearm homicide
 ```{r homicide, echo = F, fig.height = 5, fig.width= 8.5, warning=F, message=F}
@@ -122,7 +207,7 @@ figure.2 <- ggplot(CDC_Males_AllAges_0816_wide %>%
    geom_text(data = CDC_Males_AllAges_0816_wide %>% filter(is.na(adj.RD.suicide) == F & type == "Firearm"), #add labels
              aes(x = adjusted.suicide.White + 5, label = label.suicide),
              size = 4, col = "#1b7837") +
-  scale_x_continuous(limits = c(0, 30)) + labs(caption = "Riddell et al. Adapted from Annals of Internal Medicine (in press). 2018.")
+  scale_x_continuous(limits = c(0, 30)) + labs(caption = "Riddell et al. Adapted from Annals of Internal Medicine. 2018.")
 
 figure.1 + figure.2 + plot_layout(ncol = 1, heights = c(2, 1))
 
@@ -154,7 +239,7 @@ guns.white <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("
          fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
          ) + 
   ggtitle("Homicide, suicide, and state gun ownership (%) for white men") +
-  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine (in press). 2018.")
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine. 2018.")
 
 guns.white
 ```  
@@ -189,7 +274,7 @@ guns.both <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("U
          fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
          ) +
   ggtitle("Homicide, suicide, and state gun ownership (%) for white and black men") +
-  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine (in press). 2018")
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine. 2018")
 
 guns.both
 ```  
@@ -218,7 +303,16 @@ guns2 <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", 
          fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
          ) +
   ggtitle("Homicide, suicide, and state gun ownership (%) for white and black men") +
-  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine (in press). 2018")
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine. 2018")
 
 guns2
 ``` 
+
+##Discussion
+
+
+##Questions?
+
+https://github.com/corinne-riddell/InjuryDisparity
+corinne.riddell@mail.mcgill.ca
+@datavisitor
