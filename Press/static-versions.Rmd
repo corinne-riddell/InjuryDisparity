@@ -14,52 +14,10 @@ library(patchwork)
 
 ```{r load-clean-data, echo = F}
 # This loads the dataset created in step 1 into memory. It is called CDC_Males_AllAges_0816_wide
-load(file = "./Data/Cleaned-data/Males_AllAges_0816.Rdata")
+load(file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
 
-```{r}
-white.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
-       aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
-  geom_quasirandom() +
-  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
-  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
-  ggtitle("Suicides of white men") + geom_text(aes(label = ST))
-  
-white.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
-       aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
-  geom_quasirandom() +
-  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
-  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
-  ggtitle("Homicides of white men")
-
-black.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.Black)),
-       aes(x = gun.house.prev.category, y = adjusted.suicide.Black)) + 
-  geom_quasirandom() +
-  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
-  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
-  ggtitle("Suicides of black men")
-  
-black.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.Black)),
-       aes(x = gun.house.prev.category, y = adjusted.homicide.Black)) + 
-  geom_quasirandom() +
-  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
-  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
-  ggtitle("Homicides of black men")
-
-all <- white.sui + white.hom + black.sui + black.hom + plot_layout(ncol = 2)
-
-all
-
-subplot(ggplotly(white.sui), ggplotly(black.sui), 
-        ggplotly(white.hom), ggplotly(black.hom), 
-        nrows = 2)
-
-
-
-ggsave(plot = all, filename = "./Plots/press-option1.jpeg", width = 10, height = 8)
-```
-
-```{r}
+```{r press-release-fixed-axes}
 white.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
        aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
   geom_quasirandom() +
@@ -96,10 +54,48 @@ all <- white.sui + black.sui + white.hom + black.hom + plot_layout(ncol = 2)
 
 all
 
-ggsave(plot = all, filename = "./Plots/press-option2.jpeg", width = 10, height = 8)
+#ggsave(plot = all, filename = "./Plots/press-release-1.jpeg", width = 10, height = 8)
 ```
 
-```{r}
+```{r press-release-2-free-axes}
+white.sui2 <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Suicides of white men") 
+  
+white.hom2 <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Homicides of white men")
+
+black.sui2 <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.suicide.Black)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Suicides of black men")
+  
+black.hom2 <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.Black)),
+       aes(x = gun.house.prev.category, y = adjusted.homicide.Black)) + 
+  geom_quasirandom() +
+  scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
+  xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
+  ggtitle("Homicides of black men")
+
+all2 <- white.sui2 + white.hom2 + black.sui2 + black.hom2 + plot_layout(ncol = 2)
+
+all2
+
+#ggsave(plot = all, filename = "./Plots/press-option1.jpeg", width = 10, height = 8)
+```
+
+
+
+```{r old-bar-charts, echo=F, eval=F}
 
 ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
        aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
@@ -112,9 +108,7 @@ ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(g
 
 ```
 
-help! #rstats data vis team: Is there a clever hack to label points that were plotted using geom_quasirandom() (from the ggbeeswarm package)? The labels are specified by a third var.
-
-```{r}
+```{r, eval=F, echo=F}
 library(ggbeeswarm)
 library(tidyverse)
 library(ggrepel)
