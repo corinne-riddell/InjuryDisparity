@@ -18,43 +18,69 @@ load(file = "../Data/Cleaned-data/Males_AllAges_0816.Rdata")
 ```
 
 ```{r press-release-fixed-axes}
+
+CDC_Males_AllAges_0816_wide$State2 <- NA
+CDC_Males_AllAges_0816_wide$State2[CDC_Males_AllAges_0816_wide$State %in% c("Alabama", "Arkansas", "Mississippi", "Massachusetts", "New York", "Missouri", "Illinois")] <- as.character(CDC_Males_AllAges_0816_wide$State[CDC_Males_AllAges_0816_wide$State %in% c("Alabama", "Arkansas", "Mississippi", "Massachusetts", "New York", "Missouri", "Illinois")])
+
+CDC_Males_AllAges_0816_wide$State2 <- factor(CDC_Males_AllAges_0816_wide$State2, 
+                                                levels = c("Massachusetts", "New York", "Illinois", "Missouri", "Alabama", "Mississippi", "Arkansas")) 
+
 white.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.White)),
        aes(x = gun.house.prev.category, y = adjusted.suicide.White)) + 
-  geom_quasirandom() +
+  geom_quasirandom(aes(col = State2)) +
   scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
   xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
   ggtitle("Suicides of white men") +
-  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30))
-  
+  guides(col = guide_legend(title = element_blank())) + 
+  scale_color_discrete(na.value = "black", breaks = c("Massachusetts", "New York", "Illinois", "Missouri", "Alabama", "Mississippi", "Arkansas"))
+
+white.sui
+
 white.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.White)),
        aes(x = gun.house.prev.category, y = adjusted.homicide.White)) + 
-  geom_quasirandom() +
+  geom_quasirandom(aes(col = State2)) +
   scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
   xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
   ggtitle("Homicides of white men") +
-  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60))
+  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60))  +
+  guides(col = guide_legend(title = element_blank())) + 
+  scale_color_discrete(na.value = "black", breaks = c("Massachusetts", "New York", "Illinois", "Missouri", "Alabama", "Mississippi", "Arkansas"))
+
+white.hom
 
 black.sui <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.suicide.Black)),
        aes(x = gun.house.prev.category, y = adjusted.suicide.Black)) + 
-  geom_quasirandom() +
+  geom_quasirandom(aes(col = State2)) +
   scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
   xlab("State gun ownership") + ylab("Suicide rate (per 100,000 men)") + theme_bw() +
   ggtitle("Suicides of black men") +
-  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30))
-  
+  scale_y_continuous(breaks = seq(0, 30, 5), labels = seq(0, 30, 5), limits = c(0, 30)) +
+  guides(col = guide_legend(title = element_blank())) + 
+  scale_color_discrete(na.value = "black", breaks = c("Massachusetts", "New York", "Illinois", "Missouri", "Alabama", "Mississippi", "Arkansas"))
+
+black.sui
+
 black.hom <- ggplot(data = CDC_Males_AllAges_0816_wide %>% filter(type == "Firearm", !is.na(gun.house.prev.category), !is.na(adjusted.homicide.Black)),
        aes(x = gun.house.prev.category, y = adjusted.homicide.Black)) + 
-  geom_quasirandom() +
+  geom_quasirandom(aes(col = State2)) +
   scale_x_discrete(labels = c("Low", "Medium-low", "Medium-high", "High")) +
   xlab("State gun ownership") + ylab("Homicide rate (per 100,000 men)") + theme_bw() +
   ggtitle("Homicides of black men") +
-  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60))
+  scale_y_continuous(breaks = seq(0, 60, 20), labels = seq(0, 60, 20), limits = c(0, 60)) +
+  guides(col = guide_legend(title = element_blank())) + 
+  scale_color_discrete(na.value = "black", breaks = c("Massachusetts", "New York", "Illinois", "Missouri", "Alabama", "Mississippi", "Arkansas"))
 
-all <- white.sui + black.sui + white.hom + black.hom + plot_layout(ncol = 2)
+black.hom
 
-all
+sui <- white.sui + black.sui + plot_layout(ncol = 2)
+sui
 
-#ggsave(plot = all, filename = "./Plots/press-release-1.jpeg", width = 10, height = 8)
+hom <- white.hom + black.hom + plot_layout(ncol = 2)
+hom
+
+
+ggsave(plot = hom, filename = "../Plots/press-release-hom-colored.jpeg", width = 10, height = 4)
+ggsave(plot = sui, filename = "../Plots/press-release-sui-colored.jpeg", width = 10, height = 4)
 ```
 
 ```{r press-release-2-free-axes}
