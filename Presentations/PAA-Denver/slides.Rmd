@@ -256,6 +256,67 @@ figure.1 + figure.2 + plot_layout(ncol = 1, heights = c(2, 1))
 ```  
 
 ##Homicide, suicide, and state gun ownership (%) for white men
+
+```{r association-guns-white-low, echo=F, fig.width=8.5, fig.height=6, warning=F, message=F}
+guns.white.low <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", "DC")), type == "Firearm" & gun.house.prev < 19.9), aes(y=adjusted.suicide.White, x=adjusted.homicide.White)) + 
+  geom_point(aes(size = average.pop.white, pch = "White", fill = gun.house.prev.category), alpha = 0.75) +
+  #geom_point(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, size = average.pop.black, 
+  #               pch = "Black", fill = gun.house.prev.category), alpha = 0.75) +
+  scale_fill_viridis_d(option = "D", direction = -1) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000),
+                  labels = c("200k", "500k", "1.5m", "3m", "7m"),
+                  max_size = 15) +
+  scale_y_continuous(limits = c(0, 30)) +
+  scale_x_continuous(limits = c(0, 5)) +
+  xlab("Homicide rate (per 100k)") + ylab("Suicide rate (per 100k)") +
+  geom_text_repel(aes(label = ST)) +
+  theme(legend.key = element_blank(), 
+        legend.background = element_rect(fill= "transparent", colour = "transparent"),
+        legend.text = element_text(size = 13),
+        axis.title = element_text(size = 13), 
+        axis.text = element_text(size = 15)) +
+  guides(shape = guide_legend(title = "Race", override.aes = list(size=5)),
+         size = guide_legend(title = "Population size", override.aes = list(pch = 21)),
+         fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
+         ) + 
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine. 2018.")
+
+guns.white.low
+```  
+
+##Homicide, suicide, and state gun ownership (%) for white men
+
+```{r association-guns-white-high, echo=F, fig.width=8.5, fig.height=6, warning=F, message=F}
+guns.white.high <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", "DC")), type == "Firearm" & (gun.house.prev < 19.9 | gun.house.prev >= 45.0)), aes(y=adjusted.suicide.White, x=adjusted.homicide.White)) + 
+  geom_point(aes(size = average.pop.white, pch = "White", fill = gun.house.prev.category), alpha = 0.75) +
+  #geom_point(aes(y = adjusted.suicide.Black, x = adjusted.homicide.Black, size = average.pop.black, 
+  #               pch = "Black", fill = gun.house.prev.category), alpha = 0.75) +
+  scale_fill_viridis_d(option = "D", direction = -1) +
+  scale_shape_manual(values = c(21, 22)) +
+  scale_size_area(breaks = c(200000, 500000, 1500000, 3000000, 7000000),
+                  labels = c("200k", "500k", "1.5m", "3m", "7m"),
+                  max_size = 15) +
+  scale_y_continuous(limits = c(0, 30)) +
+  scale_x_continuous(limits = c(0, 5)) +
+  xlab("Homicide rate (per 100k)") + ylab("Suicide rate (per 100k)") +
+  geom_text_repel(aes(label = ST)) +
+  theme(legend.key = element_blank(), 
+        legend.background = element_rect(fill= "transparent", colour = "transparent"),
+        legend.text = element_text(size = 13),
+        axis.title = element_text(size = 13), 
+        axis.text = element_text(size = 15)) +
+  guides(shape = guide_legend(title = "Race", override.aes = list(size=5)),
+         size = guide_legend(title = "Population size", override.aes = list(pch = 21)),
+         fill = guide_legend(title = "Gun prevalence (%)", override.aes = list(pch = 21, size = 5))
+         ) + 
+  labs(caption = "Adapted from Riddell et al. Annals of Internal Medicine. 2018.")
+
+guns.white.high
+```  
+
+##Homicide, suicide, and state gun ownership (%) for white men
+
 ```{r association-guns-white, echo=F, fig.width=8.5, fig.height=6, warning=F, message=F}
 guns.white <- ggplot(subset(CDC_Males_AllAges_0816_wide %>% filter(! ST %in% c("US", "DC")), type == "Firearm"), aes(y=adjusted.suicide.White, x=adjusted.homicide.White)) + 
   geom_point(aes(size = average.pop.white, pch = "White", fill = gun.house.prev.category), alpha = 0.75) +
@@ -353,7 +414,20 @@ guns2
 ``` 
 
 ##Discussion
+- The mechanisms that have led to varying racial inequalities across states is unclear.
+- Black men are at higher risk of homicide because of:
+    - Structural disadvantage (poverty, joblessness, family disruption)
+    - Racial residential segregation
+    - Participation in drug markets
+- These factors may occur more frequently within states with larger disparities in firearm homicide
 
+##Discussion
+- Studies of gun policy have estimated reductions in homicide and suicide because of specific policies
+- Whether these policies are linked to racial disparities is unclear, but worthy of investigation
+
+##Discussion
+- Alcohol is a risk factor for suicide and may play a role in the increased rate of suicides among white men
+- Variation in alcohol use across states may be implicated in the magnitude and direction in the racial inequality in suicide
 
 ##Questions?
 
