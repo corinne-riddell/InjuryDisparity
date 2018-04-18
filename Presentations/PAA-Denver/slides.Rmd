@@ -1,11 +1,14 @@
 ---
-title: "PAA Session 413: Race, Ethnicity, and Population Health<br/><br/>Comparison of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic men by US state"
+title: 'PAA Session 413: Race, Ethnicity, and Population Health<br/><br/>Comparison
+  of rates of firearm and non-firearm homicide and suicide in black and white non-Hispanic
+  men by US state'
 author: "Corinne Riddell, PhD, Postdoctoral Fellow, McGill University"
 date: "April 28, 2018"
-output: 
+output:
   slidy_presentation:
-    incremental: true
-    footer: "Copyright (c) 2018, Corinne Riddell"
+    font_adjustment: +2
+    footer: Copyright (c) 2018, Corinne Riddell
+    incremental: yes
 css: custom.css
 ---
 
@@ -64,17 +67,7 @@ mort.gap
 - Differences in race-specific levels of exposures to:
     - Neighborhood residential conditions
     - Medical care
-    - Policy environments
-    - etc.
-    
-## Why does it matter?
-
-- Identification of subpopulations with an excess burden of injury
-- Interventions directed to reduce inequalities and overall levels of violent deaths
-
-##Study Objective 1
-
-- Estimate the absolute inequality between non-Hispanic black and white men in firearm- and non-firearm homicide and suicide across US states
+    - Policy environments, such as gun ownership
 
 ##Gun ownership and gun deaths
 ```{r, out.width = 800, echo = F}
@@ -84,24 +77,22 @@ knitr::include_graphics(path = "../../Presentations/UCDavis/images/mother-jones-
 https://www.motherjones.com/politics/2013/01/pro-gun-myths-fact-check/
 
 ## Gun ownership, homicide, and suicide
-
-- States with the highest levels of gun ownership have the highest rates of homicide and suicide
 - Case-control studies estimate positive associations between: 
-    - gun in the home and homicide in the home <small>(Kellermann et al., NEJM. 1993)</small>
-    - gun in the home and household risk of suicide <small>(Kellermann et al., NEJM. 1992)</small>
+    - Gun in the home and homicide in the home <small>(Kellermann et al., NEJM. 1993)</small>
+    - Gun in the home and household risk of suicide <small>(Kellermann et al., NEJM. 1992)</small>
     
 ## Gun ownership, homicide, suicide, and race
 - Two component causes of homicide and suicide:
     - Opportunity
+        - Access to guns increases opportunity for violence
     - Motivation
+        - Participation in drug markets increases risk of homicide
+        - Social support, cultural cohesion decrease risk of suicide
 
-```{r, out.width=750, echo=F}
-knitr::include_graphics(path = "../../Presentations/UCDavis/images/suicide-reduced-DAG.png")
-```
+##Study Objectives
 
-##Study Objective 2
-
-- Examine the relationships between state gun ownership prevalence, firearm homicide, and firearm  suicide, separately for black and white men.
+1. Estimate the absolute inequality between non-Hispanic black and white men in firearm- and non-firearm homicide and suicide across US states
+2. Examine the relationships between state gun ownership prevalence, firearm homicide, and firearm  suicide, separately for black and white men.
 
 ##Data
 
@@ -449,3 +440,12 @@ knitr::include_graphics(path = "../../Presentations/UCDavis/images/DAG_suicide.p
 ```{r, echo = F, out.width = 750}
 knitr::include_graphics(path = "../../Presentations/UCDavis/images/DAG_homicide.png")
 ```
+
+```{r, out.width=750, echo=F}
+knitr::include_graphics(path = "../../Presentations/UCDavis/images/suicide-reduced-DAG.png")
+```
+
+## Why does it matter?
+
+- Identification of subpopulations with an excess burden of injury
+- Interventions directed to reduce inequalities and overall levels of violent deaths
