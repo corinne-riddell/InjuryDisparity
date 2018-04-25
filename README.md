@@ -3,7 +3,9 @@
 
 # Project overview
 
-This repository contains the data, code, and R markdown version of a manuscript submitted to *Annals of Internal Medicine* on November 7th, 2017. A second and third revision were submitted on February 15th, and February 25th, 2018. It is unknown whether and how much the difference in excess deaths due to homicide among black men and suicide among white men vary by US state. Such knowledge could inform social policy aimed towards reducing social disparities in health. The objective of this manuscript is to estimate the absolute inequality between non-Hispanic black and white men in firearm and non-firearm homicide and suicide across US states.
+This repository contains the data, code, and R markdown version of a manuscript published by *Annals of Internal Medicine* on April 24, 2018. (Here)[http://annals.org/aim/fullarticle/2679556/comparison-rates-firearm-nonfirearm-homicide-suicide-black-white-non-hispanic] is the free published paper. The paper was first submitted on November 7th, 2017. A second and third revision were submitted on February 15th, and February 25th, 2018. 
+
+The objective of this paper was to compare the rates of firearm and nonfirearm homicide and suicide in black and white non-Hispanic men by U.S. state and to examine whether these deaths are associated with state prevalence of gun ownership.
 
 # Organization of this Github repository
 
